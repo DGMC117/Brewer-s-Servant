@@ -9,6 +9,7 @@ class CardFace (
     val flavor_text: String,
     val illustration_id: UUID,
     val image_uris: ImageURIs,
+    val layout: String,
     val loyalty: String,
     val mana_cost: String,
     val name: String,
