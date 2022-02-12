@@ -53,7 +53,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         private val DATABASE_NAME = "PaintersServantDB"
 
         // Database version
-        private val DATABASE_VERSION = 0
+        private val DATABASE_VERSION = 1
 
         // Card table name
         private val CARD_TABLE_NAME = "Card"
