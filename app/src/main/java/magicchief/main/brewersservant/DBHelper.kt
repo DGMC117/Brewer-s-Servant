@@ -48,7 +48,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         + CARD_IMAGE_ART_CROP + " varchar(255),"
                         + CARD_IMAGE_LARGE + " varchar(255),"
                         + CARD_IMAGE_NORMAL + " varchar(255),"
-                        + CARD_IMAGE_SMALL + " varchar(255),"
+                        + CARD_IMAGE_SMALL + " varchar(255)"
                         + ")"
                 )
         // Create CardFace table
@@ -73,7 +73,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         + CARD_FACE_IMAGE_ART_CROP + " varchar(255),"
                         + CARD_FACE_IMAGE_LARGE + " varchar(255),"
                         + CARD_FACE_IMAGE_NORMAL + " varchar(255),"
-                        + CARD_FACE_IMAGE_SMALL + " varchar(255),"
+                        + CARD_FACE_IMAGE_SMALL + " varchar(255)"
                         + ")"
                 )
         // Create RelatedCard table
@@ -82,7 +82,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         + RELATED_CARD_ID_MAIN + " char(36) foreign key references $CARD_TABLE_NAME($CARD_ID),"
                         + RELATED_CARD_ID_RELATED + " char(36) foreign key references $CARD_TABLE_NAME($CARD_ID),"
                         + RELATED_CARD_COMPONENT + " varchar(25) not null,"
-                        + "primary key ($RELATED_CARD_ID_MAIN,$RELATED_CARD_ID_RELATED),"
+                        + "primary key ($RELATED_CARD_ID_MAIN,$RELATED_CARD_ID_RELATED)"
                         + ")"
                 )
         // Create CardSet table
@@ -91,7 +91,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         + CARD_SET_SET_ID + " char(36) primary key,"
                         + CARD_SET_CODE + " varchar(10) not null,"
                         + CARD_SET_NAME + " varchar(50) not null,"
-                        + CARD_SET_ICON_SVG_URI + " varchar(255) not null,"
+                        + CARD_SET_ICON_SVG_URI + " varchar(255) not null"
                         + ")"
                 )
 
