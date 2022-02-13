@@ -11,7 +11,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // Create Card table
         val createCardDB = (
                 "CREATE TABLE $CARD_TABLE_NAME ("
-                        + CARD_ID + " int primary key,"
+                        + CARD_ID + " char(36) primary key,"
                         + CARD_CMC + " float not null,"
                         + CARD_COLOR_IDENTITY + " varchar(50) not null,"
                         + CARD_COLORS + " varchar(50),"
@@ -27,7 +27,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         + CARD_ARTIST + " varchar(50),"
                         + CARD_FLAVOR_TEXT + " text,"
                         + CARD_RARITY + " varchar(50) not null,"
-                        + CARD_SET_ID + " int not null foreign key references $CARD_SET_TABLE_NAME($CARD_SET_SET_ID),"
+                        + CARD_SET_ID + " char(36) not null foreign key references $CARD_SET_TABLE_NAME($CARD_SET_SET_ID),"
                         + CARD_PRICE_USD + " varchar(25) not null,"
                         + CARD_PRICE_EUR + " varchar(25) not null,"
                         + CARD_PRICE_TIX + " varchar(25) not null,"
@@ -52,8 +52,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // Create CardFace table
         val createCardFaceDB = (
                 "CREATE TABLE $CARD_FACE_TABLE_NAME ("
-                        + CARD_FACE_ID + " int auto_increment primary key,"
-                        + CARD_FACE_ID_MAIN_CARD + " int not null foreign key references $CARD_TABLE_NAME($CARD_ID),"
+                        + CARD_FACE_ID + " char(36) auto_increment primary key,"
+                        + CARD_FACE_ID_MAIN_CARD + " char(36) not null foreign key references $CARD_TABLE_NAME($CARD_ID),"
                         + CARD_FACE_CMC + " float,"
                         + CARD_FACE_COLORS + " varchar(50),"
                         + CARD_FACE_LAYOUT + " varchar(50),"
@@ -77,8 +77,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // Create RelatedCard table
         val createRelatedCardDB = (
                 "CREATE TABLE $RELATED_CARD_TABLE_NAME ("
-                        + RELATED_CARD_ID_MAIN + " int foreign key references $CARD_TABLE_NAME($CARD_ID),"
-                        + RELATED_CARD_ID_RELATED + " int foreign key references $CARD_TABLE_NAME($CARD_ID),"
+                        + RELATED_CARD_ID_MAIN + " char(36) foreign key references $CARD_TABLE_NAME($CARD_ID),"
+                        + RELATED_CARD_ID_RELATED + " char(36) foreign key references $CARD_TABLE_NAME($CARD_ID),"
                         + RELATED_CARD_COMPONENT + " varchar(25) not null,"
                         + "primary key ($RELATED_CARD_ID_MAIN,$RELATED_CARD_ID_RELATED),"
                         + ")"
@@ -86,7 +86,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // Create CardSet table
         val createCardSetDB = (
                 "CREATE TABLE $CARD_SET_TABLE_NAME ("
-                        + CARD_SET_SET_ID + " int primary key,"
+                        + CARD_SET_SET_ID + " char(36) primary key,"
                         + CARD_SET_CODE + " varchar(10) not null,"
                         + CARD_SET_NAME + " varchar(50) not null,"
                         + CARD_SET_ICON_SVG_URI + " varchar(255) not null,"
