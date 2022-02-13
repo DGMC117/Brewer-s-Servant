@@ -1,8 +1,10 @@
 package magicchief.main.brewersservant
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import magicchief.main.brewersservant.dataclass.Set
 
 class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -198,5 +200,17 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         private val CARD_SET_NAME = "name"
         private val CARD_SET_ICON_SVG_URI = "icon_svg_uri"
 
+    }
+
+    fun addCardSet (cardSet: Set): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(CARD_SET_SET_ID, cardSet.id.toString())
+        contentValues.put(CARD_SET_CODE, cardSet.code)
+        contentValues.put(CARD_SET_NAME, cardSet.name)
+        contentValues.put(CARD_SET_ICON_SVG_URI, cardSet.icon_svg_uri.toString())
+        val result = db.insert(CARD_SET_TABLE_NAME, null, contentValues)
+        db.close()
+        return result
     }
 }
