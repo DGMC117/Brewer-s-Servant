@@ -4,6 +4,7 @@ import java.util.*
 
 class CardFace (
     val artist: String,
+    val cmc: Double,
     val color_indicator: Array<String>,
     val colors: Array<String>,
     val flavor_text: String,
