@@ -4,7 +4,10 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import magicchief.main.brewersservant.dataclass.Card
+import magicchief.main.brewersservant.dataclass.CardFace
 import magicchief.main.brewersservant.dataclass.Set
+import java.util.*
 
 class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -215,6 +218,98 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         contentValues.put(CARD_SET_ICON_SVG_URI, cardSet.icon_svg_uri.toString())
         val result = db.insert(CARD_SET_TABLE_NAME, null, contentValues)
         db.close()
+        return result
+    }
+
+    fun addCard (card: Card): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(CARD_ID, card.id.toString())
+        contentValues.put(CARD_CMC, card.cmc)
+        contentValues.put(CARD_COLOR_IDENTITY, colorArrayToString(card.color_identity))
+        contentValues.put(CARD_COLORS, colorArrayToString(card.colors)) // Missing Null Check
+        contentValues.put(CARD_LAYOUT, card.layout)
+        contentValues.put(CARD_LOYALTY, card.loyalty) // Missing Null Check
+        contentValues.put(CARD_MANA_COST, card.mana_cost) // Missing Null Check
+        contentValues.put(CARD_NAME, card.name)
+        contentValues.put(CARD_ORACLE_TEXT, card.oracle_text) // Missing Null Check
+        contentValues.put(CARD_POWER, card.power) // Missing Null Check
+        contentValues.put(CARD_PRODUCED_MANA, colorArrayToString(card.produced_mana)) // Missing Null Check
+        contentValues.put(CARD_TOUGHNESS, card.toughness) // Missing Null Check
+        contentValues.put(CARD_TYPE_LINE, card.type_line)
+        contentValues.put(CARD_ARTIST, card.artist) // Missing Null Check
+        contentValues.put(CARD_FLAVOR_TEXT, card.flavor_text) // Missing Null Check
+        contentValues.put(CARD_RARITY, card.rarity)
+        contentValues.put(CARD_SET_ID, card.set_id)
+        contentValues.put(CARD_PRICE_USD, card.prices.usd)
+        contentValues.put(CARD_PRICE_EUR, card.prices.eur)
+        contentValues.put(CARD_PRICE_TIX, card.prices.tix)
+        contentValues.put(CARD_LEGAL_STANDARD, card.legalities.standard)
+        contentValues.put(CARD_LEGAL_PIONEER, card.legalities.pioneer)
+        contentValues.put(CARD_LEGAL_MODERN, card.legalities.modern)
+        contentValues.put(CARD_LEGAL_LEGACY, card.legalities.legacy)
+        contentValues.put(CARD_LEGAL_VINTAGE, card.legalities.vintage)
+        contentValues.put(CARD_LEGAL_BRAWL, card.legalities.brawl)
+        contentValues.put(CARD_LEGAL_HISTORIC, card.legalities.historic)
+        contentValues.put(CARD_LEGAL_PAUPER, card.legalities.pauper)
+        contentValues.put(CARD_LEGAL_PENNY, card.legalities.penny)
+        contentValues.put(CARD_LEGAL_COMMANDER, card.legalities.commander)
+        contentValues.put(CARD_IMAGE_PNG, card.image_uris.png.toString()) // Missing Null Check
+        contentValues.put(CARD_IMAGE_BORDER_CROP, card.image_uris.border_crop.toString()) // Missing Null Check
+        contentValues.put(CARD_IMAGE_ART_CROP, card.image_uris.art_crop.toString()) // Missing Null Check
+        contentValues.put(CARD_IMAGE_LARGE, card.image_uris.large.toString()) // Missing Null Check
+        contentValues.put(CARD_IMAGE_NORMAL, card.image_uris.normal.toString()) // Missing Null Check
+        contentValues.put(CARD_IMAGE_SMALL, card.image_uris.small.toString()) // Missing Null Check
+        val result = db.insert(CARD_TABLE_NAME, null, contentValues)
+        db.close()
+        return result
+    }
+
+    fun addCardFace (cardFace: CardFace, mainCardId: UUID): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(CARD_FACE_ID_MAIN_CARD, mainCardId.toString())
+        contentValues.put(CARD_FACE_CMC, cardFace.cmc) // Missing Null Check
+        contentValues.put(CARD_FACE_COLORS, colorArrayToString(cardFace.colors)) // Missing Null Check
+        contentValues.put(CARD_FACE_LAYOUT, cardFace.layout) // Missing Null Check
+        contentValues.put(CARD_FACE_LOYALTY, cardFace.loyalty) // Missing Null Check
+        contentValues.put(CARD_FACE_MANA_COST, cardFace.mana_cost)
+        contentValues.put(CARD_FACE_NAME, cardFace.name)
+        contentValues.put(CARD_FACE_ORACLE_TEXT, cardFace.oracle_text) // Missing Null Check
+        contentValues.put(CARD_FACE_POWER, cardFace.power) // Missing Null Check
+        contentValues.put(CARD_FACE_TOUGHNESS, cardFace.toughness) // Missing Null Check
+        contentValues.put(CARD_FACE_TYPE_LINE, cardFace.type_line) // Missing Null Check
+        contentValues.put(CARD_FACE_ARTIST, cardFace.artist) // Missing Null Check
+        contentValues.put(CARD_FACE_FLAVOR_TEXT, cardFace.flavor_text) // Missing Null Check
+        contentValues.put(CARD_FACE_IMAGE_PNG, cardFace.image_uris.png.toString()) // Missing Null Check
+        contentValues.put(CARD_FACE_IMAGE_BORDER_CROP, cardFace.image_uris.border_crop.toString()) // Missing Null Check
+        contentValues.put(CARD_FACE_IMAGE_ART_CROP, cardFace.image_uris.art_crop.toString()) // Missing Null Check
+        contentValues.put(CARD_FACE_IMAGE_LARGE, cardFace.image_uris.large.toString()) // Missing Null Check
+        contentValues.put(CARD_FACE_IMAGE_NORMAL, cardFace.image_uris.normal.toString()) // Missing Null Check
+        contentValues.put(CARD_FACE_IMAGE_SMALL, cardFace.image_uris.small.toString()) // Missing Null Check
+        val result = db.insert(CARD_FACE_TABLE_NAME, null, contentValues)
+        db.close()
+        return result
+    }
+
+    fun addRelatedCard (mainCardId: UUID, relatedCardId: UUID, componentType: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(RELATED_CARD_ID_MAIN, mainCardId.toString())
+        contentValues.put(RELATED_CARD_ID_RELATED, relatedCardId.toString())
+        contentValues.put(RELATED_CARD_COMPONENT, componentType)
+        val result = db.insert(RELATED_CARD_TABLE_NAME, null, contentValues)
+        db.close()
+        return result
+    }
+
+    private fun colorArrayToString (colors: Array<String>): String {
+        var result = if (colors.isEmpty()) "" else colors[0]
+        var i = 1
+        while (i < colors.size) {
+            result += "," + colors[i]
+            i++
+        }
         return result
     }
 }
