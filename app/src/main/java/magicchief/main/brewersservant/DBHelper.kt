@@ -16,7 +16,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // Create Card table
         val createCardDB = (
                 "CREATE TABLE $CARD_TABLE_NAME ("
-                        + CARD_ID + " char(36) primary key,"
+                        + CARD_ID + " int auto_increment primary key,"
+                        + CARD_SCRYFALL_ID + " char(36) unique not null,"
                         + CARD_CMC + " float not null,"
                         + CARD_COLOR_IDENTITY + " varchar(50) not null,"
                         + CARD_COLORS + " varchar(50),"
@@ -32,10 +33,10 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         + CARD_ARTIST + " varchar(50),"
                         + CARD_FLAVOR_TEXT + " text,"
                         + CARD_RARITY + " varchar(50) not null,"
-                        + CARD_SET_ID + " char(36) not null,"
-                        + CARD_PRICE_USD + " varchar(25) not null,"
-                        + CARD_PRICE_EUR + " varchar(25) not null,"
-                        + CARD_PRICE_TIX + " varchar(25) not null,"
+                        + CARD_SET_SCRYFALL_ID + " char(36) not null,"
+                        + CARD_PRICE_USD + " varchar(25),"
+                        + CARD_PRICE_EUR + " varchar(25),"
+                        + CARD_PRICE_TIX + " varchar(25),"
                         + CARD_LEGAL_STANDARD + " varchar(25) not null,"
                         + CARD_LEGAL_PIONEER + " varchar(25) not null,"
                         + CARD_LEGAL_MODERN + " varchar(25) not null,"
@@ -52,14 +53,14 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         + CARD_IMAGE_LARGE + " varchar(255),"
                         + CARD_IMAGE_NORMAL + " varchar(255),"
                         + CARD_IMAGE_SMALL + " varchar(255),"
-                        + "foreign key ($CARD_SET_ID) references $CARD_SET_TABLE_NAME($CARD_SET_SET_ID)"
+                        + "foreign key ($CARD_SET_SCRYFALL_ID) references $CARD_SET_TABLE_NAME($CARD_SET_SCRYFALL_SET_ID)"
                         + ")"
                 )
         // Create CardFace table
         val createCardFaceDB = (
                 "CREATE TABLE $CARD_FACE_TABLE_NAME ("
                         + CARD_FACE_ID + " int auto_increment primary key,"
-                        + CARD_FACE_ID_MAIN_CARD + " char(36) not null,"
+                        + CARD_FACE_SCRYFALL_ID_MAIN_CARD + " char(36) not null,"
                         + CARD_FACE_CMC + " float,"
                         + CARD_FACE_COLORS + " varchar(50),"
                         + CARD_FACE_LAYOUT + " varchar(50),"
@@ -78,24 +79,25 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         + CARD_FACE_IMAGE_LARGE + " varchar(255),"
                         + CARD_FACE_IMAGE_NORMAL + " varchar(255),"
                         + CARD_FACE_IMAGE_SMALL + " varchar(255),"
-                        + "foreign key ($CARD_FACE_ID_MAIN_CARD) references $CARD_TABLE_NAME($CARD_ID)"
+                        + "foreign key ($CARD_FACE_SCRYFALL_ID_MAIN_CARD) references $CARD_TABLE_NAME($CARD_SCRYFALL_ID)"
                         + ")"
                 )
         // Create RelatedCard table
         val createRelatedCardDB = (
                 "CREATE TABLE $RELATED_CARD_TABLE_NAME ("
-                        + RELATED_CARD_ID_MAIN + " char(36),"
-                        + RELATED_CARD_ID_RELATED + " char(36),"
+                        + RELATED_CARD_ID + " int auto_increment primary key,"
+                        + RELATED_CARD_SCRYFALL_ID_MAIN + " char(36) not null,"
+                        + RELATED_CARD_SCRYFALL_ID_RELATED + " char(36) not null,"
                         + RELATED_CARD_COMPONENT + " varchar(25) not null,"
-                        + "primary key ($RELATED_CARD_ID_MAIN,$RELATED_CARD_ID_RELATED),"
-                        + "foreign key ($RELATED_CARD_ID_MAIN) references $CARD_TABLE_NAME($CARD_ID),"
-                        + "foreign key ($RELATED_CARD_ID_RELATED) references $CARD_TABLE_NAME($CARD_ID)"
+                        + "foreign key ($RELATED_CARD_SCRYFALL_ID_MAIN) references $CARD_TABLE_NAME($CARD_SCRYFALL_ID),"
+                        + "foreign key ($RELATED_CARD_SCRYFALL_ID_RELATED) references $CARD_TABLE_NAME($CARD_SCRYFALL_ID)"
                         + ")"
                 )
         // Create CardSet table
         val createCardSetDB = (
                 "CREATE TABLE $CARD_SET_TABLE_NAME ("
-                        + CARD_SET_SET_ID + " char(36) primary key,"
+                        + CARD_SET_SET_ID + " int auto_increment primary key,"
+                        + CARD_SET_SCRYFALL_SET_ID + " char(36) not null,"
                         + CARD_SET_CODE + " varchar(10) not null,"
                         + CARD_SET_NAME + " varchar(50) not null,"
                         + CARD_SET_ICON_SVG_URI + " varchar(255) not null"
@@ -132,6 +134,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         private val CARD_TABLE_NAME = "Card"
         // Card table column names
         private val CARD_ID = "id"
+        private val CARD_SCRYFALL_ID = "scryfall_id"
         private val CARD_CMC = "cmc"
         private val CARD_COLOR_IDENTITY = "color_identity"
         private val CARD_COLORS = "colors"
@@ -147,7 +150,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         private val CARD_ARTIST = "artist"
         private val CARD_FLAVOR_TEXT = "flavor_text"
         private val CARD_RARITY = "rarity"
-        private val CARD_SET_ID = "set_id"
+        private val CARD_SET_SCRYFALL_ID = "scryfall_set_id"
         private val CARD_PRICE_USD = "price_usd"
         private val CARD_PRICE_EUR = "price_eur"
         private val CARD_PRICE_TIX = "price_tix"
@@ -171,8 +174,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // CardFace table name
         private val CARD_FACE_TABLE_NAME = "CardFace"
         // CardFace table column names
-        private val CARD_FACE_ID = "id" // Autogenerated
-        private val CARD_FACE_ID_MAIN_CARD = "id_main_card"
+        private val CARD_FACE_ID = "id"
+        private val CARD_FACE_SCRYFALL_ID_MAIN_CARD = "id_main_card_scryfall"
         private val CARD_FACE_ARTIST = "artist"
         private val CARD_FACE_CMC = "cmc"
         private val CARD_FACE_COLORS = "colors"
@@ -195,14 +198,16 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // RelatedCard table name
         private val RELATED_CARD_TABLE_NAME = "RelatedCard"
         // RelatedCard table column names
-        private val RELATED_CARD_ID_MAIN = "id_main"
-        private val RELATED_CARD_ID_RELATED = "id_related"
+        private val RELATED_CARD_ID = "id"
+        private val RELATED_CARD_SCRYFALL_ID_MAIN = "id_main_scryfall"
+        private val RELATED_CARD_SCRYFALL_ID_RELATED = "id_related_scryfall"
         private val RELATED_CARD_COMPONENT = "component"
 
         // CardSet table name
         private val CARD_SET_TABLE_NAME = "CardSet"
         // CardSet table column names
         private val CARD_SET_SET_ID = "id"
+        private val CARD_SET_SCRYFALL_SET_ID = "scryfall_set_id"
         private val CARD_SET_CODE = "code"
         private val CARD_SET_NAME = "name"
         private val CARD_SET_ICON_SVG_URI = "icon_svg_uri"
@@ -212,7 +217,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     fun addCardSet (cardSet: Set): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(CARD_SET_SET_ID, cardSet.id.toString())
+        contentValues.put(CARD_SET_SCRYFALL_SET_ID, cardSet.id.toString())
         contentValues.put(CARD_SET_CODE, cardSet.code)
         contentValues.put(CARD_SET_NAME, cardSet.name)
         contentValues.put(CARD_SET_ICON_SVG_URI, cardSet.icon_svg_uri.toString())
@@ -224,7 +229,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     fun addCard (card: Card): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(CARD_ID, card.id.toString())
+        contentValues.put(CARD_SCRYFALL_ID, card.id.toString())
         contentValues.put(CARD_CMC, card.cmc)
         contentValues.put(CARD_COLOR_IDENTITY, colorArrayToString(card.color_identity))
         contentValues.put(CARD_COLORS, colorArrayToString(card.colors)) // Missing Null Check
@@ -240,7 +245,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         contentValues.put(CARD_ARTIST, card.artist) // Missing Null Check
         contentValues.put(CARD_FLAVOR_TEXT, card.flavor_text) // Missing Null Check
         contentValues.put(CARD_RARITY, card.rarity)
-        contentValues.put(CARD_SET_ID, card.set_id)
+        contentValues.put(CARD_SET_SCRYFALL_ID, card.set_id)
         contentValues.put(CARD_PRICE_USD, card.prices.usd)
         contentValues.put(CARD_PRICE_EUR, card.prices.eur)
         contentValues.put(CARD_PRICE_TIX, card.prices.tix)
@@ -254,12 +259,12 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         contentValues.put(CARD_LEGAL_PAUPER, card.legalities.pauper)
         contentValues.put(CARD_LEGAL_PENNY, card.legalities.penny)
         contentValues.put(CARD_LEGAL_COMMANDER, card.legalities.commander)
-        contentValues.put(CARD_IMAGE_PNG, card.image_uris.png.toString()) // Missing Null Check
-        contentValues.put(CARD_IMAGE_BORDER_CROP, card.image_uris.border_crop.toString()) // Missing Null Check
-        contentValues.put(CARD_IMAGE_ART_CROP, card.image_uris.art_crop.toString()) // Missing Null Check
-        contentValues.put(CARD_IMAGE_LARGE, card.image_uris.large.toString()) // Missing Null Check
-        contentValues.put(CARD_IMAGE_NORMAL, card.image_uris.normal.toString()) // Missing Null Check
-        contentValues.put(CARD_IMAGE_SMALL, card.image_uris.small.toString()) // Missing Null Check
+        contentValues.put(CARD_IMAGE_PNG, if (card.image_uris != null) card.image_uris.png.toString() else null)
+        contentValues.put(CARD_IMAGE_BORDER_CROP, if (card.image_uris != null) card.image_uris.border_crop.toString() else null)
+        contentValues.put(CARD_IMAGE_ART_CROP, if (card.image_uris != null) card.image_uris.art_crop.toString() else null)
+        contentValues.put(CARD_IMAGE_LARGE, if (card.image_uris != null) card.image_uris.large.toString() else null)
+        contentValues.put(CARD_IMAGE_NORMAL, if (card.image_uris != null) card.image_uris.normal.toString() else null)
+        contentValues.put(CARD_IMAGE_SMALL, if (card.image_uris != null) card.image_uris.small.toString() else null)
         val result = db.insert(CARD_TABLE_NAME, null, contentValues)
         db.close()
         return result
@@ -268,7 +273,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     fun addCardFace (cardFace: CardFace, mainCardId: UUID): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(CARD_FACE_ID_MAIN_CARD, mainCardId.toString())
+        contentValues.put(CARD_FACE_SCRYFALL_ID_MAIN_CARD, mainCardId.toString())
         contentValues.put(CARD_FACE_CMC, cardFace.cmc) // Missing Null Check
         contentValues.put(CARD_FACE_COLORS, colorArrayToString(cardFace.colors)) // Missing Null Check
         contentValues.put(CARD_FACE_LAYOUT, cardFace.layout) // Missing Null Check
@@ -281,12 +286,12 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         contentValues.put(CARD_FACE_TYPE_LINE, cardFace.type_line) // Missing Null Check
         contentValues.put(CARD_FACE_ARTIST, cardFace.artist) // Missing Null Check
         contentValues.put(CARD_FACE_FLAVOR_TEXT, cardFace.flavor_text) // Missing Null Check
-        contentValues.put(CARD_FACE_IMAGE_PNG, cardFace.image_uris.png.toString()) // Missing Null Check
-        contentValues.put(CARD_FACE_IMAGE_BORDER_CROP, cardFace.image_uris.border_crop.toString()) // Missing Null Check
-        contentValues.put(CARD_FACE_IMAGE_ART_CROP, cardFace.image_uris.art_crop.toString()) // Missing Null Check
-        contentValues.put(CARD_FACE_IMAGE_LARGE, cardFace.image_uris.large.toString()) // Missing Null Check
-        contentValues.put(CARD_FACE_IMAGE_NORMAL, cardFace.image_uris.normal.toString()) // Missing Null Check
-        contentValues.put(CARD_FACE_IMAGE_SMALL, cardFace.image_uris.small.toString()) // Missing Null Check
+        contentValues.put(CARD_FACE_IMAGE_PNG, if (cardFace.image_uris != null) cardFace.image_uris.png.toString() else null)
+        contentValues.put(CARD_FACE_IMAGE_BORDER_CROP, if (cardFace.image_uris != null) cardFace.image_uris.border_crop.toString() else null)
+        contentValues.put(CARD_FACE_IMAGE_ART_CROP, if (cardFace.image_uris != null) cardFace.image_uris.art_crop.toString() else null)
+        contentValues.put(CARD_FACE_IMAGE_LARGE, if (cardFace.image_uris != null) cardFace.image_uris.large.toString() else null)
+        contentValues.put(CARD_FACE_IMAGE_NORMAL, if (cardFace.image_uris != null) cardFace.image_uris.normal.toString() else null)
+        contentValues.put(CARD_FACE_IMAGE_SMALL, if (cardFace.image_uris != null) cardFace.image_uris.small.toString() else null)
         val result = db.insert(CARD_FACE_TABLE_NAME, null, contentValues)
         db.close()
         return result
@@ -295,8 +300,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     fun addRelatedCard (mainCardId: UUID, relatedCardId: UUID, componentType: String): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(RELATED_CARD_ID_MAIN, mainCardId.toString())
-        contentValues.put(RELATED_CARD_ID_RELATED, relatedCardId.toString())
+        contentValues.put(RELATED_CARD_SCRYFALL_ID_MAIN, mainCardId.toString())
+        contentValues.put(RELATED_CARD_SCRYFALL_ID_RELATED, relatedCardId.toString())
         contentValues.put(RELATED_CARD_COMPONENT, componentType)
         val result = db.insert(RELATED_CARD_TABLE_NAME, null, contentValues)
         db.close()
@@ -304,9 +309,9 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     private fun colorArrayToString (colors: Array<String>): String {
-        var result = if (colors.isEmpty()) "" else colors[0]
+        var result = if (colors.isNullOrEmpty()) "" else colors[0]
         var i = 1
-        while (i < colors.size) {
+        while (result != "" && i < colors.size) {
             result += "," + colors[i]
             i++
         }
