@@ -9,10 +9,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        lateinit var intent: Intent
         val sharedPref = Preferences(applicationContext)
-        if (!sharedPref.databaseDownloadDone) {
-            intent = Intent (this, CardDownloadActivity::class.java)
-            startActivity(intent)
-        }
+        if (!sharedPref.databaseDownloadDone) intent = Intent (this, CardDownloadActivity::class.java)
+        else intent = Intent (this, CardListActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
