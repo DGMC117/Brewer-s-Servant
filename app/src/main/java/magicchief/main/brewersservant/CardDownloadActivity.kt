@@ -90,6 +90,11 @@ class CardDownloadActivity : AppCompatActivity() {
                         reader.endArray()
                         reader.close()
                         Toast.makeText(applicationContext, "Cards download complete!", Toast.LENGTH_SHORT).show()
+                        val sharedPref = Preferences(applicationContext)
+                        sharedPref.databaseDownloadDone = true
+                        val intent = Intent(applicationContext, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
                     }
 
                     override fun onFailure(call: Call, e: IOException) {
