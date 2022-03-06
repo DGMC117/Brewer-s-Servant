@@ -1,13 +1,18 @@
 package magicchief.main.brewersservant
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import androidx.core.database.getStringOrNull
+import androidx.core.net.toUri
 import magicchief.main.brewersservant.dataclass.Card
 import magicchief.main.brewersservant.dataclass.CardFace
 import magicchief.main.brewersservant.dataclass.Set
+import java.net.URI
 import java.util.*
+import kotlin.collections.ArrayList
 
 class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -246,19 +251,19 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         contentValues.put(CARD_FLAVOR_TEXT, card.flavor_text) // Missing Null Check
         contentValues.put(CARD_RARITY, card.rarity)
         contentValues.put(CARD_SET_SCRYFALL_ID, card.set_id)
-        contentValues.put(CARD_PRICE_USD, card.prices.usd)
-        contentValues.put(CARD_PRICE_EUR, card.prices.eur)
-        contentValues.put(CARD_PRICE_TIX, card.prices.tix)
-        contentValues.put(CARD_LEGAL_STANDARD, card.legalities.standard)
-        contentValues.put(CARD_LEGAL_PIONEER, card.legalities.pioneer)
-        contentValues.put(CARD_LEGAL_MODERN, card.legalities.modern)
-        contentValues.put(CARD_LEGAL_LEGACY, card.legalities.legacy)
-        contentValues.put(CARD_LEGAL_VINTAGE, card.legalities.vintage)
-        contentValues.put(CARD_LEGAL_BRAWL, card.legalities.brawl)
-        contentValues.put(CARD_LEGAL_HISTORIC, card.legalities.historic)
-        contentValues.put(CARD_LEGAL_PAUPER, card.legalities.pauper)
-        contentValues.put(CARD_LEGAL_PENNY, card.legalities.penny)
-        contentValues.put(CARD_LEGAL_COMMANDER, card.legalities.commander)
+        contentValues.put(CARD_PRICE_USD, card.prices?.usd)
+        contentValues.put(CARD_PRICE_EUR, card.prices?.eur)
+        contentValues.put(CARD_PRICE_TIX, card.prices?.tix)
+        contentValues.put(CARD_LEGAL_STANDARD, card.legalities?.standard)
+        contentValues.put(CARD_LEGAL_PIONEER, card.legalities?.pioneer)
+        contentValues.put(CARD_LEGAL_MODERN, card.legalities?.modern)
+        contentValues.put(CARD_LEGAL_LEGACY, card.legalities?.legacy)
+        contentValues.put(CARD_LEGAL_VINTAGE, card.legalities?.vintage)
+        contentValues.put(CARD_LEGAL_BRAWL, card.legalities?.brawl)
+        contentValues.put(CARD_LEGAL_HISTORIC, card.legalities?.historic)
+        contentValues.put(CARD_LEGAL_PAUPER, card.legalities?.pauper)
+        contentValues.put(CARD_LEGAL_PENNY, card.legalities?.penny)
+        contentValues.put(CARD_LEGAL_COMMANDER, card.legalities?.commander)
         contentValues.put(CARD_IMAGE_PNG, if (card.image_uris != null) card.image_uris.png.toString() else null)
         contentValues.put(CARD_IMAGE_BORDER_CROP, if (card.image_uris != null) card.image_uris.border_crop.toString() else null)
         contentValues.put(CARD_IMAGE_ART_CROP, if (card.image_uris != null) card.image_uris.art_crop.toString() else null)
@@ -308,13 +313,71 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         return result
     }
 
-    private fun colorArrayToString (colors: Array<String>): String {
+    @SuppressLint("Range")
+    fun getCards(): MutableList<Card> {
+        val list: MutableList<Card> = ArrayList()
+        val db = this.readableDatabase
+        val query = "SELECT * FROM $CARD_TABLE_NAME ORDER BY $CARD_NAME LIMIT 50"
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                var card = Card()
+                card.id = UUID.fromString(result.getString(result.getColumnIndex(CARD_SCRYFALL_ID)))
+                card.cmc = result.getFloat(result.getColumnIndex(CARD_CMC)).toDouble()
+                card.color_identity = colorStringtoArray(result.getString(result.getColumnIndex(CARD_COLOR_IDENTITY)))
+                card.colors = colorStringtoArray(result.getString(result.getColumnIndex(CARD_COLORS)))
+                card.layout = result.getString(result.getColumnIndex(CARD_LAYOUT))
+                card.loyalty = result.getStringOrNull(result.getColumnIndex(CARD_LOYALTY))
+                card.mana_cost = result.getStringOrNull(result.getColumnIndex(CARD_MANA_COST))
+                card.name = result.getString(result.getColumnIndex(CARD_NAME))
+                card.oracle_text = result.getStringOrNull(result.getColumnIndex(CARD_ORACLE_TEXT))
+                card.power = result.getStringOrNull(result.getColumnIndex(CARD_POWER))
+                card.produced_mana = colorStringtoArray(result.getStringOrNull(result.getColumnIndex(CARD_PRODUCED_MANA)))
+                card.toughness = result.getStringOrNull(result.getColumnIndex(CARD_TOUGHNESS))
+                card.type_line = result.getString(result.getColumnIndex(CARD_TYPE_LINE))
+                card.artist = result.getStringOrNull(result.getColumnIndex(CARD_ARTIST))
+                card.flavor_text = result.getStringOrNull(result.getColumnIndex(CARD_FLAVOR_TEXT))
+                card.rarity = result.getString(result.getColumnIndex(CARD_RARITY))
+                card.set_id = result.getString(result.getColumnIndex(CARD_SET_SCRYFALL_ID))
+                card.prices?.usd = result.getStringOrNull(result.getColumnIndex(CARD_PRICE_USD))
+                card.prices?.eur = result.getStringOrNull(result.getColumnIndex(CARD_PRICE_EUR))
+                card.prices?.tix = result.getStringOrNull(result.getColumnIndex(CARD_PRICE_TIX))
+                card.legalities?.standard = result.getString(result.getColumnIndex(CARD_LEGAL_STANDARD))
+                card.legalities?.pioneer = result.getString(result.getColumnIndex(CARD_LEGAL_PIONEER))
+                card.legalities?.modern = result.getString(result.getColumnIndex(CARD_LEGAL_MODERN))
+                card.legalities?.legacy = result.getString(result.getColumnIndex(CARD_LEGAL_LEGACY))
+                card.legalities?.vintage = result.getString(result.getColumnIndex(CARD_LEGAL_VINTAGE))
+                card.legalities?.brawl = result.getString(result.getColumnIndex(CARD_LEGAL_BRAWL))
+                card.legalities?.historic = result.getString(result.getColumnIndex(CARD_LEGAL_HISTORIC))
+                card.legalities?.pauper = result.getString(result.getColumnIndex(CARD_LEGAL_PAUPER))
+                card.legalities?.penny = result.getString(result.getColumnIndex(CARD_LEGAL_PENNY))
+                card.legalities?.commander = result.getString(result.getColumnIndex(CARD_LEGAL_COMMANDER))
+                card.image_uris?.png = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_PNG)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_PNG))) else null
+                card.image_uris?.border_crop = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_BORDER_CROP)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_BORDER_CROP))) else null
+                card.image_uris?.art_crop = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_ART_CROP)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_ART_CROP))) else null
+                card.image_uris?.large = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_LARGE)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_LARGE))) else null
+                card.image_uris?.normal = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL))) else null
+                card.image_uris?.small = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL))) else null
+                list.add(card)
+            }
+            while (result.moveToNext())
+        }
+        return list
+    }
+
+    private fun colorArrayToString (colors: Array<String>?): String {
         var result = if (colors.isNullOrEmpty()) "" else colors[0]
         var i = 1
-        while (result != "" && i < colors.size) {
+        while (result != "" && i < colors?.size!!) {
             result += "," + colors[i]
             i++
         }
+        return result
+    }
+
+    private fun colorStringtoArray (colors: String?): Array<String> {
+        var result = arrayOf<String>()
+        // TODO("Implement color string to array")
         return result
     }
 }

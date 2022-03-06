@@ -3,10 +3,10 @@ package magicchief.main.brewersservant.dataclass
 import java.net.URI
 
 class ImageURIs (
-    val png: URI,
-    val border_crop: URI,
-    val art_crop: URI,
-    val large: URI,
-    val normal: URI,
-    val small: URI
+    var png: URI? = null,
+    var border_crop: URI? = null,
+    var art_crop: URI? = null,
+    var large: URI? = null,
+    var normal: URI? = null,
+    var small: URI? = null
         )
