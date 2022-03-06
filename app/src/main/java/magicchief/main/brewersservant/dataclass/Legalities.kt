@@ -1,14 +1,14 @@
 package magicchief.main.brewersservant.dataclass
 
 class Legalities (
-    val standard: String,
-    val pioneer: String,
-    val modern: String,
-    val legacy: String,
-    val vintage: String,
-    val brawl: String,
-    val historic: String,
-    val pauper: String,
-    val penny: String,
-    val commander: String
+    var standard: String? = null,
+    var pioneer: String? = null,
+    var modern: String? = null,
+    var legacy: String? = null,
+    var vintage: String? = null,
+    var brawl: String? = null,
+    var historic: String? = null,
+    var pauper: String? = null,
+    var penny: String? = null,
+    var commander: String? = null
         )

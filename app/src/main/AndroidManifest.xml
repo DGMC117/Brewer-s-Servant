@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BrewersServant">
         <activity
+            android:name=".CardListActivity"
+            android:exported="false" />
+        <activity
             android:name=".CardDownloadActivity"
             android:exported="false" />
         <activity
