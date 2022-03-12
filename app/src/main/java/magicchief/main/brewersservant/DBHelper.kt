@@ -317,7 +317,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     fun getCards(): MutableList<Card> {
         val list: MutableList<Card> = ArrayList()
         val db = this.readableDatabase
-        val query = "SELECT * FROM $CARD_TABLE_NAME WHERE $CARD_TYPE_LINE LIKE '%sorcery%' ORDER BY $CARD_NAME LIMIT 50"
+        val query = "SELECT * FROM $CARD_TABLE_NAME WHERE $CARD_TYPE_LINE LIKE '%legendary%ench%creat%' ORDER BY $CARD_NAME LIMIT 50"
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
             do {
