@@ -5,4 +5,5 @@
     <string name="card_type_repeated">Card type already selected!</string>
     <string name="and">AND</string>
     <string name="or">OR</string>
+    <string name="text_hint">Card Text</string>
 </resources>

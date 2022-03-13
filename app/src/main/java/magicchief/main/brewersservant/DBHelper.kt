@@ -313,7 +313,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     @SuppressLint("Range")
-    fun getCards(cardName: String?, cardTypes: Array<String>?, isCardTypes: BooleanArray?, cardTypesAnd: Boolean): MutableList<Card> {
+    fun getCards(cardName: String?, cardTypes: Array<String>?, isCardTypes: BooleanArray?, cardTypesAnd: Boolean, cardText: String?): MutableList<Card> {
         var whereStarted = false
         var query = "SELECT * FROM $CARD_TABLE_NAME"
         if (cardName != null && cardName != "") {
@@ -330,6 +330,17 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                 query += " LIKE '%${cardTypes[k]}%'"
                 whereStarted = true
                 ++k
+            }
+            query += ")"
+        }
+        if (cardText != null && cardText != "") {
+            val words = cardText.split(" ")
+            var first = true
+            words.forEach {
+                query += if (!whereStarted) " WHERE (" else if (first) " AND (" else " AND"
+                query += " $CARD_ORACLE_TEXT LIKE '%${it}%'"
+                whereStarted = true
+                first = false
             }
             query += ")"
         }

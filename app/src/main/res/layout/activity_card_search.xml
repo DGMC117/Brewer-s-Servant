@@ -28,6 +28,7 @@
         app:singleSelection="true"/>
 
     <LinearLayout
+        android:id="@+id/card_type_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/card_type_chip_group"
@@ -70,6 +71,20 @@
                 android:text="@string/or"/>
         </com.google.android.material.chip.ChipGroup>
     </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/card_text_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/text_hint"
+        android:padding="5dp"
+        app:layout_constraintTop_toBottomOf="@id/card_type_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/search_fab"

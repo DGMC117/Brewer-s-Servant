@@ -52,6 +52,8 @@ class CardSearchActivity : AppCompatActivity() {
 
         val cardTypesAndOrChipGroup = findViewById<ChipGroup>(R.id.type_line_and_or_chip_group)
 
+        val cardTextTextView = findViewById<TextInputLayout>(R.id.card_text_search)
+
         val searchButton = findViewById<FloatingActionButton>(R.id.search_fab)
         searchButton.setOnClickListener {
             var cardTypesList = mutableListOf<String>()
@@ -68,6 +70,7 @@ class CardSearchActivity : AppCompatActivity() {
             intent.putExtra("card_types", cardTypesList.toTypedArray())
             intent.putExtra("is_card_types", isCardTypesList.toBooleanArray())
             intent.putExtra("card_type_and", (cardTypesAndOrChipGroup.get(0) as Chip).isChecked)
+            intent.putExtra("card_text", cardTextTextView.editText?.text.toString())
             startActivity(intent)
         }
     }
