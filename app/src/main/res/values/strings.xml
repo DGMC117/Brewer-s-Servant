@@ -3,4 +3,6 @@
     <string name="name_hint">Name</string>
     <string name="type_hint">Types and/or Subtypes</string>
     <string name="card_type_repeated">Card type already selected!</string>
+    <string name="and">AND</string>
+    <string name="or">OR</string>
 </resources>

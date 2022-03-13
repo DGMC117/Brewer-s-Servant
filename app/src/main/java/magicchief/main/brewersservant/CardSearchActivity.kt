@@ -1,18 +1,17 @@
 package magicchief.main.brewersservant
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.forEach
 import androidx.core.view.get
 import androidx.core.view.size
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
 
 class CardSearchActivity : AppCompatActivity() {
@@ -39,7 +38,7 @@ class CardSearchActivity : AppCompatActivity() {
             }
             if (notRepeated) {
                 val inflater = LayoutInflater.from(this)
-                val chipItem = inflater.inflate(R.layout.chip_item, null, false) as Chip
+                val chipItem = inflater.inflate(R.layout.entry_chip_item, null, false) as Chip
                 chipItem.text = row
                 chipItem.setOnCloseIconClickListener {
                     cardTypesChipGroup.removeView(it)
@@ -49,6 +48,27 @@ class CardSearchActivity : AppCompatActivity() {
             }
             else Toast.makeText(applicationContext, R.string.card_type_repeated, Toast.LENGTH_SHORT).show()
             (typeLineTextView.editText as? AutoCompleteTextView)?.setText("")
+        }
+
+        val cardTypesAndOrChipGroup = findViewById<ChipGroup>(R.id.type_line_and_or_chip_group)
+
+        val searchButton = findViewById<FloatingActionButton>(R.id.search_fab)
+        searchButton.setOnClickListener {
+            var cardTypesList = mutableListOf<String>()
+            var isCardTypesList = mutableListOf<Boolean>()
+            var k = 0
+            while (k < cardTypesChipGroup.size) {
+                val chip = cardTypesChipGroup.get(k) as Chip
+                cardTypesList.add(chip.text.toString())
+                isCardTypesList.add(chip.isChecked)
+                ++k
+            }
+            val intent = Intent (this, CardListActivity::class.java)
+            intent.putExtra("card_name", nameTextView.editText?.text.toString())
+            intent.putExtra("card_types", cardTypesList.toTypedArray())
+            intent.putExtra("is_card_types", isCardTypesList.toBooleanArray())
+            intent.putExtra("card_type_and", (cardTypesAndOrChipGroup.get(0) as Chip).isChecked)
+            startActivity(intent)
         }
     }
 }

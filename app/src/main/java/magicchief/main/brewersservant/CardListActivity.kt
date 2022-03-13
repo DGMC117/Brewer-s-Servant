@@ -14,8 +14,13 @@ class CardListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_card_list)
 
+        val cardName = intent.getStringExtra("card_name")
+        val cardTypesArray = intent.getStringArrayExtra("card_types")
+        val isCardTypesArray = intent.getBooleanArrayExtra("is_card_types")
+        val cardTypesAnd = intent.getBooleanExtra("card_type_and", true)
+
         val db = DBHelper(applicationContext)
-        val cards = db.getCards()
+        val cards = db.getCards(cardName, cardTypesArray, isCardTypesArray, cardTypesAnd)
 
         var card_list = findViewById<RecyclerView>(R.id.card_list)
         layoutManager = LinearLayoutManager (this)

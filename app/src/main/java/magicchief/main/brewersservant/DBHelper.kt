@@ -6,7 +6,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import androidx.core.database.getStringOrNull
-import androidx.core.net.toUri
 import magicchief.main.brewersservant.dataclass.Card
 import magicchief.main.brewersservant.dataclass.CardFace
 import magicchief.main.brewersservant.dataclass.Set
@@ -314,10 +313,30 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     @SuppressLint("Range")
-    fun getCards(): MutableList<Card> {
+    fun getCards(cardName: String?, cardTypes: Array<String>?, isCardTypes: BooleanArray?, cardTypesAnd: Boolean): MutableList<Card> {
+        var whereStarted = false
+        var query = "SELECT * FROM $CARD_TABLE_NAME"
+        if (cardName != null && cardName != "") {
+            query += if (whereStarted) " AND" else " WHERE"
+            query += " $CARD_NAME LIKE '%${cardName}%'"
+            whereStarted = true
+        }
+        if (!cardTypes.isNullOrEmpty() && isCardTypes != null && isCardTypes.isNotEmpty()) {
+            var k = 0
+            while (k < cardTypes.size) {
+                query += if (!whereStarted) " WHERE (" else if (k == 0) " AND (" else if (cardTypesAnd) " AND" else " OR"
+                query += " $CARD_TYPE_LINE"
+                if (!isCardTypes[k]) query += " NOT"
+                query += " LIKE '%${cardTypes[k]}%'"
+                whereStarted = true
+                ++k
+            }
+            query += ")"
+        }
+        query += " ORDER BY $CARD_NAME LIMIT 50"
+
         val list: MutableList<Card> = ArrayList()
         val db = this.readableDatabase
-        val query = "SELECT * FROM $CARD_TABLE_NAME WHERE $CARD_TYPE_LINE LIKE '%legendary%ench%creat%' ORDER BY $CARD_NAME LIMIT 50"
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
             do {
