@@ -6,4 +6,22 @@
     <string name="and">AND</string>
     <string name="or">OR</string>
     <string name="text_hint">Card Text</string>
+    <string name="add">+</string>
+    <string name="no_mana_value_selected">Mana value input is empty!</string>
+    <string name="mana_value">Mana Value:</string>
+    <string name="power">Power:</string>
+    <string name="no_power_selected">Power input is empty!</string>
+    <string name="toughness">Toughness:</string>
+    <string name="no_toughness_selected">Toughness input is empty!</string>
+    <string name="loyalty">Loyalty:</string>
+    <string name="no_loyalty_selected">Loyalty input is empty!</string>
+    <string name="rarity">Rarity:</string>
+    <string name="legality">Legality:</string>
+    <string name="layout">Layout:</string>
+    <string name="exactly_colors">Exactly</string>
+    <string name="including_colors">Including</string>
+    <string name="at_most_colors">At most</string>
+    <string name="card_color">Color</string>
+    <string name="commander_color_identity">Commander Color Identity</string>
+    <string name="produced_mana">Produced Mana</string>
 </resources>

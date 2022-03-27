@@ -6,7 +6,5 @@ import java.util.*
 class RelatedCard (
     val id: UUID,
     val component: String,  // token, meld_part, meld_result, combo_piece
-    val name: String,
-    val type_line: String,
-    val uri: URI
+    val name: String
         )

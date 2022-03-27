@@ -313,7 +313,9 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     @SuppressLint("Range")
-    fun getCards(cardName: String?, cardTypes: Array<String>?, isCardTypes: BooleanArray?, cardTypesAnd: Boolean, cardText: String?): MutableList<Card> {
+    fun getCards(cardName: String?, cardTypes: Array<String>?, isCardTypes: BooleanArray?, cardTypesAnd: Boolean, cardText: String?, manaValueParamsArray: Array<String>?,
+                 powerParamsArray: Array<String>?, toughnessParamsArray: Array<String>?, loyaltyParamsArray: Array<String>?, rarityParamsArray: Array<String>?, legalityParamsArray: Array<String>?,
+                 layoutParamsArray: Array<String>?): MutableList<Card> {
         var whereStarted = false
         var query = "SELECT * FROM $CARD_TABLE_NAME"
         if (cardName != null && cardName != "") {
@@ -341,6 +343,69 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                 query += " $CARD_ORACLE_TEXT LIKE '%${it}%'"
                 whereStarted = true
                 first = false
+            }
+            query += ")"
+        }
+        if (!manaValueParamsArray.isNullOrEmpty()) {
+            var k = 0
+            while (k < manaValueParamsArray.size) {
+                query += if (!whereStarted) " WHERE ($CARD_CMC ${manaValueParamsArray[k]}" else if (k == 0) " AND ($CARD_CMC ${manaValueParamsArray[k]}" else if (k % 2 == 0) " $CARD_CMC ${manaValueParamsArray[k]}" else " ${manaValueParamsArray[k]}"
+                whereStarted = true
+                ++k
+            }
+            query += ")"
+        }
+        if (!powerParamsArray.isNullOrEmpty()) {
+            var k = 0
+            while (k < powerParamsArray.size) {
+                query += if (!whereStarted) " WHERE ($CARD_POWER ${powerParamsArray[k]}" else if (k == 0) " AND ($CARD_POWER ${powerParamsArray[k]}" else if (k % 2 == 0) " $CARD_POWER ${powerParamsArray[k]}" else " ${powerParamsArray[k]}"
+                whereStarted = true
+                ++k
+            }
+            query += ")"
+        }
+        if (!toughnessParamsArray.isNullOrEmpty()) {
+            var k = 0
+            while (k < toughnessParamsArray.size) {
+                query += if (!whereStarted) " WHERE ($CARD_TOUGHNESS ${toughnessParamsArray[k]}" else if (k == 0) " AND ($CARD_TOUGHNESS ${toughnessParamsArray[k]}" else if (k % 2 == 0) " $CARD_TOUGHNESS ${toughnessParamsArray[k]}" else " ${toughnessParamsArray[k]}"
+                whereStarted = true
+                ++k
+            }
+            query += ")"
+        }
+        if (!loyaltyParamsArray.isNullOrEmpty()) {
+            var k = 0
+            while (k < loyaltyParamsArray.size) {
+                query += if (!whereStarted) " WHERE ($CARD_LOYALTY ${loyaltyParamsArray[k]}" else if (k == 0) " AND ($CARD_LOYALTY ${loyaltyParamsArray[k]}" else if (k % 2 == 0) " $CARD_LOYALTY ${loyaltyParamsArray[k]}" else " ${loyaltyParamsArray[k]}"
+                whereStarted = true
+                ++k
+            }
+            query += ")"
+        }
+        if (!rarityParamsArray.isNullOrEmpty()) {
+            var k = 0
+            while (k < rarityParamsArray.size) {
+                query += if (!whereStarted) " WHERE ($CARD_RARITY == '${rarityParamsArray[k].lowercase()}'" else if (k == 0) " AND ($CARD_RARITY == '${rarityParamsArray[k].lowercase()}'" else if (k % 2 == 0) " $CARD_RARITY == '${rarityParamsArray[k].lowercase()}'" else " ${rarityParamsArray[k]}"
+                whereStarted = true
+                ++k
+            }
+            query += ")"
+        }
+        if (!legalityParamsArray.isNullOrEmpty()) {
+            var k = 0
+            while (k < legalityParamsArray.size) {
+                query += if (!whereStarted) " WHERE (legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${legalityParamsArray[k].split(" ")[0].lowercase()}'" else if (k == 0) " AND (legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${legalityParamsArray[k].split(" ")[0].lowercase()}'" else if (k % 2 == 0) " legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${legalityParamsArray[k].split(" ")[0].lowercase()}'" else " ${legalityParamsArray[k]}"
+                whereStarted = true
+                ++k
+            }
+            query += ")"
+        }
+        if (!layoutParamsArray.isNullOrEmpty()) {
+            var k = 0
+            while (k < layoutParamsArray.size) {
+                query += if (!whereStarted) " WHERE ($CARD_LAYOUT == '${layoutParamsArray[k].lowercase().replace(" ", "_")}'" else if (k == 0) " AND ($CARD_LAYOUT == '${layoutParamsArray[k].lowercase().replace(" ", "_")}'" else if (k % 2 == 0) " $CARD_LAYOUT == '${layoutParamsArray[k].lowercase().replace(" ", "_")}'" else " ${layoutParamsArray[k]}"
+                whereStarted = true
+                ++k
             }
             query += ")"
         }

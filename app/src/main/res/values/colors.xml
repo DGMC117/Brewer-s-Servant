@@ -3,6 +3,14 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="mtg_white">#F9FAF4</color>
+    <color name="mtg_blue">#0E68AB</color>
+    <color name="mtg_black">#150B00</color>
+    <color name="mtg_red">#D3202A</color>
+    <color name="mtg_green">#00733E</color>
+    <color name="mtg_colorless">#030301</color>
+    <color name="mtg_symbol_back">#b0c2c4</color>
+
     <color name="primaryColor">#ad1456</color>
     <color name="primaryLightColor">#e35182</color>
     <color name="primaryDarkColor">#78002e</color>
@@ -17,7 +25,7 @@
     <color name="colorError">#C5032B</color>
     <color name="colorOnError">#ffffff</color>
 
-    <color name="colorSurface">#555555</color>
+    <color name="colorSurface">#3E3E3E</color>
     <color name="colorOnSurface">#ffffff</color>
 
     <color name="colorBackground">#000000</color>
