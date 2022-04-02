@@ -9,14 +9,17 @@ import android.view.View
 import android.widget.*
 import androidx.core.view.get
 import androidx.core.view.size
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import okhttp3.internal.wait
 import org.w3c.dom.Text
+import kotlin.system.exitProcess
 
 class CardSearchActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
@@ -445,6 +448,48 @@ class CardSearchActivity : AppCompatActivity() {
             }
         }
 
+        val manaCostTextInput = findViewById<TextInputLayout>(R.id.mana_cost_text_input)
+
+        val manaCostSymbols = arrayOf("\uE600")
+        val manaCostAddSymbolButton = findViewById<Button>(R.id.add_mana_symbol_button)
+        manaCostAddSymbolButton.setOnClickListener {
+            MaterialAlertDialogBuilder(this, R.style.SymbolChoiceDialog).setTitle(R.string.add_mana_symbol)
+                .setItems(manaCostSymbols){ dialog, which ->
+                    Toast.makeText(applicationContext, "w", Toast.LENGTH_SHORT).show()
+                }.show()
+        }
+
+        val colorOperatorToggle = findViewById<MaterialButtonToggleGroup>(R.id.color_operator_toggle_group)
+        colorOperatorToggle.check(R.id.color_exactly_button)
+
+        val colorToggleGroup = findViewById<MaterialButtonToggleGroup>(R.id.color_toggle_group)
+        colorToggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                if (checkedId == R.id.color_colorless_button) {
+                    group.clearChecked()
+                    group.check(checkedId)
+                } else {
+                    group.uncheck(R.id.color_colorless_button)
+                }
+            }
+        }
+
+        val colorIdentityToggleGroup = findViewById<MaterialButtonToggleGroup>(R.id.color_identity_toggle_group)
+        colorIdentityToggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                if (checkedId == R.id.color_identity_colorless_button) {
+                    group.clearChecked()
+                    group.check(checkedId)
+                } else {
+                    group.uncheck(R.id.color_identity_colorless_button)
+                }
+            }
+        }
+
+        val producedManaToggleGroup = findViewById<MaterialButtonToggleGroup>(R.id.produced_mana_toggle_group)
+
+        val cardFlavorTextTextView = findViewById<TextInputLayout>(R.id.card_flavor_text_search)
+
         val searchButton = findViewById<FloatingActionButton>(R.id.search_fab)
         searchButton.setOnClickListener {
             var cardTypesList = mutableListOf<String>()
@@ -505,6 +550,7 @@ class CardSearchActivity : AppCompatActivity() {
                 layoutParameters.add(chip.text.toString())
                 ++k
             }
+            val colorOperator = if (colorOperatorToggle.checkedButtonId == R.id.color_exactly_button) "exactly" else if (colorOperatorToggle.checkedButtonId == R.id.color_including_button) "including" else "at_most"
 
             val intent = Intent (this, CardListActivity::class.java)
             intent.putExtra("card_name", nameTextView.editText?.text.toString())
@@ -519,7 +565,57 @@ class CardSearchActivity : AppCompatActivity() {
             intent.putExtra("rarity_params", rarityParameters.toTypedArray())
             intent.putExtra("legality_params", legalityParameters.toTypedArray())
             intent.putExtra("layout_params", layoutParameters.toTypedArray())
+            intent.putExtra("color", getColorsSelectedArray(colorToggleGroup, "color"))
+            intent.putExtra("color_operator", colorOperator)
+            intent.putExtra("color_identity", getColorsSelectedArray(colorIdentityToggleGroup, "identity"))
+            intent.putExtra("produced_mana", getColorsSelectedArray(producedManaToggleGroup, "produced"))
+            intent.putExtra("card_flavor_text", cardFlavorTextTextView.editText?.text.toString())
             startActivity(intent)
         }
+    }
+
+    fun getColorsSelectedArray(colorToggleGroup: MaterialButtonToggleGroup, type: String): String {
+        var result = ""
+        val checkedIds = colorToggleGroup.checkedButtonIds
+        if (checkedIds.size < 1) return result
+        else {
+            if (type == "color") {
+                checkedIds.forEach {
+                    when (it) {
+                        R.id.color_white_button -> result += if (result.length < 1) "W" else ",W"
+                        R.id.color_blue_button -> result += if (result.length < 1) "U" else ",U"
+                        R.id.color_black_button -> result += if (result.length < 1) "B" else ",B"
+                        R.id.color_red_button -> result += if (result.length < 1) "R" else ",R"
+                        R.id.color_green_button -> result += if (result.length < 1) "G" else ",G"
+                        else -> result = "C"
+                    }
+                }
+            }
+            else if (type == "identity") {
+                checkedIds.forEach {
+                    when (it) {
+                        R.id.color_identity_white_button -> result += if (result.length < 1) "W" else ",W"
+                        R.id.color_identity_blue_button -> result += if (result.length < 1) "U" else ",U"
+                        R.id.color_identity_black_button -> result += if (result.length < 1) "B" else ",B"
+                        R.id.color_identity_red_button -> result += if (result.length < 1) "R" else ",R"
+                        R.id.color_identity_green_button -> result += if (result.length < 1) "G" else ",G"
+                        else -> result = "C"
+                    }
+                }
+            }
+            else {
+                checkedIds.forEach {
+                    when (it) {
+                        R.id.produced_mana_white_button -> result += if (result.length < 1) "W" else ",W"
+                        R.id.produced_mana_blue_button -> result += if (result.length < 1) "U" else ",U"
+                        R.id.produced_mana_black_button -> result += if (result.length < 1) "B" else ",B"
+                        R.id.produced_mana_red_button -> result += if (result.length < 1) "R" else ",R"
+                        R.id.produced_mana_green_button -> result += if (result.length < 1) "G" else ",G"
+                        else -> result += if (result.length < 1) "C" else ",C"
+                    }
+                }
+            }
+        }
+        return result
     }
 }

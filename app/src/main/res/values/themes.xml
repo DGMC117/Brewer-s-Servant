@@ -73,4 +73,6 @@
         <item name="dividerInsetStart">100dp</item>
         <item name="dividerInsetEnd">100dp</item>
     </style>
+    <style name="SymbolChoiceDialog" parent="ThemeOverlay.MaterialComponents">
+    </style>
 </resources>

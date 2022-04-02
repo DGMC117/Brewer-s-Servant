@@ -315,7 +315,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     @SuppressLint("Range")
     fun getCards(cardName: String?, cardTypes: Array<String>?, isCardTypes: BooleanArray?, cardTypesAnd: Boolean, cardText: String?, manaValueParamsArray: Array<String>?,
                  powerParamsArray: Array<String>?, toughnessParamsArray: Array<String>?, loyaltyParamsArray: Array<String>?, rarityParamsArray: Array<String>?, legalityParamsArray: Array<String>?,
-                 layoutParamsArray: Array<String>?): MutableList<Card> {
+                 layoutParamsArray: Array<String>?, cardColor: String?, colorOperator: String?, cardColorIdentity: String?, cardProducedMana: String?, cardFlavorText: String?): MutableList<Card> {
         var whereStarted = false
         var query = "SELECT * FROM $CARD_TABLE_NAME"
         if (cardName != null && cardName != "") {
@@ -409,6 +409,98 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             }
             query += ")"
         }
+        if (cardColor != null && cardColor != "") {
+            if (cardColor == "C") query += if (!whereStarted) " WHERE ($CARD_COLORS == ''" else " AND ($CARD_COLORS == ''"
+            else {
+                when (colorOperator) {
+                    "exactly"->{
+                        val colors = colorStringtoArray(cardColor)
+                        val colorsNotSelected = mutableListOf("W", "U", "B", "R", "G")
+                        var k = 0
+                        while (k < colors.size) {
+                            query += if (!whereStarted) " WHERE ($CARD_COLORS LIKE '%${colors[k]}%'" else if (k == 0) " AND ($CARD_COLORS LIKE '%${colors[k]}%'" else " AND $CARD_COLORS LIKE '%${colors[k]}%'"
+                            colorsNotSelected.remove(colors[k])
+                            whereStarted = true
+                            ++k
+                        }
+                        k = 0
+                        while (k < colorsNotSelected.size) {
+                            query += if (k == 0) ") AND ($CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'" else " AND $CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'"
+                            ++k
+                        }
+                    }
+                    "including"->{
+                        val colors = colorStringtoArray(cardColor)
+                        var k = 0
+                        while (k < colors.size) {
+                            query += if (!whereStarted) " WHERE ($CARD_COLORS LIKE '%${colors[k]}%'" else if (k == 0) " AND ($CARD_COLORS LIKE '%${colors[k]}%'" else " AND $CARD_COLORS LIKE '%${colors[k]}%'"
+                            whereStarted = true
+                            ++k
+                        }
+                    }
+                    else->{
+                        val colors = colorStringtoArray(cardColor)
+                        val colorsNotSelected = mutableListOf("W", "U", "B", "R", "G")
+                        var k = 0
+                        while (k < colors.size) {
+                            query += if (!whereStarted) " WHERE ($CARD_COLORS LIKE '%${colors[k]}%'" else if (k == 0) " AND ($CARD_COLORS LIKE '%${colors[k]}%'" else " OR $CARD_COLORS LIKE '%${colors[k]}%'"
+                            colorsNotSelected.remove(colors[k])
+                            whereStarted = true
+                            ++k
+                        }
+                        k = 0
+                        while (k < colorsNotSelected.size) {
+                            query += if (k == 0) ") AND ($CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'" else " AND $CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'"
+                            ++k
+                        }
+                    }
+                }
+            }
+            whereStarted = true
+            query += ")"
+        }
+        if (cardColorIdentity != null && cardColorIdentity != "") {
+            if (cardColorIdentity == "C") query += if (!whereStarted) " WHERE ($CARD_COLOR_IDENTITY == ''" else " AND ($CARD_COLOR_IDENTITY == ''"
+            else {
+                val colors = colorStringtoArray(cardColorIdentity)
+                val colorsNotInIdentity = mutableListOf("W", "U", "B", "R", "G")
+                var k = 0
+                while (k < colors.size) {
+                    query += if (!whereStarted) " WHERE ($CARD_COLOR_IDENTITY LIKE '%${colors[k]}%'" else if (k == 0) " AND ($CARD_COLOR_IDENTITY LIKE '%${colors[k]}%'" else " OR $CARD_COLOR_IDENTITY LIKE '%${colors[k]}%'"
+                    colorsNotInIdentity.remove(colors[k])
+                    whereStarted = true
+                    ++k
+                }
+                k = 0
+                while (k < colorsNotInIdentity.size) {
+                    query += if (k == 0) ") AND ($CARD_COLOR_IDENTITY NOT LIKE '%${colorsNotInIdentity[k]}%'" else " AND $CARD_COLOR_IDENTITY NOT LIKE '%${colorsNotInIdentity[k]}%'"
+                    ++k
+                }
+            }
+            whereStarted = true
+            query += ")"
+        }
+        if (cardProducedMana != null && cardProducedMana != "") {
+            val colors = colorStringtoArray(cardProducedMana)
+            var k = 0
+            while (k < colors.size) {
+                query += if (!whereStarted) " WHERE ($CARD_PRODUCED_MANA LIKE '%${colors[k]}%'" else if (k == 0) " AND ($CARD_PRODUCED_MANA LIKE '%${colors[k]}%'" else " AND $CARD_PRODUCED_MANA LIKE '%${colors[k]}%'"
+                whereStarted = true
+                ++k
+            }
+            query += ")"
+        }
+        if (cardFlavorText != null && cardFlavorText != "") {
+            val words = cardFlavorText.split(" ")
+            var first = true
+            words.forEach {
+                query += if (!whereStarted) " WHERE (" else if (first) " AND (" else " AND"
+                query += " $CARD_FLAVOR_TEXT LIKE '%${it}%'"
+                whereStarted = true
+                first = false
+            }
+            query += ")"
+        }
         query += " ORDER BY $CARD_NAME LIMIT 50"
 
         val list: MutableList<Card> = ArrayList()
@@ -472,7 +564,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
 
     private fun colorStringtoArray (colors: String?): Array<String> {
         var result = arrayOf<String>()
-        // TODO("Implement color string to array")
+        if (colors == "") return result
+        if (colors != null) result = colors.split(",").toTypedArray()
         return result
     }
 }
