@@ -56,6 +56,7 @@
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_mana.xml" value="0.3165" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_p_cost.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_pw_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_q_cost.xml" value="0.3165" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_rg_cost.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_rgp_cost.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_rw_cost.xml" value="0.5475" />
@@ -81,6 +82,7 @@
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/chip_item.xml" value="0.31354166666666666" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/entry_chip_item.xml" value="0.4995471014492754" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/list_item.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/mana_cost_symbol_dialog.xml" value="0.5541666666666667" />
       </map>
     </option>
   </component>

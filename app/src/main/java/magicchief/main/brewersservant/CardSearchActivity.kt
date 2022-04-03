@@ -2,11 +2,17 @@ package magicchief.main.brewersservant
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.get
 import androidx.core.view.size
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -450,13 +456,258 @@ class CardSearchActivity : AppCompatActivity() {
 
         val manaCostTextInput = findViewById<TextInputLayout>(R.id.mana_cost_text_input)
 
-        val manaCostSymbols = arrayOf("\uE600")
         val manaCostAddSymbolButton = findViewById<Button>(R.id.add_mana_symbol_button)
         manaCostAddSymbolButton.setOnClickListener {
-            MaterialAlertDialogBuilder(this, R.style.SymbolChoiceDialog).setTitle(R.string.add_mana_symbol)
-                .setItems(manaCostSymbols){ dialog, which ->
-                    Toast.makeText(applicationContext, "w", Toast.LENGTH_SHORT).show()
-                }.show()
+            val manaCostSymbolDialog = LayoutInflater.from(this).inflate(R.layout.mana_cost_symbol_dialog, null, false)
+            val dialog = MaterialAlertDialogBuilder(this)
+                .setView(manaCostSymbolDialog)
+                .setTitle(R.string.add_mana_symbol)
+                .show()
+            val costWLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_w_layout)
+            costWLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{W}")
+                dialog.dismiss()
+            }
+            val costULayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_u_layout)
+            costULayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{U}")
+                dialog.dismiss()
+            }
+            val costBLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_b_layout)
+            costBLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{B}")
+                dialog.dismiss()
+            }
+            val costRLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_r_layout)
+            costRLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{R}")
+                dialog.dismiss()
+            }
+            val costGLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_g_layout)
+            costGLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{G}")
+                dialog.dismiss()
+            }
+            val costWULayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_wu_layout)
+            costWULayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{W/U}")
+                dialog.dismiss()
+            }
+            val costUBLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_ub_layout)
+            costUBLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{U/B}")
+                dialog.dismiss()
+            }
+            val costBRLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_br_layout)
+            costBRLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{B/R}")
+                dialog.dismiss()
+            }
+            val costRGLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_rg_layout)
+            costRGLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{R/G}")
+                dialog.dismiss()
+            }
+            val costGWLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_gw_layout)
+            costGWLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{G/W}")
+                dialog.dismiss()
+            }
+            val costWBLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_wb_layout)
+            costWBLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{W/B}")
+                dialog.dismiss()
+            }
+            val costURLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_ur_layout)
+            costURLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{U/R}")
+                dialog.dismiss()
+            }
+            val costBGLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_bg_layout)
+            costBGLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{B/G}")
+                dialog.dismiss()
+            }
+            val costRWLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_rw_layout)
+            costRWLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{R/W}")
+                dialog.dismiss()
+            }
+            val costGULayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_gu_layout)
+            costGULayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{G/U}")
+                dialog.dismiss()
+            }
+            val costWPLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_wp_layout)
+            costWPLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{W/P}")
+                dialog.dismiss()
+            }
+            val costUPLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_up_layout)
+            costUPLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{U/P}")
+                dialog.dismiss()
+            }
+            val costBPLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_bp_layout)
+            costBPLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{B/P}")
+                dialog.dismiss()
+            }
+            val costRPLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_rp_layout)
+            costRPLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{R/P}")
+                dialog.dismiss()
+            }
+            val costGPLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_gp_layout)
+            costGPLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{G/P}")
+                dialog.dismiss()
+            }
+            val cost2WLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_2w_layout)
+            cost2WLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{2/W}")
+                dialog.dismiss()
+            }
+            val cost2ULayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_2u_layout)
+            cost2ULayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{2/U}")
+                dialog.dismiss()
+            }
+            val cost2BLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_2b_layout)
+            cost2BLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{2/B}")
+                dialog.dismiss()
+            }
+            val cost2RLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_2r_layout)
+            cost2RLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{2/R}")
+                dialog.dismiss()
+            }
+            val cost2GLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_2g_layout)
+            cost2GLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{2/G}")
+                dialog.dismiss()
+            }
+            val costCLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_c_layout)
+            costCLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{C}")
+                dialog.dismiss()
+            }
+            val costSLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_s_layout)
+            costSLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{S}")
+                dialog.dismiss()
+            }
+            val cost0Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_0_layout)
+            cost0Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{0}")
+                dialog.dismiss()
+            }
+            val cost1Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_1_layout)
+            cost1Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{1}")
+                dialog.dismiss()
+            }
+            val cost2Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_2_layout)
+            cost2Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{2}")
+                dialog.dismiss()
+            }
+            val cost3Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_3_layout)
+            cost3Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{3}")
+                dialog.dismiss()
+            }
+            val cost4Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_4_layout)
+            cost4Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{4}")
+                dialog.dismiss()
+            }
+            val cost5Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_5_layout)
+            cost5Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{5}")
+                dialog.dismiss()
+            }
+            val cost6Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_6_layout)
+            cost6Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{6}")
+                dialog.dismiss()
+            }
+            val cost7Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_7_layout)
+            cost7Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{7}")
+                dialog.dismiss()
+            }
+            val cost8Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_8_layout)
+            cost8Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{8}")
+                dialog.dismiss()
+            }
+            val cost9Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_9_layout)
+            cost9Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{9}")
+                dialog.dismiss()
+            }
+            val cost10Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_10_layout)
+            cost10Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{10}")
+                dialog.dismiss()
+            }
+            val cost11Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_11_layout)
+            cost11Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{11}")
+                dialog.dismiss()
+            }
+            val cost12Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_12_layout)
+            cost12Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{12}")
+                dialog.dismiss()
+            }
+            val cost13Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_13_layout)
+            cost13Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{13}")
+                dialog.dismiss()
+            }
+            val cost15Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_15_layout)
+            cost15Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{15}")
+                dialog.dismiss()
+            }
+            val cost16Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_16_layout)
+            cost16Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{16}")
+                dialog.dismiss()
+            }
+            val costXLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_x_layout)
+            costXLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{X}")
+                dialog.dismiss()
+            }
+            val costGUPLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_gup_layout)
+            costGUPLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{G/U/P}")
+                dialog.dismiss()
+            }
+            val costYLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_y_layout)
+            costYLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{Y}")
+                dialog.dismiss()
+            }
+            val costZLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_z_layout)
+            costZLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{Z}")
+                dialog.dismiss()
+            }
+            val cost1000000Layout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_1000000_layout)
+            cost1000000Layout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{1000000}")
+                dialog.dismiss()
+            }
+            val costHWLayout = manaCostSymbolDialog.findViewById<LinearLayout>(R.id.cost_hw_layout)
+            costHWLayout.setOnClickListener {
+                manaCostTextInput.editText?.setText(manaCostTextInput.editText?.text.toString() + "{HW}")
+                dialog.dismiss()
+            }
         }
 
         val colorOperatorToggle = findViewById<MaterialButtonToggleGroup>(R.id.color_operator_toggle_group)
@@ -565,6 +816,7 @@ class CardSearchActivity : AppCompatActivity() {
             intent.putExtra("rarity_params", rarityParameters.toTypedArray())
             intent.putExtra("legality_params", legalityParameters.toTypedArray())
             intent.putExtra("layout_params", layoutParameters.toTypedArray())
+            intent.putExtra("mana_cost", manaCostTextInput.editText?.text.toString())
             intent.putExtra("color", getColorsSelectedArray(colorToggleGroup, "color"))
             intent.putExtra("color_operator", colorOperator)
             intent.putExtra("color_identity", getColorsSelectedArray(colorIdentityToggleGroup, "identity"))
@@ -617,5 +869,124 @@ class CardSearchActivity : AppCompatActivity() {
             }
         }
         return result
+    }
+
+    fun getSymbolDrawable (str: String): Drawable {
+        when (str) {
+            "{T}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_t_cost)!!
+            "{Q}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_q_cost)!!
+            "{E}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_e_cost)!!
+            "{PW}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_pw_cost)!!
+            "{CHAOS}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_chaos_cost
+            )!!
+            "{A}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_a_cost)!!
+            "{X}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_x_cost)!!
+            "{Y}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_y_cost)!!
+            "{Z}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_z_cost)!!
+            "{0}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_0_cost)!!
+            "{1}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_1_cost)!!
+            "{2}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2_cost)!!
+            "{3}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_3_cost)!!
+            "{4}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_4_cost)!!
+            "{5}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_5_cost)!!
+            "{6}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_6_cost)!!
+            "{7}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_7_cost)!!
+            "{8}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_8_cost)!!
+            "{9}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_9_cost)!!
+            "{10}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_10_cost)!!
+            "{11}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_11_cost)!!
+            "{12}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_12_cost)!!
+            "{13}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_13_cost)!!
+            "{14}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_14_cost)!!
+            "{15}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_15_cost)!!
+            "{16}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_16_cost)!!
+            "{17}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_17_cost)!!
+            "{18}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_18_cost)!!
+            "{19}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_19_cost)!!
+            "{20}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_20_cost)!!
+            "{100}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_100_cost
+            )!!
+            "{1000000}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_1000000_cost
+            )!!
+            "{∞}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_infinity_cost
+            )!!
+            "{W/U}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_wu_cost)!!
+            "{W/B}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_wb_cost)!!
+            "{B/R}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_br_cost)!!
+            "{B/G}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_bg_cost)!!
+            "{U/B}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_ub_cost)!!
+            "{U/R}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_ur_cost)!!
+            "{R/G}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_rg_cost)!!
+            "{R/W}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_rw_cost)!!
+            "{G/W}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_gw_cost)!!
+            "{G/U}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_gu_cost)!!
+            "{W/U/P}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_wup_cost
+            )!!
+            "{W/B/P}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_wbp_cost
+            )!!
+            "{B/R/P}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_brp_cost
+            )!!
+            "{B/G/P}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_bgp_cost
+            )!!
+            "{U/B/P}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_ubp_cost
+            )!!
+            "{U/R/P}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_urp_cost
+            )!!
+            "{R/G/P}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_rgp_cost
+            )!!
+            "{R/W/P}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_rwp_cost
+            )!!
+            "{G/W/P}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_gwp_cost
+            )!!
+            "{G/U/P}" -> return AppCompatResources.getDrawable(
+                this,
+                R.drawable.ic_gup_cost
+            )!!
+            "{2W}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2w_cost)!!
+            "{2U}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2u_cost)!!
+            "{2B}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2b_cost)!!
+            "{2R}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2r_cost)!!
+            "{2G}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2g_cost)!!
+            "{W}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_w_cost)!!
+            "{U}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_u_cost)!!
+            "{B}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_b_cost)!!
+            "{R}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_r_cost)!!
+            "{G}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_g_cost)!!
+            "{P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_p_cost)!!
+            "{W/P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_wp_cost)!!
+            "{U/P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_up_cost)!!
+            "{B/P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_bp_cost)!!
+            "{R/P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_rp_cost)!!
+            "{G/P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_gp_cost)!!
+            "{C}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_c_cost)!!
+            "{S}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_s_cost)!!
+            else -> return AppCompatResources.getDrawable(this, R.drawable.ic_chaos_cost)!!
+        }
     }
 }

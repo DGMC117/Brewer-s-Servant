@@ -1,7 +1,11 @@
 package magicchief.main.brewersservant
 
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ImageSpan
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -26,6 +30,7 @@ class CardListActivity : AppCompatActivity() {
         val rarityParamsArray = intent.getStringArrayExtra("rarity_params")
         val legalityParamsArray = intent.getStringArrayExtra("legality_params")
         val layoutParamsArray = intent.getStringArrayExtra("layout_params")
+        val manaCost = intent.getStringExtra("mana_cost")
         val cardColor = intent.getStringExtra("color")
         val colorOperator = intent.getStringExtra("color_operator")
         val cardColorIdentity = intent.getStringExtra("color_identity")
@@ -34,12 +39,12 @@ class CardListActivity : AppCompatActivity() {
 
         val db = DBHelper(applicationContext)
         val cards = db.getCards(cardName, cardTypesArray, isCardTypesArray, cardTypesAnd, cardText, manaValueParamsArray, powerParamsArray, toughnessParamsArray, loyaltyParamsArray, rarityParamsArray, legalityParamsArray, layoutParamsArray,
-        cardColor, colorOperator, cardColorIdentity, cardProducedMana, cardFlavorText)
+        manaCost, cardColor, colorOperator, cardColorIdentity, cardProducedMana, cardFlavorText)
 
         var cardList = findViewById<RecyclerView>(R.id.card_list)
         layoutManager = LinearLayoutManager (this)
         cardList.layoutManager = layoutManager
-        adapter = CardListAdapter(cards)
+        adapter = CardListAdapter(cards, this)
         cardList.adapter = adapter
     }
 }

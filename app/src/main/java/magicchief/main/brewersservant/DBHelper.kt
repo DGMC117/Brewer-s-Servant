@@ -5,6 +5,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ImageSpan
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.database.getStringOrNull
 import magicchief.main.brewersservant.dataclass.Card
 import magicchief.main.brewersservant.dataclass.CardFace
@@ -14,6 +19,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+    val parentContext = context
 
     override fun onCreate(db: SQLiteDatabase) {
         // Define SQL instructions
@@ -136,6 +142,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
 
         // Card table name
         private val CARD_TABLE_NAME = "Card"
+
         // Card table column names
         private val CARD_ID = "id"
         private val CARD_SCRYFALL_ID = "scryfall_id"
@@ -177,6 +184,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
 
         // CardFace table name
         private val CARD_FACE_TABLE_NAME = "CardFace"
+
         // CardFace table column names
         private val CARD_FACE_ID = "id"
         private val CARD_FACE_SCRYFALL_ID_MAIN_CARD = "id_main_card_scryfall"
@@ -201,6 +209,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
 
         // RelatedCard table name
         private val RELATED_CARD_TABLE_NAME = "RelatedCard"
+
         // RelatedCard table column names
         private val RELATED_CARD_ID = "id"
         private val RELATED_CARD_SCRYFALL_ID_MAIN = "id_main_scryfall"
@@ -209,6 +218,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
 
         // CardSet table name
         private val CARD_SET_TABLE_NAME = "CardSet"
+
         // CardSet table column names
         private val CARD_SET_SET_ID = "id"
         private val CARD_SET_SCRYFALL_SET_ID = "scryfall_set_id"
@@ -218,7 +228,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
 
     }
 
-    fun addCardSet (cardSet: Set): Long {
+    fun addCardSet(cardSet: Set): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(CARD_SET_SCRYFALL_SET_ID, cardSet.id.toString())
@@ -230,7 +240,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         return result
     }
 
-    fun addCard (card: Card): Long {
+    fun addCard(card: Card): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(CARD_SCRYFALL_ID, card.id.toString())
@@ -243,7 +253,10 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         contentValues.put(CARD_NAME, card.name)
         contentValues.put(CARD_ORACLE_TEXT, card.oracle_text) // Missing Null Check
         contentValues.put(CARD_POWER, card.power) // Missing Null Check
-        contentValues.put(CARD_PRODUCED_MANA, colorArrayToString(card.produced_mana)) // Missing Null Check
+        contentValues.put(
+            CARD_PRODUCED_MANA,
+            colorArrayToString(card.produced_mana)
+        ) // Missing Null Check
         contentValues.put(CARD_TOUGHNESS, card.toughness) // Missing Null Check
         contentValues.put(CARD_TYPE_LINE, card.type_line)
         contentValues.put(CARD_ARTIST, card.artist) // Missing Null Check
@@ -263,23 +276,44 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         contentValues.put(CARD_LEGAL_PAUPER, card.legalities?.pauper)
         contentValues.put(CARD_LEGAL_PENNY, card.legalities?.penny)
         contentValues.put(CARD_LEGAL_COMMANDER, card.legalities?.commander)
-        contentValues.put(CARD_IMAGE_PNG, if (card.image_uris != null) card.image_uris.png.toString() else null)
-        contentValues.put(CARD_IMAGE_BORDER_CROP, if (card.image_uris != null) card.image_uris.border_crop.toString() else null)
-        contentValues.put(CARD_IMAGE_ART_CROP, if (card.image_uris != null) card.image_uris.art_crop.toString() else null)
-        contentValues.put(CARD_IMAGE_LARGE, if (card.image_uris != null) card.image_uris.large.toString() else null)
-        contentValues.put(CARD_IMAGE_NORMAL, if (card.image_uris != null) card.image_uris.normal.toString() else null)
-        contentValues.put(CARD_IMAGE_SMALL, if (card.image_uris != null) card.image_uris.small.toString() else null)
+        contentValues.put(
+            CARD_IMAGE_PNG,
+            if (card.image_uris != null) card.image_uris.png.toString() else null
+        )
+        contentValues.put(
+            CARD_IMAGE_BORDER_CROP,
+            if (card.image_uris != null) card.image_uris.border_crop.toString() else null
+        )
+        contentValues.put(
+            CARD_IMAGE_ART_CROP,
+            if (card.image_uris != null) card.image_uris.art_crop.toString() else null
+        )
+        contentValues.put(
+            CARD_IMAGE_LARGE,
+            if (card.image_uris != null) card.image_uris.large.toString() else null
+        )
+        contentValues.put(
+            CARD_IMAGE_NORMAL,
+            if (card.image_uris != null) card.image_uris.normal.toString() else null
+        )
+        contentValues.put(
+            CARD_IMAGE_SMALL,
+            if (card.image_uris != null) card.image_uris.small.toString() else null
+        )
         val result = db.insert(CARD_TABLE_NAME, null, contentValues)
         db.close()
         return result
     }
 
-    fun addCardFace (cardFace: CardFace, mainCardId: UUID): Long {
+    fun addCardFace(cardFace: CardFace, mainCardId: UUID): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(CARD_FACE_SCRYFALL_ID_MAIN_CARD, mainCardId.toString())
         contentValues.put(CARD_FACE_CMC, cardFace.cmc) // Missing Null Check
-        contentValues.put(CARD_FACE_COLORS, colorArrayToString(cardFace.colors)) // Missing Null Check
+        contentValues.put(
+            CARD_FACE_COLORS,
+            colorArrayToString(cardFace.colors)
+        ) // Missing Null Check
         contentValues.put(CARD_FACE_LAYOUT, cardFace.layout) // Missing Null Check
         contentValues.put(CARD_FACE_LOYALTY, cardFace.loyalty) // Missing Null Check
         contentValues.put(CARD_FACE_MANA_COST, cardFace.mana_cost)
@@ -290,18 +324,36 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         contentValues.put(CARD_FACE_TYPE_LINE, cardFace.type_line) // Missing Null Check
         contentValues.put(CARD_FACE_ARTIST, cardFace.artist) // Missing Null Check
         contentValues.put(CARD_FACE_FLAVOR_TEXT, cardFace.flavor_text) // Missing Null Check
-        contentValues.put(CARD_FACE_IMAGE_PNG, if (cardFace.image_uris != null) cardFace.image_uris.png.toString() else null)
-        contentValues.put(CARD_FACE_IMAGE_BORDER_CROP, if (cardFace.image_uris != null) cardFace.image_uris.border_crop.toString() else null)
-        contentValues.put(CARD_FACE_IMAGE_ART_CROP, if (cardFace.image_uris != null) cardFace.image_uris.art_crop.toString() else null)
-        contentValues.put(CARD_FACE_IMAGE_LARGE, if (cardFace.image_uris != null) cardFace.image_uris.large.toString() else null)
-        contentValues.put(CARD_FACE_IMAGE_NORMAL, if (cardFace.image_uris != null) cardFace.image_uris.normal.toString() else null)
-        contentValues.put(CARD_FACE_IMAGE_SMALL, if (cardFace.image_uris != null) cardFace.image_uris.small.toString() else null)
+        contentValues.put(
+            CARD_FACE_IMAGE_PNG,
+            if (cardFace.image_uris != null) cardFace.image_uris.png.toString() else null
+        )
+        contentValues.put(
+            CARD_FACE_IMAGE_BORDER_CROP,
+            if (cardFace.image_uris != null) cardFace.image_uris.border_crop.toString() else null
+        )
+        contentValues.put(
+            CARD_FACE_IMAGE_ART_CROP,
+            if (cardFace.image_uris != null) cardFace.image_uris.art_crop.toString() else null
+        )
+        contentValues.put(
+            CARD_FACE_IMAGE_LARGE,
+            if (cardFace.image_uris != null) cardFace.image_uris.large.toString() else null
+        )
+        contentValues.put(
+            CARD_FACE_IMAGE_NORMAL,
+            if (cardFace.image_uris != null) cardFace.image_uris.normal.toString() else null
+        )
+        contentValues.put(
+            CARD_FACE_IMAGE_SMALL,
+            if (cardFace.image_uris != null) cardFace.image_uris.small.toString() else null
+        )
         val result = db.insert(CARD_FACE_TABLE_NAME, null, contentValues)
         db.close()
         return result
     }
 
-    fun addRelatedCard (mainCardId: UUID, relatedCardId: UUID, componentType: String): Long {
+    fun addRelatedCard(mainCardId: UUID, relatedCardId: UUID, componentType: String): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(RELATED_CARD_SCRYFALL_ID_MAIN, mainCardId.toString())
@@ -313,9 +365,26 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     @SuppressLint("Range")
-    fun getCards(cardName: String?, cardTypes: Array<String>?, isCardTypes: BooleanArray?, cardTypesAnd: Boolean, cardText: String?, manaValueParamsArray: Array<String>?,
-                 powerParamsArray: Array<String>?, toughnessParamsArray: Array<String>?, loyaltyParamsArray: Array<String>?, rarityParamsArray: Array<String>?, legalityParamsArray: Array<String>?,
-                 layoutParamsArray: Array<String>?, cardColor: String?, colorOperator: String?, cardColorIdentity: String?, cardProducedMana: String?, cardFlavorText: String?): MutableList<Card> {
+    fun getCards(
+        cardName: String?,
+        cardTypes: Array<String>?,
+        isCardTypes: BooleanArray?,
+        cardTypesAnd: Boolean,
+        cardText: String?,
+        manaValueParamsArray: Array<String>?,
+        powerParamsArray: Array<String>?,
+        toughnessParamsArray: Array<String>?,
+        loyaltyParamsArray: Array<String>?,
+        rarityParamsArray: Array<String>?,
+        legalityParamsArray: Array<String>?,
+        layoutParamsArray: Array<String>?,
+        manaCost: String?,
+        cardColor: String?,
+        colorOperator: String?,
+        cardColorIdentity: String?,
+        cardProducedMana: String?,
+        cardFlavorText: String?
+    ): MutableList<Card> {
         var whereStarted = false
         var query = "SELECT * FROM $CARD_TABLE_NAME"
         if (cardName != null && cardName != "") {
@@ -394,7 +463,19 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         if (!legalityParamsArray.isNullOrEmpty()) {
             var k = 0
             while (k < legalityParamsArray.size) {
-                query += if (!whereStarted) " WHERE (legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${legalityParamsArray[k].split(" ")[0].lowercase()}'" else if (k == 0) " AND (legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${legalityParamsArray[k].split(" ")[0].lowercase()}'" else if (k % 2 == 0) " legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${legalityParamsArray[k].split(" ")[0].lowercase()}'" else " ${legalityParamsArray[k]}"
+                query += if (!whereStarted) " WHERE (legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${
+                    legalityParamsArray[k].split(
+                        " "
+                    )[0].lowercase()
+                }'" else if (k == 0) " AND (legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${
+                    legalityParamsArray[k].split(
+                        " "
+                    )[0].lowercase()
+                }'" else if (k % 2 == 0) " legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${
+                    legalityParamsArray[k].split(
+                        " "
+                    )[0].lowercase()
+                }'" else " ${legalityParamsArray[k]}"
                 whereStarted = true
                 ++k
             }
@@ -403,9 +484,35 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         if (!layoutParamsArray.isNullOrEmpty()) {
             var k = 0
             while (k < layoutParamsArray.size) {
-                query += if (!whereStarted) " WHERE ($CARD_LAYOUT == '${layoutParamsArray[k].lowercase().replace(" ", "_")}'" else if (k == 0) " AND ($CARD_LAYOUT == '${layoutParamsArray[k].lowercase().replace(" ", "_")}'" else if (k % 2 == 0) " $CARD_LAYOUT == '${layoutParamsArray[k].lowercase().replace(" ", "_")}'" else " ${layoutParamsArray[k]}"
+                query += if (!whereStarted) " WHERE ($CARD_LAYOUT == '${
+                    layoutParamsArray[k].lowercase().replace(" ", "_")
+                }'" else if (k == 0) " AND ($CARD_LAYOUT == '${
+                    layoutParamsArray[k].lowercase().replace(" ", "_")
+                }'" else if (k % 2 == 0) " $CARD_LAYOUT == '${
+                    layoutParamsArray[k].lowercase().replace(" ", "_")
+                }'" else " ${layoutParamsArray[k]}"
                 whereStarted = true
                 ++k
+            }
+            query += ")"
+        }
+        if (manaCost != null && manaCost != "") {
+            var costStr = manaCost!!
+            var first = true
+            while (costStr.indexOf('{') != -1) {
+                val subString = costStr.substring(costStr.indexOf('{'), costStr.indexOf('}') + 1)
+                query += if (!whereStarted) " WHERE (" else if (first) " AND (" else " AND"
+                val subStrCount = countSubString(costStr, subString)
+                query += " $CARD_MANA_COST LIKE '%"
+                var k = 0
+                while (k < subStrCount) {
+                    query += subString
+                    ++k
+                }
+                query += "%'"
+                costStr = costStr.replace(subString, "")
+                whereStarted = true
+                first = false
             }
             query += ")"
         }
@@ -413,7 +520,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             if (cardColor == "C") query += if (!whereStarted) " WHERE ($CARD_COLORS == ''" else " AND ($CARD_COLORS == ''"
             else {
                 when (colorOperator) {
-                    "exactly"->{
+                    "exactly" -> {
                         val colors = colorStringtoArray(cardColor)
                         val colorsNotSelected = mutableListOf("W", "U", "B", "R", "G")
                         var k = 0
@@ -429,7 +536,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                             ++k
                         }
                     }
-                    "including"->{
+                    "including" -> {
                         val colors = colorStringtoArray(cardColor)
                         var k = 0
                         while (k < colors.size) {
@@ -438,7 +545,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                             ++k
                         }
                     }
-                    else->{
+                    else -> {
                         val colors = colorStringtoArray(cardColor)
                         val colorsNotSelected = mutableListOf("W", "U", "B", "R", "G")
                         var k = 0
@@ -511,15 +618,21 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                 var card = Card()
                 card.id = UUID.fromString(result.getString(result.getColumnIndex(CARD_SCRYFALL_ID)))
                 card.cmc = result.getFloat(result.getColumnIndex(CARD_CMC)).toDouble()
-                card.color_identity = colorStringtoArray(result.getString(result.getColumnIndex(CARD_COLOR_IDENTITY)))
-                card.colors = colorStringtoArray(result.getString(result.getColumnIndex(CARD_COLORS)))
+                card.color_identity =
+                    colorStringtoArray(result.getString(result.getColumnIndex(CARD_COLOR_IDENTITY)))
+                card.colors =
+                    colorStringtoArray(result.getString(result.getColumnIndex(CARD_COLORS)))
                 card.layout = result.getString(result.getColumnIndex(CARD_LAYOUT))
                 card.loyalty = result.getStringOrNull(result.getColumnIndex(CARD_LOYALTY))
                 card.mana_cost = result.getStringOrNull(result.getColumnIndex(CARD_MANA_COST))
                 card.name = result.getString(result.getColumnIndex(CARD_NAME))
                 card.oracle_text = result.getStringOrNull(result.getColumnIndex(CARD_ORACLE_TEXT))
                 card.power = result.getStringOrNull(result.getColumnIndex(CARD_POWER))
-                card.produced_mana = colorStringtoArray(result.getStringOrNull(result.getColumnIndex(CARD_PRODUCED_MANA)))
+                card.produced_mana = colorStringtoArray(
+                    result.getStringOrNull(
+                        result.getColumnIndex(CARD_PRODUCED_MANA)
+                    )
+                )
                 card.toughness = result.getStringOrNull(result.getColumnIndex(CARD_TOUGHNESS))
                 card.type_line = result.getString(result.getColumnIndex(CARD_TYPE_LINE))
                 card.artist = result.getStringOrNull(result.getColumnIndex(CARD_ARTIST))
@@ -529,30 +642,52 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                 card.prices?.usd = result.getStringOrNull(result.getColumnIndex(CARD_PRICE_USD))
                 card.prices?.eur = result.getStringOrNull(result.getColumnIndex(CARD_PRICE_EUR))
                 card.prices?.tix = result.getStringOrNull(result.getColumnIndex(CARD_PRICE_TIX))
-                card.legalities?.standard = result.getString(result.getColumnIndex(CARD_LEGAL_STANDARD))
-                card.legalities?.pioneer = result.getString(result.getColumnIndex(CARD_LEGAL_PIONEER))
+                card.legalities?.standard =
+                    result.getString(result.getColumnIndex(CARD_LEGAL_STANDARD))
+                card.legalities?.pioneer =
+                    result.getString(result.getColumnIndex(CARD_LEGAL_PIONEER))
                 card.legalities?.modern = result.getString(result.getColumnIndex(CARD_LEGAL_MODERN))
                 card.legalities?.legacy = result.getString(result.getColumnIndex(CARD_LEGAL_LEGACY))
-                card.legalities?.vintage = result.getString(result.getColumnIndex(CARD_LEGAL_VINTAGE))
+                card.legalities?.vintage =
+                    result.getString(result.getColumnIndex(CARD_LEGAL_VINTAGE))
                 card.legalities?.brawl = result.getString(result.getColumnIndex(CARD_LEGAL_BRAWL))
-                card.legalities?.historic = result.getString(result.getColumnIndex(CARD_LEGAL_HISTORIC))
+                card.legalities?.historic =
+                    result.getString(result.getColumnIndex(CARD_LEGAL_HISTORIC))
                 card.legalities?.pauper = result.getString(result.getColumnIndex(CARD_LEGAL_PAUPER))
                 card.legalities?.penny = result.getString(result.getColumnIndex(CARD_LEGAL_PENNY))
-                card.legalities?.commander = result.getString(result.getColumnIndex(CARD_LEGAL_COMMANDER))
-                card.image_uris?.png = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_PNG)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_PNG))) else null
-                card.image_uris?.border_crop = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_BORDER_CROP)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_BORDER_CROP))) else null
-                card.image_uris?.art_crop = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_ART_CROP)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_ART_CROP))) else null
-                card.image_uris?.large = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_LARGE)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_LARGE))) else null
-                card.image_uris?.normal = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL))) else null
-                card.image_uris?.small = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL))) else null
+                card.legalities?.commander =
+                    result.getString(result.getColumnIndex(CARD_LEGAL_COMMANDER))
+                card.image_uris?.png =
+                    if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_PNG)) != null) URI.create(
+                        result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_PNG))
+                    ) else null
+                card.image_uris?.border_crop =
+                    if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_BORDER_CROP)) != null) URI.create(
+                        result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_BORDER_CROP))
+                    ) else null
+                card.image_uris?.art_crop =
+                    if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_ART_CROP)) != null) URI.create(
+                        result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_ART_CROP))
+                    ) else null
+                card.image_uris?.large =
+                    if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_LARGE)) != null) URI.create(
+                        result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_LARGE))
+                    ) else null
+                card.image_uris?.normal =
+                    if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL)) != null) URI.create(
+                        result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL))
+                    ) else null
+                card.image_uris?.small =
+                    if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL)) != null) URI.create(
+                        result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL))
+                    ) else null
                 list.add(card)
-            }
-            while (result.moveToNext())
+            } while (result.moveToNext())
         }
         return list
     }
 
-    private fun colorArrayToString (colors: Array<String>?): String {
+    private fun colorArrayToString(colors: Array<String>?): String {
         var result = if (colors.isNullOrEmpty()) "" else colors[0]
         var i = 1
         while (result != "" && i < colors?.size!!) {
@@ -562,10 +697,152 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         return result
     }
 
-    private fun colorStringtoArray (colors: String?): Array<String> {
+    private fun colorStringtoArray(colors: String?): Array<String> {
         var result = arrayOf<String>()
         if (colors == "") return result
         if (colors != null) result = colors.split(",").toTypedArray()
         return result
+    }
+
+    fun stringToSpannableString(string: String, textSize: Int): SpannableString {
+        var str = string
+        var result = SpannableString(str)
+        while (str.indexOf('{') != -1) {
+            val subStart = str.indexOf('{')
+            val subEnd = str.indexOf('}')
+            val subString = str.substring(subStart, subEnd + 1)
+            val draw = getSymbolDrawable(subString)
+            val proportion = draw.intrinsicWidth / draw.intrinsicHeight
+            draw.setBounds(0, 0, textSize * proportion, textSize)
+            val imageSpan = ImageSpan(draw, ImageSpan.ALIGN_BASELINE)
+            result.setSpan(imageSpan, subStart, subEnd + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            str = str.replaceFirst('{', '0')
+            str = str.replaceFirst('}', '0')
+            println(str)
+        }
+        return result
+    }
+
+    fun getSymbolDrawable(str: String): Drawable {
+        when (str) {
+            "{T}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_t_cost)!!
+            "{Q}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_q_cost)!!
+            "{E}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_e_cost)!!
+            "{PW}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_pw_cost)!!
+            "{CHAOS}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_chaos_cost
+            )!!
+            "{A}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_a_cost)!!
+            "{X}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_x_cost)!!
+            "{Y}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_y_cost)!!
+            "{Z}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_z_cost)!!
+            "{0}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_0_cost)!!
+            "{1}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_1_cost)!!
+            "{2}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_2_cost)!!
+            "{3}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_3_cost)!!
+            "{4}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_4_cost)!!
+            "{5}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_5_cost)!!
+            "{6}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_6_cost)!!
+            "{7}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_7_cost)!!
+            "{8}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_8_cost)!!
+            "{9}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_9_cost)!!
+            "{10}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_10_cost)!!
+            "{11}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_11_cost)!!
+            "{12}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_12_cost)!!
+            "{13}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_13_cost)!!
+            "{14}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_14_cost)!!
+            "{15}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_15_cost)!!
+            "{16}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_16_cost)!!
+            "{17}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_17_cost)!!
+            "{18}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_18_cost)!!
+            "{19}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_19_cost)!!
+            "{20}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_20_cost)!!
+            "{100}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_100_cost
+            )!!
+            "{1000000}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_1000000_cost
+            )!!
+            "{∞}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_infinity_cost
+            )!!
+            "{W/U}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_wu_cost)!!
+            "{W/B}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_wb_cost)!!
+            "{B/R}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_br_cost)!!
+            "{B/G}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_bg_cost)!!
+            "{U/B}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_ub_cost)!!
+            "{U/R}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_ur_cost)!!
+            "{R/G}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_rg_cost)!!
+            "{R/W}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_rw_cost)!!
+            "{G/W}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_gw_cost)!!
+            "{G/U}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_gu_cost)!!
+            "{W/U/P}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_wup_cost
+            )!!
+            "{W/B/P}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_wbp_cost
+            )!!
+            "{B/R/P}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_brp_cost
+            )!!
+            "{B/G/P}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_bgp_cost
+            )!!
+            "{U/B/P}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_ubp_cost
+            )!!
+            "{U/R/P}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_urp_cost
+            )!!
+            "{R/G/P}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_rgp_cost
+            )!!
+            "{R/W/P}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_rwp_cost
+            )!!
+            "{G/W/P}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_gwp_cost
+            )!!
+            "{G/U/P}" -> return AppCompatResources.getDrawable(
+                parentContext,
+                R.drawable.ic_gup_cost
+            )!!
+            "{2/W}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_2w_cost)!!
+            "{2/U}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_2u_cost)!!
+            "{2/B}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_2b_cost)!!
+            "{2/R}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_2r_cost)!!
+            "{2/G}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_2g_cost)!!
+            "{W}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_w_cost)!!
+            "{U}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_u_cost)!!
+            "{B}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_b_cost)!!
+            "{R}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_r_cost)!!
+            "{G}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_g_cost)!!
+            "{P}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_p_cost)!!
+            "{W/P}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_wp_cost)!!
+            "{U/P}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_up_cost)!!
+            "{B/P}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_bp_cost)!!
+            "{R/P}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_rp_cost)!!
+            "{G/P}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_gp_cost)!!
+            "{C}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_c_cost)!!
+            "{S}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_s_cost)!!
+            else -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_chaos_cost)!!
+        }
+    }
+
+    fun countSubString(str: String, subStr: String): Int {
+        return str.split(subStr).size - 1
     }
 }
