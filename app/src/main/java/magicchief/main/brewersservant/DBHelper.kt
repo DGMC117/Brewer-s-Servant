@@ -383,7 +383,10 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         colorOperator: String?,
         cardColorIdentity: String?,
         cardProducedMana: String?,
-        cardFlavorText: String?
+        cardFlavorText: String?,
+        priceCoin: String?,
+        priceOperator: String?,
+        priceValue: String?
     ): MutableList<Card> {
         var whereStarted = false
         var query = "SELECT * FROM $CARD_TABLE_NAME"
@@ -606,6 +609,14 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                 whereStarted = true
                 first = false
             }
+            query += ")"
+        }
+        if (priceValue != null && priceValue != "") {
+            query += if (!whereStarted) " WHERE (" else " AND ("
+            query += if (priceCoin == "usd") "$CARD_PRICE_USD" else if (priceCoin == "eur") "$CARD_PRICE_EUR" else "$CARD_PRICE_TIX"
+            query += " $priceOperator $priceValue"
+            whereStarted = true
+            query += if (priceCoin == "usd") " AND $CARD_PRICE_USD NOT NULL" else if (priceCoin == "eur") " AND $CARD_PRICE_EUR NOT NULL" else " AND $CARD_PRICE_TIX NOT NULL"
             query += ")"
         }
         query += " ORDER BY $CARD_NAME LIMIT 50"
@@ -838,7 +849,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             "{G/P}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_gp_cost)!!
             "{C}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_c_cost)!!
             "{S}" -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_s_cost)!!
-            else -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_chaos_cost)!!
+            else -> return AppCompatResources.getDrawable(parentContext, R.drawable.ic_1_2_cost)!!
         }
     }
 

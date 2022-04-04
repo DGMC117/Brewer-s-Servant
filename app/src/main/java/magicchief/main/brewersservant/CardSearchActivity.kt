@@ -75,6 +75,250 @@ class CardSearchActivity : AppCompatActivity() {
 
         val cardTextTextView = findViewById<TextInputLayout>(R.id.card_text_search)
 
+        val textAddSymbolButton = findViewById<Button>(R.id.text_add_mana_symbol_button)
+        textAddSymbolButton.setOnClickListener {
+            val textSymbolDialog = LayoutInflater.from(this).inflate(R.layout.text_symbol_dialog, null, false)
+            val dialog = MaterialAlertDialogBuilder(this)
+                .setView(textSymbolDialog)
+                .setTitle(R.string.add_mana_symbol)
+                .show()
+            val costWLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_w_layout)
+            costWLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{W}")
+                dialog.dismiss()
+            }
+            val costULayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_u_layout)
+            costULayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{U}")
+                dialog.dismiss()
+            }
+            val costBLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_b_layout)
+            costBLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{B}")
+                dialog.dismiss()
+            }
+            val costRLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_r_layout)
+            costRLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{R}")
+                dialog.dismiss()
+            }
+            val costGLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_g_layout)
+            costGLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{G}")
+                dialog.dismiss()
+            }
+            val costWULayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_wu_layout)
+            costWULayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{W/U}")
+                dialog.dismiss()
+            }
+            val costUBLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_ub_layout)
+            costUBLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{U/B}")
+                dialog.dismiss()
+            }
+            val costBRLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_br_layout)
+            costBRLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{B/R}")
+                dialog.dismiss()
+            }
+            val costRGLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_rg_layout)
+            costRGLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{R/G}")
+                dialog.dismiss()
+            }
+            val costGWLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_gw_layout)
+            costGWLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{G/W}")
+                dialog.dismiss()
+            }
+            val costWBLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_wb_layout)
+            costWBLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{W/B}")
+                dialog.dismiss()
+            }
+            val costURLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_ur_layout)
+            costURLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{U/R}")
+                dialog.dismiss()
+            }
+            val costBGLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_bg_layout)
+            costBGLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{B/G}")
+                dialog.dismiss()
+            }
+            val costRWLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_rw_layout)
+            costRWLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{R/W}")
+                dialog.dismiss()
+            }
+            val costGULayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_gu_layout)
+            costGULayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{G/U}")
+                dialog.dismiss()
+            }
+            val costWPLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_wp_layout)
+            costWPLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{W/P}")
+                dialog.dismiss()
+            }
+            val costUPLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_up_layout)
+            costUPLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{U/P}")
+                dialog.dismiss()
+            }
+            val costBPLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_bp_layout)
+            costBPLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{B/P}")
+                dialog.dismiss()
+            }
+            val costRPLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_rp_layout)
+            costRPLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{R/P}")
+                dialog.dismiss()
+            }
+            val costGPLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_gp_layout)
+            costGPLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{G/P}")
+                dialog.dismiss()
+            }
+            val costCLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_c_layout)
+            costCLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{C}")
+                dialog.dismiss()
+            }
+            val costSLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_s_layout)
+            costSLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{S}")
+                dialog.dismiss()
+            }
+            val cost0Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_0_layout)
+            cost0Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{0}")
+                dialog.dismiss()
+            }
+            val cost1Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_1_layout)
+            cost1Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{1}")
+                dialog.dismiss()
+            }
+            val cost2Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_2_layout)
+            cost2Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{2}")
+                dialog.dismiss()
+            }
+            val cost3Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_3_layout)
+            cost3Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{3}")
+                dialog.dismiss()
+            }
+            val cost4Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_4_layout)
+            cost4Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{4}")
+                dialog.dismiss()
+            }
+            val cost5Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_5_layout)
+            cost5Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{5}")
+                dialog.dismiss()
+            }
+            val cost6Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_6_layout)
+            cost6Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{6}")
+                dialog.dismiss()
+            }
+            val cost7Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_7_layout)
+            cost7Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{7}")
+                dialog.dismiss()
+            }
+            val cost8Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_8_layout)
+            cost8Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{8}")
+                dialog.dismiss()
+            }
+            val cost9Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_9_layout)
+            cost9Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{9}")
+                dialog.dismiss()
+            }
+            val cost10Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_10_layout)
+            cost10Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{10}")
+                dialog.dismiss()
+            }
+            val cost12Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_12_layout)
+            cost12Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{12}")
+                dialog.dismiss()
+            }
+            val cost20Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_20_layout)
+            cost20Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{20}")
+                dialog.dismiss()
+            }
+            val cost100Layout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_100_layout)
+            cost100Layout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{100}")
+                dialog.dismiss()
+            }
+            val costinfinityLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_infinity_layout)
+            costinfinityLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{∞}")
+                dialog.dismiss()
+            }
+            val costXLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_x_layout)
+            costXLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{X}")
+                dialog.dismiss()
+            }
+            val costPLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_p_layout)
+            costPLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{P}")
+                dialog.dismiss()
+            }
+            val cost2WLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_2w_layout)
+            cost2WLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{2/W}")
+                dialog.dismiss()
+            }
+            val costHRLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_hr_layout)
+            costHRLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{HR}")
+                dialog.dismiss()
+            }
+            val costALayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_a_layout)
+            costALayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{A}")
+                dialog.dismiss()
+            }
+            val costCHAOSLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_chaos_layout)
+            costCHAOSLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{CHAOS}")
+                dialog.dismiss()
+            }
+            val costHALFLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_1_2_layout)
+            costHALFLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{½}")
+                dialog.dismiss()
+            }
+            val costELayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_e_layout)
+            costELayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{E}")
+                dialog.dismiss()
+            }
+            val costTLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_t_layout)
+            costTLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{T}")
+                dialog.dismiss()
+            }
+            val costQLayout = textSymbolDialog.findViewById<LinearLayout>(R.id.cost_q_layout)
+            costQLayout.setOnClickListener {
+                cardTextTextView.editText?.setText(cardTextTextView.editText?.text.toString() + "{Q}")
+                dialog.dismiss()
+            }
+        }
+
         val manaValueLayout = findViewById<LinearLayout>(R.id.mana_value_selected_layout)
         val manaValueInputLayout = findViewById<LinearLayout>(R.id.mana_value_input_layout)
         val manaValueChipGroup = findViewById<ChipGroup>(R.id.mana_value_conditions_chip_group)
@@ -741,6 +985,16 @@ class CardSearchActivity : AppCompatActivity() {
 
         val cardFlavorTextTextView = findViewById<TextInputLayout>(R.id.card_flavor_text_search)
 
+        val priceCoinToggle = findViewById<MaterialButtonToggleGroup>(R.id.price_coin_toggle_group)
+        priceCoinToggle.check(R.id.price_usd_button)
+
+        val priceMathRelationTextView = findViewById<TextInputLayout>(R.id.price_math_relation_selector)
+        val priceMathAdapter = ArrayAdapter(applicationContext, R.layout.list_item, parametersMathValues)
+        (priceMathRelationTextView.editText as? AutoCompleteTextView)?.setAdapter(priceMathAdapter)
+        (priceMathRelationTextView.editText as? AutoCompleteTextView)?.setText(parametersMathValues[0], false)
+
+        val priceValueInput = findViewById<TextInputLayout>(R.id.price_value_input)
+
         val searchButton = findViewById<FloatingActionButton>(R.id.search_fab)
         searchButton.setOnClickListener {
             var cardTypesList = mutableListOf<String>()
@@ -822,6 +1076,9 @@ class CardSearchActivity : AppCompatActivity() {
             intent.putExtra("color_identity", getColorsSelectedArray(colorIdentityToggleGroup, "identity"))
             intent.putExtra("produced_mana", getColorsSelectedArray(producedManaToggleGroup, "produced"))
             intent.putExtra("card_flavor_text", cardFlavorTextTextView.editText?.text.toString())
+            intent.putExtra("price_coin", if (priceCoinToggle.checkedButtonId == R.id.price_usd_button) "usd" else if (priceCoinToggle.checkedButtonId == R.id.price_eur_button) "eur" else "tix")
+            intent.putExtra("price_operator", priceMathRelationTextView.editText?.text.toString())
+            intent.putExtra("price_value", priceValueInput.editText?.text.toString())
             startActivity(intent)
         }
     }

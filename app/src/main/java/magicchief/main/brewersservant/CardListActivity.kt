@@ -36,10 +36,13 @@ class CardListActivity : AppCompatActivity() {
         val cardColorIdentity = intent.getStringExtra("color_identity")
         val cardProducedMana = intent.getStringExtra("produced_mana")
         val cardFlavorText = intent.getStringExtra("card_flavor_text")
+        val priceCoin = intent.getStringExtra("price_coin")
+        val priceOperator = intent.getStringExtra("price_operator")
+        val priceValue = intent.getStringExtra("price_value")
 
         val db = DBHelper(applicationContext)
         val cards = db.getCards(cardName, cardTypesArray, isCardTypesArray, cardTypesAnd, cardText, manaValueParamsArray, powerParamsArray, toughnessParamsArray, loyaltyParamsArray, rarityParamsArray, legalityParamsArray, layoutParamsArray,
-        manaCost, cardColor, colorOperator, cardColorIdentity, cardProducedMana, cardFlavorText)
+        manaCost, cardColor, colorOperator, cardColorIdentity, cardProducedMana, cardFlavorText, priceCoin, priceOperator, priceValue)
 
         var cardList = findViewById<RecyclerView>(R.id.card_list)
         layoutManager = LinearLayoutManager (this)

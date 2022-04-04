@@ -26,7 +26,11 @@
     <string name="produced_mana">Produced Mana</string>
     <string name="flavor_text_hint">Card Flavor Text</string>
     <string name="mana_cost_hint">Card Mana Cost</string>
-    <string name="add_mana_symbol">Add Mana Symbol</string>
+    <string name="add_mana_symbol">Add Symbol</string>
+    <string name="card_price">Price</string>
+    <string name="usd">USD ($)</string>
+    <string name="eur">EUR (€)</string>
+    <string name="tix">TIX</string>
 
     <string name="w"></string>
     <string name="u"></string>

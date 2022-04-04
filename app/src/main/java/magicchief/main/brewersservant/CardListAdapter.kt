@@ -27,6 +27,7 @@ class CardListAdapter(val cardList: MutableList<Card>, context: Context): Recycl
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.itemTitle.text = cardList[position].name
         holder.itemDetail.text = stringToSpannableString (cardList[position].mana_cost.toString(), holder.itemDetail.textSize.toInt())
+        println("Name: ${cardList[position].name}, Price: ${cardList[position].prices?.eur}")
 
         if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null) Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).into(holder.itemImage)
         else holder.itemImage.setImageResource(R.drawable.ic_baseline_image_not_supported_24)
@@ -62,7 +63,6 @@ class CardListAdapter(val cardList: MutableList<Card>, context: Context): Recycl
             result.setSpan(imageSpan, subStart, subEnd + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
             str = str.replaceFirst('{', '0')
             str = str.replaceFirst('}', '0')
-            println(str)
         }
         return result
     }
@@ -142,7 +142,7 @@ class CardListAdapter(val cardList: MutableList<Card>, context: Context): Recycl
             "{S}" -> return getDrawable(parentContext, R.drawable.ic_s_cost)!!
             "{HW}" -> return getDrawable(parentContext, R.drawable.ic_hw_cost)!!
             "{HR}" -> return getDrawable(parentContext, R.drawable.ic_hr_cost)!!
-            else -> return getDrawable(parentContext, R.drawable.ic_chaos_cost)!!
+            else -> return getDrawable(parentContext, R.drawable.ic_1_2_cost)!!
         }
     }
 
