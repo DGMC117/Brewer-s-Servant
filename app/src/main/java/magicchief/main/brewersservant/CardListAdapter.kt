@@ -27,7 +27,6 @@ class CardListAdapter(val cardList: MutableList<Card>, context: Context): Recycl
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.itemTitle.text = cardList[position].name
         holder.itemDetail.text = stringToSpannableString (cardList[position].mana_cost.toString(), holder.itemDetail.textSize.toInt())
-        println("Name: ${cardList[position].name}, Price: ${cardList[position].prices?.eur}")
 
         if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null) Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).into(holder.itemImage)
         else holder.itemImage.setImageResource(R.drawable.ic_baseline_image_not_supported_24)
