@@ -114,12 +114,79 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         + CARD_SET_ICON_SVG_URI + " varchar(255) not null"
                         + ")"
                 )
+        // Create Catalog tables
+        val createArtistCatalogDB = (
+                "CREATE TABLE $ARTIST_CATALOG_TABLE_NAME ("
+                        + ARTIST_CATALOG_ID + " int auto_increment primary key,"
+                        + ARTIST_CATALOG_NAME + " varchar(50) not null"
+                        + ")"
+                )
+        val createCreatureTypeCatalogDB = (
+                "CREATE TABLE $CREATURE_TYPE_CATALOG_TABLE_NAME ("
+                        + CREATURE_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + CREATURE_TYPE_CATALOG_TYPE + " varchar(50) not null"
+                        + ")"
+                )
+        val createPlaneswalkerTypeCatalogDB = (
+                "CREATE TABLE $PLANESWALKER_TYPE_CATALOG_TABLE_NAME ("
+                        + PLANESWALKER_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + PLANESWALKER_TYPE_CATALOG_TYPE + " varchar(50) not null"
+                        + ")"
+                )
+        val createLandTypeCatalogDB = (
+                "CREATE TABLE $LAND_TYPE_CATALOG_TABLE_NAME ("
+                        + LAND_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + LAND_TYPE_CATALOG_TYPE + " varchar(50) not null"
+                        + ")"
+                )
+        val createArtifactTypeCatalogDB = (
+                "CREATE TABLE $ARTIFACT_TYPE_CATALOG_TABLE_NAME ("
+                        + ARTIFACT_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + ARTIFACT_TYPE_CATALOG_TYPE + " varchar(50) not null"
+                        + ")"
+                )
+        val createEnchantmentTypeCatalogDB = (
+                "CREATE TABLE $ENCHANTMENT_TYPE_CATALOG_TABLE_NAME ("
+                        + ENCHANTMENT_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + ENCHANTMENT_TYPE_CATALOG_TYPE + " varchar(50) not null"
+                        + ")"
+                )
+        val createSpellTypeCatalogDB = (
+                "CREATE TABLE $SPELL_TYPE_CATALOG_TABLE_NAME ("
+                        + SPELL_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + SPELL_TYPE_CATALOG_TYPE + " varchar(50) not null"
+                        + ")"
+                )
+        val createCardTypeCatalogDB = (
+                "CREATE TABLE $CARD_TYPE_CATALOG_TABLE_NAME ("
+                        + CARD_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + CARD_TYPE_CATALOG_TYPE + " varchar(50) not null"
+                        + ")"
+                )
+        val createCardSuperTypeCatalogDB = (
+                "CREATE TABLE $CARD_SUPER_TYPE_CATALOG_TABLE_NAME ("
+                        + CARD_SUPER_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + CARD_SUPER_TYPE_CATALOG_TYPE + " varchar(50) not null"
+                        + ")"
+                )
 
         // Execute SQL code
         db.execSQL(createCardSetDB)
         db.execSQL(createCardDB)
         db.execSQL(createCardFaceDB)
         db.execSQL(createRelatedCardDB)
+        db.execSQL(createArtistCatalogDB)
+        db.execSQL(createCreatureTypeCatalogDB)
+        db.execSQL(createPlaneswalkerTypeCatalogDB)
+        db.execSQL(createLandTypeCatalogDB)
+        db.execSQL(createArtifactTypeCatalogDB)
+        db.execSQL(createEnchantmentTypeCatalogDB)
+        db.execSQL(createSpellTypeCatalogDB)
+        db.execSQL(createCardTypeCatalogDB)
+        db.execSQL(createCardSuperTypeCatalogDB)
+
+        initialiseCardTypesAndSuperTypes (db)
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase, p1: Int, p2: Int) {
@@ -227,6 +294,42 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         private val CARD_SET_NAME = "name"
         private val CARD_SET_ICON_SVG_URI = "icon_svg_uri"
 
+        // Catalog Tables
+        private val ARTIST_CATALOG_TABLE_NAME = "ArtistCatalog"
+        private val ARTIST_CATALOG_ID = "id"
+        private val ARTIST_CATALOG_NAME = "name"
+
+        private val CREATURE_TYPE_CATALOG_TABLE_NAME = "CreatureTypeCatalog"
+        private val CREATURE_TYPE_CATALOG_ID = "id"
+        private val CREATURE_TYPE_CATALOG_TYPE = "type"
+
+        private val PLANESWALKER_TYPE_CATALOG_TABLE_NAME = "PlaneswalkerTypeCatalog"
+        private val PLANESWALKER_TYPE_CATALOG_ID = "id"
+        private val PLANESWALKER_TYPE_CATALOG_TYPE = "type"
+
+        private val LAND_TYPE_CATALOG_TABLE_NAME = "LandTypeCatalog"
+        private val LAND_TYPE_CATALOG_ID = "id"
+        private val LAND_TYPE_CATALOG_TYPE = "type"
+
+        private val ARTIFACT_TYPE_CATALOG_TABLE_NAME = "ArtifactTypeCatalog"
+        private val ARTIFACT_TYPE_CATALOG_ID = "id"
+        private val ARTIFACT_TYPE_CATALOG_TYPE = "type"
+
+        private val ENCHANTMENT_TYPE_CATALOG_TABLE_NAME = "EnchantmentTypeCatalog"
+        private val ENCHANTMENT_TYPE_CATALOG_ID = "id"
+        private val ENCHANTMENT_TYPE_CATALOG_TYPE = "type"
+
+        private val SPELL_TYPE_CATALOG_TABLE_NAME = "SpellTypeCatalog"
+        private val SPELL_TYPE_CATALOG_ID = "id"
+        private val SPELL_TYPE_CATALOG_TYPE = "type"
+
+        private val CARD_TYPE_CATALOG_TABLE_NAME = "CardTypeCatalog"
+        private val CARD_TYPE_CATALOG_ID = "id"
+        private val CARD_TYPE_CATALOG_TYPE = "type"
+
+        private val CARD_SUPER_TYPE_CATALOG_TABLE_NAME = "CardSuperTypeCatalog"
+        private val CARD_SUPER_TYPE_CATALOG_ID = "id"
+        private val CARD_SUPER_TYPE_CATALOG_TYPE = "type"
     }
 
     fun addCardSet(cardSet: Set): Long {
@@ -237,7 +340,6 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         contentValues.put(CARD_SET_NAME, cardSet.name)
         contentValues.put(CARD_SET_ICON_SVG_URI, cardSet.icon_svg_uri.toString())
         val result = db.insert(CARD_SET_TABLE_NAME, null, contentValues)
-        db.close()
         return result
     }
 
@@ -302,7 +404,6 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             if (card.image_uris != null) card.image_uris.small.toString() else null
         )
         val result = db.insert(CARD_TABLE_NAME, null, contentValues)
-        db.close()
         return result
     }
 
@@ -350,7 +451,6 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             if (cardFace.image_uris != null) cardFace.image_uris.small.toString() else null
         )
         val result = db.insert(CARD_FACE_TABLE_NAME, null, contentValues)
-        db.close()
         return result
     }
 
@@ -361,8 +461,89 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         contentValues.put(RELATED_CARD_SCRYFALL_ID_RELATED, relatedCardId.toString())
         contentValues.put(RELATED_CARD_COMPONENT, componentType)
         val result = db.insert(RELATED_CARD_TABLE_NAME, null, contentValues)
-        db.close()
         return result
+    }
+
+    fun addArtistCatalog(name: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(ARTIST_CATALOG_NAME, name)
+        val result = db.insert(ARTIST_CATALOG_TABLE_NAME, null, contentValues)
+        return result
+    }
+
+    fun addCreatureTypeCatalog(type: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(CREATURE_TYPE_CATALOG_TYPE, type)
+        val result = db.insert(CREATURE_TYPE_CATALOG_TABLE_NAME, null, contentValues)
+        return result
+    }
+
+    fun addPlaneswalkerTypeCatalog(type: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(PLANESWALKER_TYPE_CATALOG_TYPE, type)
+        val result = db.insert(PLANESWALKER_TYPE_CATALOG_TABLE_NAME, null, contentValues)
+        return result
+    }
+
+    fun addLandTypeCatalog(type: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(LAND_TYPE_CATALOG_TYPE, type)
+        val result = db.insert(LAND_TYPE_CATALOG_TABLE_NAME, null, contentValues)
+        return result
+    }
+
+    fun addArtifactTypeCatalog(type: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(ARTIFACT_TYPE_CATALOG_TYPE, type)
+        val result = db.insert(ARTIFACT_TYPE_CATALOG_TABLE_NAME, null, contentValues)
+        return result
+    }
+
+    fun addEnchantmentTypeCatalog(type: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(ENCHANTMENT_TYPE_CATALOG_TYPE, type)
+        val result = db.insert(ENCHANTMENT_TYPE_CATALOG_TABLE_NAME, null, contentValues)
+        return result
+    }
+
+    fun addSpellTypeCatalog(type: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(SPELL_TYPE_CATALOG_TYPE, type)
+        val result = db.insert(SPELL_TYPE_CATALOG_TABLE_NAME, null, contentValues)
+        return result
+    }
+
+    fun addCardTypeCatalog(type: String, db: SQLiteDatabase): Long {
+        val contentValues = ContentValues()
+        contentValues.put(CARD_TYPE_CATALOG_TYPE, type)
+        val result = db.insert(CARD_TYPE_CATALOG_TABLE_NAME, null, contentValues)
+        return result
+    }
+
+    fun addCardSuperTypeCatalog(type: String, db: SQLiteDatabase): Long {
+        val contentValues = ContentValues()
+        contentValues.put(CARD_SUPER_TYPE_CATALOG_TYPE, type)
+        val result = db.insert(CARD_SUPER_TYPE_CATALOG_TABLE_NAME, null, contentValues)
+        return result
+    }
+
+    private fun initialiseCardTypesAndSuperTypes (db: SQLiteDatabase) {
+        val cardTypes = arrayOf("Artifact", "Conspiracy", "Creature", "Emblem", "Enchantment", "Hero", "Instant", "Land", "Phenomenon", "Plane", "Planeswalker", "Scheme", "Sorcery", "Tribal", "Vanguard")
+        val cardSuperTypes = arrayOf("Basic", "Elite", "Legendary", "Ongoing", "Snow", "Token", "World")
+
+        cardTypes.forEach {
+            addCardTypeCatalog(it, db)
+        }
+        cardSuperTypes.forEach {
+            addCardSuperTypeCatalog(it, db)
+        }
     }
 
     @SuppressLint("Range")
@@ -500,6 +681,11 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             }
             query += ")"
         }
+        else {
+            query += if (!whereStarted) " WHERE (" else " AND ("
+            query += "NOT $CARD_LAYOUT == 'planar' AND NOT $CARD_LAYOUT == 'scheme' AND NOT $CARD_LAYOUT == 'vanguard' AND NOT $CARD_LAYOUT == 'token' AND NOT $CARD_LAYOUT == 'double_faced_token' AND NOT $CARD_LAYOUT == 'emblem' AND NOT $CARD_LAYOUT == 'art_series' AND NOT $CARD_LAYOUT == 'reversible_card'"
+            query += ")"
+        }
         if (manaCost != null && manaCost != "") {
             var costStr = manaCost!!
             var first = true
@@ -622,8 +808,6 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         }
         query += " ORDER BY $CARD_NAME LIMIT 50"
 
-        println(query)
-
         val list: MutableList<Card> = ArrayList()
         val db = this.readableDatabase
         val result = db.rawQuery(query, null)
@@ -667,6 +851,90 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                 card.image_uris?.normal = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL))) else null
                 card.image_uris?.small = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL))) else null
                 list.add(card)
+            } while (result.moveToNext())
+        }
+        return list
+    }
+
+    fun getAllTypeCatalogs (): MutableList<String> {
+        val list: MutableList<String> = ArrayList()
+        val db = this.readableDatabase
+        var query = "SELECT * FROM $CARD_TYPE_CATALOG_TABLE_NAME ORDER BY $CARD_TYPE_CATALOG_TYPE"
+        var result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val type = result.getStringOrNull(result.getColumnIndex(CARD_TYPE_CATALOG_TYPE))
+                if (type != null) list.add(type)
+            } while (result.moveToNext())
+        }
+        query = "SELECT * FROM $CARD_SUPER_TYPE_CATALOG_TABLE_NAME ORDER BY $CARD_SUPER_TYPE_CATALOG_TYPE"
+        result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val type = result.getStringOrNull(result.getColumnIndex(CARD_SUPER_TYPE_CATALOG_TYPE))
+                if (type != null) list.add(type)
+            } while (result.moveToNext())
+        }
+        query = "SELECT * FROM $CREATURE_TYPE_CATALOG_TABLE_NAME ORDER BY $CREATURE_TYPE_CATALOG_TYPE"
+        result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val type = result.getStringOrNull(result.getColumnIndex(CREATURE_TYPE_CATALOG_TYPE))
+                if (type != null) list.add(type)
+            } while (result.moveToNext())
+        }
+        query = "SELECT * FROM $LAND_TYPE_CATALOG_TABLE_NAME ORDER BY $LAND_TYPE_CATALOG_TYPE"
+        result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val type = result.getStringOrNull(result.getColumnIndex(LAND_TYPE_CATALOG_TYPE))
+                if (type != null) list.add(type)
+            } while (result.moveToNext())
+        }
+        query = "SELECT * FROM $PLANESWALKER_TYPE_CATALOG_TABLE_NAME ORDER BY $PLANESWALKER_TYPE_CATALOG_TYPE"
+        result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val type = result.getStringOrNull(result.getColumnIndex(PLANESWALKER_TYPE_CATALOG_TYPE))
+                if (type != null) list.add(type)
+            } while (result.moveToNext())
+        }
+        query = "SELECT * FROM $ARTIFACT_TYPE_CATALOG_TABLE_NAME ORDER BY $ARTIFACT_TYPE_CATALOG_TYPE"
+        result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val type = result.getStringOrNull(result.getColumnIndex(ARTIFACT_TYPE_CATALOG_TYPE))
+                if (type != null) list.add(type)
+            } while (result.moveToNext())
+        }
+        query = "SELECT * FROM $ENCHANTMENT_TYPE_CATALOG_TABLE_NAME ORDER BY $ENCHANTMENT_TYPE_CATALOG_TYPE"
+        result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val type = result.getStringOrNull(result.getColumnIndex(ENCHANTMENT_TYPE_CATALOG_TYPE))
+                if (type != null) list.add(type)
+            } while (result.moveToNext())
+        }
+        query = "SELECT * FROM $SPELL_TYPE_CATALOG_TABLE_NAME ORDER BY $SPELL_TYPE_CATALOG_TYPE"
+        result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val type = result.getStringOrNull(result.getColumnIndex(SPELL_TYPE_CATALOG_TYPE))
+                if (type != null) list.add(type)
+            } while (result.moveToNext())
+        }
+        return list
+    }
+
+    fun getArtistCatalog (): MutableList<String> {
+        val list: MutableList<String> = ArrayList()
+        val db = this.readableDatabase
+        var query = "SELECT * FROM $ARTIST_CATALOG_TABLE_NAME ORDER BY $ARTIST_CATALOG_NAME"
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val artistName = result.getStringOrNull(result.getColumnIndex(ARTIST_CATALOG_NAME))
+                if (artistName != null) list.add(artistName)
             } while (result.moveToNext())
         }
         return list
