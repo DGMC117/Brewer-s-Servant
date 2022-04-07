@@ -13,8 +13,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.alpha
 import androidx.core.view.get
 import androidx.core.view.size
+import androidx.core.widget.doOnTextChanged
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -36,12 +38,20 @@ class CardSearchActivity : AppCompatActivity() {
         val dbHelper = DBHelper (applicationContext)
 
         val nameTextView = findViewById<TextInputLayout>(R.id.card_name)
+        var nameCatalog: MutableList<String> = ArrayList()
+        var nameAdapter = ArrayAdapter(applicationContext, R.layout.list_item, nameCatalog)
+        (nameTextView.editText as? AutoCompleteTextView)?.setAdapter(nameAdapter)
+        nameTextView.editText?.doOnTextChanged { text, start, before, count ->
+            if (text != null && text!!.length > 2) nameCatalog = dbHelper.getCardNameCatalog (text.toString())
+            else nameCatalog = ArrayList()
+            nameAdapter = ArrayAdapter(applicationContext, R.layout.list_item, nameCatalog)
+            (nameTextView.editText as? AutoCompleteTextView)?.setAdapter(nameAdapter)
+        }
 
         val cardTypesDivider = findViewById<MaterialDivider>(R.id.card_type_divider)
         val cardTypesChipGroup = findViewById<ChipGroup>(R.id.card_type_chip_group)
 
         val typeLineTextView = findViewById<TextInputLayout>(R.id.card_type_text)
-        //val cardTypes = listOf("Advisor", "Aetherborn", "Ally", "Angel", "Antelope", "Ape", "Archer", "Archon", "Army", "Artificer", "Assassin", "Assembly-Worker", "Atog", "Aurochs", "Avatar", "Azra", "Badger", "Barbarian", "Bard", "Basilisk", "Bat", "Bear", "Beast", "Beeble", "Beholder", "Berserker", "Bird", "Blinkmoth", "Boar", "Bringer", "Brushwagg", "Camarid", "Camel", "Caribou", "Carrier", "Cat", "Centaur", "Cephalid", "Chicken", "Chimera", "Citizen", "Cleric", "Cockatrice", "Construct", "Coward", "Crab", "Crocodile", "Cyclops", "Dauthi", "Demigod", "Demon", "Deserter", "Devil", "Dinosaur", "Djinn", "Dog", "Dragon", "Drake", "Dreadnought", "Drone", "Druid", "Dryad", "Dwarf", "Efreet", "Egg", "Elder", "Eldrazi", "Elemental", "Elephant", "Elf", "Elk", "Eye", "Faerie", "Ferret", "Fish", "Flagbearer", "Fox", "Fractal", "Frog", "Fungus", "Gargoyle", "Germ", "Giant", "Gnoll", "Gnome", "Goat", "Goblin", "God", "Golem", "Gorgon", "Graveborn", "Gremlin", "Griffin", "Guest", "Hag", "Halfling", "Hamster", "Harpy", "Head", "Hellion", "Hippo", "Hippogriff", "Homarid", "Homunculus", "Hornet", "Horror", "Horse", "Human", "Hydra", "Hyena", "Illusion", "Imp", "Incarnation", "Inkling", "Insect", "Jackal", "Jellyfish", "Juggernaut", "Kavu", "Kirin", "Kithkin", "Knight", "Kobold", "Kor", "Kraken", "Lamia", "Lammasu", "Leech", "Leviathan", "Lhurgoyf", "Licid", "Lizard", "Manticore", "Masticore", "Mercenary", "Merfolk", "Metathran", "Minion", "Minotaur", "Mole", "Monger", "Mongoose", "Monk", "Monkey", "Moonfolk", "Mouse", "Mutant", "Myr", "Mystic", "Naga", "Nautilus", "Nephilim", "Nightmare", "Nightstalker", "Ninja", "Noble", "Noggle", "Nomad", "Nymph", "Octopus", "Ogre", "Ooze", "Orb", "Orc", "Orgg", "Otter", "Ouphe", "Ox", "Oyster", "Pangolin", "Peasant", "Pegasus", "Pentavite", "Pest", "Phelddagrif", "Phoenix", "Phyrexian", "Pilot", "Pincher", "Pirate", "Plant", "Praetor", "Prism", "Processor", "Rabbit", "Ranger", "Rat", "Rebel", "Reflection", "Reveler", "Rhino", "Rigger", "Rogue", "Sable", "Salamander", "Samurai", "Sand", "Saproling", "Satyr", "Scarecrow", "Scion", "Scorpion", "Scout", "Sculpture", "Serf", "Serpent", "Servo", "Shade", "Shaman", "Shapeshifter", "Shark", "Sheep", "Siren", "Skeleton", "Slith", "Sliver", "Slug", "Snake", "Soldier", "Soltari", "Spawn", "Specter", "Spellshaper", "Sphinx", "Spider", "Spike", "Spirit", "Splinter", "Sponge", "Squid", "Squirrel", "Starfish", "Surrakar", "Survivor", "Tentacle", "Tetravite", "Thalakos", "Thopter", "Thrull", "Tiefling", "Treefolk", "Trilobite", "Triskelavite", "Troll", "Turtle", "Unicorn", "Vampire", "Vedalken", "Viashino", "Volver", "Wall", "Warlock", "Warrior", "Wasp", "Weird", "Werewolf", "Whale", "Wizard", "Wolf", "Wolverine", "Wombat", "Worm", "Wraith", "Wurm", "Yeti", "Zombie", "Zubera", "Abian", "Ajani", "Aminatou", "Angrath", "Arlinn", "Ashiok", "B.O.B.", "Bahamut", "Basri", "Bolas", "Calix", "Chandra", "Dack", "Dakkon", "Daretti", "Davriel", "Dihada", "Domri", "Dovin", "Duck", "Dungeon", "Ellywick", "Elspeth", "Estrid", "Freyalise", "Garruk", "Gideon", "Grist", "Huatli", "Inzerva", "Jace", "Jaya", "Jeska", "Kaito", "Karn", "Kasmina", "Kaya", "Kiora", "Koth", "Liliana", "Lolth", "Lukka", "Master", "Mordenkainen", "Nahiri", "Narset", "Niko", "Nissa", "Nixilis", "Oko", "Ral", "Rowan", "Saheeli", "Samut", "Sarkhan", "Serra", "Sorin", "Szat", "Tamiyo", "Teferi", "Teyo", "Tezzeret", "Tibalt", "Tyvar", "Ugin", "Urza", "Venser", "Vivien", "Vraska", "Will", "Windgrace", "Wrenn", "Xenagos", "Yanggu", "Yanling", "Zariel", "Desert", "Forest", "Gate", "Island", "Lair", "Locus", "Mine", "Mountain", "Plains", "Power-Plant", "Swamp", "Tower", "Urza’s", "Blood", "Clue", "Contraption", "Equipment", "Food", "Fortification", "Gold", "Treasure", "Vehicle", "Aura", "Cartouche", "Class", "Curse", "Rune", "Saga", "Shard", "Shrine", "Adventure", "Arcane", "Lesson", "Trap")
         val cardTypes = dbHelper.getAllTypeCatalogs()
         val adapter = ArrayAdapter(applicationContext, R.layout.list_item, cardTypes)
         (typeLineTextView.editText as? AutoCompleteTextView)?.setAdapter(adapter)
@@ -998,6 +1008,16 @@ class CardSearchActivity : AppCompatActivity() {
 
         val priceValueInput = findViewById<TextInputLayout>(R.id.price_value_input)
 
+        val setTextView = findViewById<TextInputLayout>(R.id.set_text_input)
+        var setCatalog: MutableList<String> = dbHelper.getSetCatalog()
+        var setAdapter = ArrayAdapter(applicationContext, R.layout.list_item, setCatalog)
+        (setTextView.editText as? AutoCompleteTextView)?.setAdapter(setAdapter)
+
+        val artistTextView = findViewById<TextInputLayout>(R.id.artist_text_input)
+        var artistCatalog: MutableList<String> = dbHelper.getArtistCatalog()
+        var artistAdapter = ArrayAdapter(applicationContext, R.layout.list_item, artistCatalog)
+        (artistTextView.editText as? AutoCompleteTextView)?.setAdapter(artistAdapter)
+
         val searchButton = findViewById<FloatingActionButton>(R.id.search_fab)
         searchButton.setOnClickListener {
             var cardTypesList = mutableListOf<String>()
@@ -1082,6 +1102,8 @@ class CardSearchActivity : AppCompatActivity() {
             intent.putExtra("price_coin", if (priceCoinToggle.checkedButtonId == R.id.price_usd_button) "usd" else if (priceCoinToggle.checkedButtonId == R.id.price_eur_button) "eur" else "tix")
             intent.putExtra("price_operator", priceMathRelationTextView.editText?.text.toString())
             intent.putExtra("price_value", priceValueInput.editText?.text.toString())
+            intent.putExtra("card_set", setTextView.editText?.text.toString())
+            intent.putExtra("card_artist", artistTextView.editText?.text.toString())
             startActivity(intent)
         }
     }

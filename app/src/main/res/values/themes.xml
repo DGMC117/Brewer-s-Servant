@@ -20,6 +20,24 @@
 
         <item name="android:colorBackground">@color/colorBackground</item>
         <item name="colorOnBackground">@color/colorOnBackground</item>
+
+        <!-- Material3 attributes (needed if parent="Theme.MaterialComponents"). -->
+        <item name="colorPrimaryInverse">@color/primaryLightColor</item>
+        <item name="colorPrimaryContainer">@color/primaryColor</item>
+        <item name="colorOnPrimaryContainer">@color/primaryTextColor</item>
+        <item name="colorSecondaryContainer">@color/secondaryColor</item>
+        <item name="colorOnSecondaryContainer">@color/secondaryTextColor</item>
+        <item name="colorTertiary">@color/colorTriadic1</item>
+        <item name="colorOnTertiary">@color/colorOnTriadic1</item>
+        <item name="colorTertiaryContainer">@color/colorTriadic1</item>
+        <item name="colorOnTertiaryContainer">@color/colorOnTriadic1</item>
+        <item name="colorSurfaceVariant">@color/colorSurface</item>
+        <item name="colorOnSurfaceVariant">@color/colorOnSurface</item>
+        <item name="colorSurfaceInverse">@color/colorSurface</item>
+        <item name="colorOnSurfaceInverse">@color/colorOnSurface</item>
+        <item name="colorOutline">@color/colorSurface</item>
+        <item name="colorErrorContainer">@color/colorError</item>
+        <item name="colorOnErrorContainer">@color/colorOnError</item>
     </style>
     <style name="TypeLineChipItem" parent="Widget.MaterialComponents.Chip.Entry">
         <item name="chipIcon">@drawable/ic_baseline_remove_circle_outline_24</item>

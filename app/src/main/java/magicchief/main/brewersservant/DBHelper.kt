@@ -568,7 +568,9 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         cardFlavorText: String?,
         priceCoin: String?,
         priceOperator: String?,
-        priceValue: String?
+        priceValue: String?,
+        cardSet: String?,
+        cardArtist: String?
     ): MutableList<Card> {
         var whereStarted = false
         var query = "SELECT * FROM $CARD_TABLE_NAME"
@@ -685,6 +687,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             query += if (!whereStarted) " WHERE (" else " AND ("
             query += "NOT $CARD_LAYOUT == 'planar' AND NOT $CARD_LAYOUT == 'scheme' AND NOT $CARD_LAYOUT == 'vanguard' AND NOT $CARD_LAYOUT == 'token' AND NOT $CARD_LAYOUT == 'double_faced_token' AND NOT $CARD_LAYOUT == 'emblem' AND NOT $CARD_LAYOUT == 'art_series' AND NOT $CARD_LAYOUT == 'reversible_card'"
             query += ")"
+            whereStarted = true
         }
         if (manaCost != null && manaCost != "") {
             var costStr = manaCost!!
@@ -806,6 +809,16 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             query += if (priceCoin == "usd") " AND $CARD_PRICE_USD NOT NULL" else if (priceCoin == "eur") " AND $CARD_PRICE_EUR NOT NULL" else " AND $CARD_PRICE_TIX NOT NULL"
             query += ")"
         }
+        if (cardSet != null && cardSet != "") {
+            query += if (whereStarted) " AND" else " WHERE"
+            query += " $CARD_SET_SCRYFALL_ID LIKE '%${getSetID(cardSet)}%'"
+            whereStarted = true
+        }
+        if (cardArtist != null && cardArtist != "") {
+            query += if (whereStarted) " AND" else " WHERE"
+            query += " $CARD_ARTIST LIKE '%${cardArtist}%'"
+            whereStarted = true
+        }
         query += " ORDER BY $CARD_NAME LIMIT 50"
 
         val list: MutableList<Card> = ArrayList()
@@ -854,6 +867,17 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             } while (result.moveToNext())
         }
         return list
+    }
+
+    fun getSetID (name: String): String {
+        var id = ""
+        val db = this.readableDatabase
+        val query = "SELECT $CARD_SET_SCRYFALL_SET_ID FROM $CARD_SET_TABLE_NAME WHERE $CARD_SET_NAME LIKE '%$name%' ORDER BY $CARD_SET_NAME"
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            id = result.getStringOrNull(result.getColumnIndex(CARD_SET_SCRYFALL_SET_ID))!!
+        }
+        return id
     }
 
     fun getAllTypeCatalogs (): MutableList<String> {
@@ -935,6 +959,34 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             do {
                 val artistName = result.getStringOrNull(result.getColumnIndex(ARTIST_CATALOG_NAME))
                 if (artistName != null) list.add(artistName)
+            } while (result.moveToNext())
+        }
+        return list
+    }
+
+    fun getSetCatalog (): MutableList<String> {
+        val list: MutableList<String> = ArrayList()
+        val db = this.readableDatabase
+        var query = "SELECT $CARD_SET_NAME FROM $CARD_SET_TABLE_NAME ORDER BY $CARD_SET_NAME"
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val setName = result.getStringOrNull(result.getColumnIndex(CARD_SET_NAME))
+                if (setName != null) list.add(setName)
+            } while (result.moveToNext())
+        }
+        return list
+    }
+
+    fun getCardNameCatalog (str: String): MutableList<String> {
+        val list: MutableList<String> = ArrayList()
+        val db = this.readableDatabase
+        var query = "SELECT $CARD_NAME FROM $CARD_TABLE_NAME WHERE $CARD_NAME LIKE '%$str%' ORDER BY $CARD_NAME"
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val name = result.getStringOrNull(result.getColumnIndex(CARD_NAME))
+                if (name != null) list.add(name)
             } while (result.moveToNext())
         }
         return list
