@@ -254,26 +254,26 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         private val CARD_FACE_TABLE_NAME = "CardFace"
 
         // CardFace table column names
-        private val CARD_FACE_ID = "id"
-        private val CARD_FACE_SCRYFALL_ID_MAIN_CARD = "id_main_card_scryfall"
-        private val CARD_FACE_ARTIST = "artist"
-        private val CARD_FACE_CMC = "cmc"
-        private val CARD_FACE_COLORS = "colors"
-        private val CARD_FACE_FLAVOR_TEXT = "flavor_text"
-        private val CARD_FACE_LAYOUT = "layout"
-        private val CARD_FACE_LOYALTY = "loyalty"
-        private val CARD_FACE_MANA_COST = "mana_cost"
-        private val CARD_FACE_NAME = "name"
-        private val CARD_FACE_ORACLE_TEXT = "oracle_text"
-        private val CARD_FACE_POWER = "power"
-        private val CARD_FACE_TOUGHNESS = "toughness"
-        private val CARD_FACE_TYPE_LINE = "type_line"
-        private val CARD_FACE_IMAGE_PNG = "image_png"
-        private val CARD_FACE_IMAGE_BORDER_CROP = "image_border_crop"
-        private val CARD_FACE_IMAGE_ART_CROP = "image_art_crop"
-        private val CARD_FACE_IMAGE_LARGE = "image_large"
-        private val CARD_FACE_IMAGE_NORMAL = "image_normal"
-        private val CARD_FACE_IMAGE_SMALL = "image_small"
+        private val CARD_FACE_ID = "card_face_id"
+        private val CARD_FACE_SCRYFALL_ID_MAIN_CARD = "card_face_id_main_card_scryfall"
+        private val CARD_FACE_ARTIST = "card_face_artist"
+        private val CARD_FACE_CMC = "card_face_cmc"
+        private val CARD_FACE_COLORS = "card_face_colors"
+        private val CARD_FACE_FLAVOR_TEXT = "card_face_flavor_text"
+        private val CARD_FACE_LAYOUT = "card_face_layout"
+        private val CARD_FACE_LOYALTY = "card_face_loyalty"
+        private val CARD_FACE_MANA_COST = "card_face_mana_cost"
+        private val CARD_FACE_NAME = "card_face_name"
+        private val CARD_FACE_ORACLE_TEXT = "card_face_oracle_text"
+        private val CARD_FACE_POWER = "card_face_power"
+        private val CARD_FACE_TOUGHNESS = "card_face_toughness"
+        private val CARD_FACE_TYPE_LINE = "card_face_type_line"
+        private val CARD_FACE_IMAGE_PNG = "card_face_image_png"
+        private val CARD_FACE_IMAGE_BORDER_CROP = "card_face_image_border_crop"
+        private val CARD_FACE_IMAGE_ART_CROP = "card_face_image_art_crop"
+        private val CARD_FACE_IMAGE_LARGE = "card_face_image_large"
+        private val CARD_FACE_IMAGE_NORMAL = "card_face_image_normal"
+        private val CARD_FACE_IMAGE_SMALL = "card_face_image_small"
 
         // RelatedCard table name
         private val RELATED_CARD_TABLE_NAME = "RelatedCard"
@@ -428,27 +428,27 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         contentValues.put(CARD_FACE_FLAVOR_TEXT, cardFace.flavor_text) // Missing Null Check
         contentValues.put(
             CARD_FACE_IMAGE_PNG,
-            if (cardFace.image_uris != null) cardFace.image_uris.png.toString() else null
+            if (cardFace.image_uris != null) cardFace.image_uris!!.png.toString() else null
         )
         contentValues.put(
             CARD_FACE_IMAGE_BORDER_CROP,
-            if (cardFace.image_uris != null) cardFace.image_uris.border_crop.toString() else null
+            if (cardFace.image_uris != null) cardFace.image_uris!!.border_crop.toString() else null
         )
         contentValues.put(
             CARD_FACE_IMAGE_ART_CROP,
-            if (cardFace.image_uris != null) cardFace.image_uris.art_crop.toString() else null
+            if (cardFace.image_uris != null) cardFace.image_uris!!.art_crop.toString() else null
         )
         contentValues.put(
             CARD_FACE_IMAGE_LARGE,
-            if (cardFace.image_uris != null) cardFace.image_uris.large.toString() else null
+            if (cardFace.image_uris != null) cardFace.image_uris!!.large.toString() else null
         )
         contentValues.put(
             CARD_FACE_IMAGE_NORMAL,
-            if (cardFace.image_uris != null) cardFace.image_uris.normal.toString() else null
+            if (cardFace.image_uris != null) cardFace.image_uris!!.normal.toString() else null
         )
         contentValues.put(
             CARD_FACE_IMAGE_SMALL,
-            if (cardFace.image_uris != null) cardFace.image_uris.small.toString() else null
+            if (cardFace.image_uris != null) cardFace.image_uris!!.small.toString() else null
         )
         val result = db.insert(CARD_FACE_TABLE_NAME, null, contentValues)
         return result
@@ -573,30 +573,30 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         cardArtist: String?
     ): MutableList<Card> {
         var whereStarted = false
-        var query = "SELECT * FROM $CARD_TABLE_NAME"
+        var query = "SELECT * FROM $CARD_TABLE_NAME c LEFT JOIN $CARD_FACE_TABLE_NAME cf ON c.$CARD_SCRYFALL_ID == cf.$CARD_FACE_SCRYFALL_ID_MAIN_CARD"
         if (cardName != null && cardName != "") {
             query += if (whereStarted) " AND" else " WHERE"
-            query += " $CARD_NAME LIKE '%${cardName}%'"
+            query += " c.$CARD_NAME LIKE '%${cardName.replace("'", "_")}%'"
             whereStarted = true
         }
         if (!cardTypes.isNullOrEmpty() && isCardTypes != null && isCardTypes.isNotEmpty()) {
             var k = 0
             while (k < cardTypes.size) {
                 query += if (!whereStarted) " WHERE (" else if (k == 0) " AND (" else if (cardTypesAnd) " AND" else " OR"
-                query += " $CARD_TYPE_LINE"
+                query += " c.$CARD_TYPE_LINE"
                 if (!isCardTypes[k]) query += " NOT"
-                query += " LIKE '%${cardTypes[k]}%'"
+                query += " LIKE '%${cardTypes[k].replace("'", "_")}%'"
                 whereStarted = true
                 ++k
             }
             query += ")"
         }
         if (cardText != null && cardText != "") {
-            val words = cardText.split(" ")
+            val words = cardText.replace("'", "_").split(" ")
             var first = true
             words.forEach {
                 query += if (!whereStarted) " WHERE (" else if (first) " AND (" else " AND"
-                query += " $CARD_ORACLE_TEXT LIKE '%${it}%'"
+                query += " c.$CARD_ORACLE_TEXT LIKE '%${it}%'"
                 whereStarted = true
                 first = false
             }
@@ -605,7 +605,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         if (!manaValueParamsArray.isNullOrEmpty()) {
             var k = 0
             while (k < manaValueParamsArray.size) {
-                query += if (!whereStarted) " WHERE ($CARD_CMC ${manaValueParamsArray[k]}" else if (k == 0) " AND ($CARD_CMC ${manaValueParamsArray[k]}" else if (k % 2 == 0) " $CARD_CMC ${manaValueParamsArray[k]}" else " ${manaValueParamsArray[k]}"
+                query += if (!whereStarted) " WHERE (c.$CARD_CMC ${manaValueParamsArray[k]}" else if (k == 0) " AND (c.$CARD_CMC ${manaValueParamsArray[k]}" else if (k % 2 == 0) " c.$CARD_CMC ${manaValueParamsArray[k]}" else " ${manaValueParamsArray[k]}"
                 whereStarted = true
                 ++k
             }
@@ -614,7 +614,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         if (!powerParamsArray.isNullOrEmpty()) {
             var k = 0
             while (k < powerParamsArray.size) {
-                query += if (!whereStarted) " WHERE ($CARD_POWER ${powerParamsArray[k]}" else if (k == 0) " AND ($CARD_POWER ${powerParamsArray[k]}" else if (k % 2 == 0) " $CARD_POWER ${powerParamsArray[k]}" else " ${powerParamsArray[k]}"
+                query += if (!whereStarted) " WHERE (c.$CARD_POWER ${powerParamsArray[k]}" else if (k == 0) " AND (c.$CARD_POWER ${powerParamsArray[k]}" else if (k % 2 == 0) " c.$CARD_POWER ${powerParamsArray[k]}" else " ${powerParamsArray[k]}"
                 whereStarted = true
                 ++k
             }
@@ -623,7 +623,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         if (!toughnessParamsArray.isNullOrEmpty()) {
             var k = 0
             while (k < toughnessParamsArray.size) {
-                query += if (!whereStarted) " WHERE ($CARD_TOUGHNESS ${toughnessParamsArray[k]}" else if (k == 0) " AND ($CARD_TOUGHNESS ${toughnessParamsArray[k]}" else if (k % 2 == 0) " $CARD_TOUGHNESS ${toughnessParamsArray[k]}" else " ${toughnessParamsArray[k]}"
+                query += if (!whereStarted) " WHERE (c.$CARD_TOUGHNESS ${toughnessParamsArray[k]}" else if (k == 0) " AND (c.$CARD_TOUGHNESS ${toughnessParamsArray[k]}" else if (k % 2 == 0) " c.$CARD_TOUGHNESS ${toughnessParamsArray[k]}" else " ${toughnessParamsArray[k]}"
                 whereStarted = true
                 ++k
             }
@@ -632,7 +632,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         if (!loyaltyParamsArray.isNullOrEmpty()) {
             var k = 0
             while (k < loyaltyParamsArray.size) {
-                query += if (!whereStarted) " WHERE ($CARD_LOYALTY ${loyaltyParamsArray[k]}" else if (k == 0) " AND ($CARD_LOYALTY ${loyaltyParamsArray[k]}" else if (k % 2 == 0) " $CARD_LOYALTY ${loyaltyParamsArray[k]}" else " ${loyaltyParamsArray[k]}"
+                query += if (!whereStarted) " WHERE (c.$CARD_LOYALTY ${loyaltyParamsArray[k]}" else if (k == 0) " AND (c.$CARD_LOYALTY ${loyaltyParamsArray[k]}" else if (k % 2 == 0) " c.$CARD_LOYALTY ${loyaltyParamsArray[k]}" else " ${loyaltyParamsArray[k]}"
                 whereStarted = true
                 ++k
             }
@@ -641,7 +641,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         if (!rarityParamsArray.isNullOrEmpty()) {
             var k = 0
             while (k < rarityParamsArray.size) {
-                query += if (!whereStarted) " WHERE ($CARD_RARITY == '${rarityParamsArray[k].lowercase()}'" else if (k == 0) " AND ($CARD_RARITY == '${rarityParamsArray[k].lowercase()}'" else if (k % 2 == 0) " $CARD_RARITY == '${rarityParamsArray[k].lowercase()}'" else " ${rarityParamsArray[k]}"
+                query += if (!whereStarted) " WHERE (c.$CARD_RARITY == '${rarityParamsArray[k].lowercase()}'" else if (k == 0) " AND (c.$CARD_RARITY == '${rarityParamsArray[k].lowercase()}'" else if (k % 2 == 0) " c.$CARD_RARITY == '${rarityParamsArray[k].lowercase()}'" else " ${rarityParamsArray[k]}"
                 whereStarted = true
                 ++k
             }
@@ -650,15 +650,15 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         if (!legalityParamsArray.isNullOrEmpty()) {
             var k = 0
             while (k < legalityParamsArray.size) {
-                query += if (!whereStarted) " WHERE (legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${
+                query += if (!whereStarted) " WHERE (c.legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${
                     legalityParamsArray[k].split(
                         " "
                     )[0].lowercase()
-                }'" else if (k == 0) " AND (legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${
+                }'" else if (k == 0) " AND (c.legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${
                     legalityParamsArray[k].split(
                         " "
                     )[0].lowercase()
-                }'" else if (k % 2 == 0) " legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${
+                }'" else if (k % 2 == 0) " c.legal_${legalityParamsArray[k].split(" ")[1].lowercase()} == '${
                     legalityParamsArray[k].split(
                         " "
                     )[0].lowercase()
@@ -671,11 +671,11 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         if (!layoutParamsArray.isNullOrEmpty()) {
             var k = 0
             while (k < layoutParamsArray.size) {
-                query += if (!whereStarted) " WHERE ($CARD_LAYOUT == '${
+                query += if (!whereStarted) " WHERE (c.$CARD_LAYOUT == '${
                     layoutParamsArray[k].lowercase().replace(" ", "_")
-                }'" else if (k == 0) " AND ($CARD_LAYOUT == '${
+                }'" else if (k == 0) " AND (c.$CARD_LAYOUT == '${
                     layoutParamsArray[k].lowercase().replace(" ", "_")
-                }'" else if (k % 2 == 0) " $CARD_LAYOUT == '${
+                }'" else if (k % 2 == 0) " c.$CARD_LAYOUT == '${
                     layoutParamsArray[k].lowercase().replace(" ", "_")
                 }'" else " ${layoutParamsArray[k]}"
                 whereStarted = true
@@ -685,7 +685,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         }
         else {
             query += if (!whereStarted) " WHERE (" else " AND ("
-            query += "NOT $CARD_LAYOUT == 'planar' AND NOT $CARD_LAYOUT == 'scheme' AND NOT $CARD_LAYOUT == 'vanguard' AND NOT $CARD_LAYOUT == 'token' AND NOT $CARD_LAYOUT == 'double_faced_token' AND NOT $CARD_LAYOUT == 'emblem' AND NOT $CARD_LAYOUT == 'art_series' AND NOT $CARD_LAYOUT == 'reversible_card'"
+            query += "NOT c.$CARD_LAYOUT == 'planar' AND NOT c.$CARD_LAYOUT == 'scheme' AND NOT c.$CARD_LAYOUT == 'vanguard' AND NOT c.$CARD_LAYOUT == 'token' AND NOT c.$CARD_LAYOUT == 'double_faced_token' AND NOT c.$CARD_LAYOUT == 'emblem' AND NOT c.$CARD_LAYOUT == 'art_series' AND NOT c.$CARD_LAYOUT == 'reversible_card'"
             query += ")"
             whereStarted = true
         }
@@ -696,7 +696,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                 val subString = costStr.substring(costStr.indexOf('{'), costStr.indexOf('}') + 1)
                 query += if (!whereStarted) " WHERE (" else if (first) " AND (" else " AND"
                 val subStrCount = countSubString(costStr, subString)
-                query += " $CARD_MANA_COST LIKE '%"
+                query += " c.$CARD_MANA_COST LIKE '%"
                 var k = 0
                 while (k < subStrCount) {
                     query += subString
@@ -710,7 +710,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             query += ")"
         }
         if (cardColor != null && cardColor != "") {
-            if (cardColor == "C") query += if (!whereStarted) " WHERE ($CARD_COLORS == ''" else " AND ($CARD_COLORS == ''"
+            if (cardColor == "C") query += if (!whereStarted) " WHERE (c.$CARD_COLORS == ''" else " AND (c.$CARD_COLORS == ''"
             else {
                 when (colorOperator) {
                     "exactly" -> {
@@ -718,14 +718,14 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         val colorsNotSelected = mutableListOf("W", "U", "B", "R", "G")
                         var k = 0
                         while (k < colors.size) {
-                            query += if (!whereStarted) " WHERE ($CARD_COLORS LIKE '%${colors[k]}%'" else if (k == 0) " AND ($CARD_COLORS LIKE '%${colors[k]}%'" else " AND $CARD_COLORS LIKE '%${colors[k]}%'"
+                            query += if (!whereStarted) " WHERE (c.$CARD_COLORS LIKE '%${colors[k]}%'" else if (k == 0) " AND (c.$CARD_COLORS LIKE '%${colors[k]}%'" else " AND c.$CARD_COLORS LIKE '%${colors[k]}%'"
                             colorsNotSelected.remove(colors[k])
                             whereStarted = true
                             ++k
                         }
                         k = 0
                         while (k < colorsNotSelected.size) {
-                            query += if (k == 0) ") AND ($CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'" else " AND $CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'"
+                            query += if (k == 0) ") AND (c.$CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'" else " AND c.$CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'"
                             ++k
                         }
                     }
@@ -733,7 +733,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         val colors = colorStringtoArray(cardColor)
                         var k = 0
                         while (k < colors.size) {
-                            query += if (!whereStarted) " WHERE ($CARD_COLORS LIKE '%${colors[k]}%'" else if (k == 0) " AND ($CARD_COLORS LIKE '%${colors[k]}%'" else " AND $CARD_COLORS LIKE '%${colors[k]}%'"
+                            query += if (!whereStarted) " WHERE (c.$CARD_COLORS LIKE '%${colors[k]}%'" else if (k == 0) " AND (c.$CARD_COLORS LIKE '%${colors[k]}%'" else " AND c.$CARD_COLORS LIKE '%${colors[k]}%'"
                             whereStarted = true
                             ++k
                         }
@@ -743,14 +743,14 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         val colorsNotSelected = mutableListOf("W", "U", "B", "R", "G")
                         var k = 0
                         while (k < colors.size) {
-                            query += if (!whereStarted) " WHERE ($CARD_COLORS LIKE '%${colors[k]}%'" else if (k == 0) " AND ($CARD_COLORS LIKE '%${colors[k]}%'" else " OR $CARD_COLORS LIKE '%${colors[k]}%'"
+                            query += if (!whereStarted) " WHERE (c.$CARD_COLORS LIKE '%${colors[k]}%'" else if (k == 0) " AND (c.$CARD_COLORS LIKE '%${colors[k]}%'" else " OR c.$CARD_COLORS LIKE '%${colors[k]}%'"
                             colorsNotSelected.remove(colors[k])
                             whereStarted = true
                             ++k
                         }
                         k = 0
                         while (k < colorsNotSelected.size) {
-                            query += if (k == 0) ") AND ($CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'" else " AND $CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'"
+                            query += if (k == 0) ") AND (c.$CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'" else " AND c.$CARD_COLORS NOT LIKE '%${colorsNotSelected[k]}%'"
                             ++k
                         }
                     }
@@ -760,20 +760,20 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             query += ")"
         }
         if (cardColorIdentity != null && cardColorIdentity != "") {
-            if (cardColorIdentity == "C") query += if (!whereStarted) " WHERE ($CARD_COLOR_IDENTITY == ''" else " AND ($CARD_COLOR_IDENTITY == ''"
+            if (cardColorIdentity == "C") query += if (!whereStarted) " WHERE (c.$CARD_COLOR_IDENTITY == ''" else " AND (c.$CARD_COLOR_IDENTITY == ''"
             else {
                 val colors = colorStringtoArray(cardColorIdentity)
                 val colorsNotInIdentity = mutableListOf("W", "U", "B", "R", "G")
                 var k = 0
                 while (k < colors.size) {
-                    query += if (!whereStarted) " WHERE ($CARD_COLOR_IDENTITY LIKE '%${colors[k]}%'" else if (k == 0) " AND ($CARD_COLOR_IDENTITY LIKE '%${colors[k]}%'" else " OR $CARD_COLOR_IDENTITY LIKE '%${colors[k]}%'"
+                    query += if (!whereStarted) " WHERE (c.$CARD_COLOR_IDENTITY LIKE '%${colors[k]}%'" else if (k == 0) " AND (c.$CARD_COLOR_IDENTITY LIKE '%${colors[k]}%'" else " OR c.$CARD_COLOR_IDENTITY LIKE '%${colors[k]}%'"
                     colorsNotInIdentity.remove(colors[k])
                     whereStarted = true
                     ++k
                 }
                 k = 0
                 while (k < colorsNotInIdentity.size) {
-                    query += if (k == 0) ") AND ($CARD_COLOR_IDENTITY NOT LIKE '%${colorsNotInIdentity[k]}%'" else " AND $CARD_COLOR_IDENTITY NOT LIKE '%${colorsNotInIdentity[k]}%'"
+                    query += if (k == 0) ") AND (c.$CARD_COLOR_IDENTITY NOT LIKE '%${colorsNotInIdentity[k]}%'" else " AND c.$CARD_COLOR_IDENTITY NOT LIKE '%${colorsNotInIdentity[k]}%'"
                     ++k
                 }
             }
@@ -784,18 +784,18 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             val colors = colorStringtoArray(cardProducedMana)
             var k = 0
             while (k < colors.size) {
-                query += if (!whereStarted) " WHERE ($CARD_PRODUCED_MANA LIKE '%${colors[k]}%'" else if (k == 0) " AND ($CARD_PRODUCED_MANA LIKE '%${colors[k]}%'" else " AND $CARD_PRODUCED_MANA LIKE '%${colors[k]}%'"
+                query += if (!whereStarted) " WHERE (c.$CARD_PRODUCED_MANA LIKE '%${colors[k]}%'" else if (k == 0) " AND (c.$CARD_PRODUCED_MANA LIKE '%${colors[k]}%'" else " AND c.$CARD_PRODUCED_MANA LIKE '%${colors[k]}%'"
                 whereStarted = true
                 ++k
             }
             query += ")"
         }
         if (cardFlavorText != null && cardFlavorText != "") {
-            val words = cardFlavorText.split(" ")
+            val words = cardFlavorText.replace("'", "_").split(" ")
             var first = true
             words.forEach {
                 query += if (!whereStarted) " WHERE (" else if (first) " AND (" else " AND"
-                query += " $CARD_FLAVOR_TEXT LIKE '%${it}%'"
+                query += " c.$CARD_FLAVOR_TEXT LIKE '%${it}%'"
                 whereStarted = true
                 first = false
             }
@@ -803,20 +803,20 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         }
         if (priceValue != null && priceValue != "") {
             query += if (!whereStarted) " WHERE (" else " AND ("
-            query += if (priceCoin == "usd") "$CARD_PRICE_USD" else if (priceCoin == "eur") "$CARD_PRICE_EUR" else "$CARD_PRICE_TIX"
+            query += if (priceCoin == "usd") "c.$CARD_PRICE_USD" else if (priceCoin == "eur") "c.$CARD_PRICE_EUR" else "c.$CARD_PRICE_TIX"
             query += " $priceOperator $priceValue"
             whereStarted = true
-            query += if (priceCoin == "usd") " AND $CARD_PRICE_USD NOT NULL" else if (priceCoin == "eur") " AND $CARD_PRICE_EUR NOT NULL" else " AND $CARD_PRICE_TIX NOT NULL"
+            query += if (priceCoin == "usd") " AND c.$CARD_PRICE_USD NOT NULL" else if (priceCoin == "eur") " AND c.$CARD_PRICE_EUR NOT NULL" else " AND c.$CARD_PRICE_TIX NOT NULL"
             query += ")"
         }
         if (cardSet != null && cardSet != "") {
             query += if (whereStarted) " AND" else " WHERE"
-            query += " $CARD_SET_SCRYFALL_ID LIKE '%${getSetID(cardSet)}%'"
+            query += " c.$CARD_SET_SCRYFALL_ID LIKE '%${getSetID(cardSet)}%'"
             whereStarted = true
         }
         if (cardArtist != null && cardArtist != "") {
             query += if (whereStarted) " AND" else " WHERE"
-            query += " $CARD_ARTIST LIKE '%${cardArtist}%'"
+            query += " c.$CARD_ARTIST LIKE '%${cardArtist}%'"
             whereStarted = true
         }
         query += " ORDER BY $CARD_NAME LIMIT 50"
@@ -863,6 +863,29 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                 card.image_uris?.large = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_LARGE)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_LARGE))) else null
                 card.image_uris?.normal = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL))) else null
                 card.image_uris?.small = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL))) else null
+                val cardFaceName = result.getStringOrNull(result.getColumnIndex(CARD_FACE_NAME))
+                if (cardFaceName != null) {
+                    var cardFace = CardFace ()
+                    cardFace.artist = result.getStringOrNull(result.getColumnIndex(CARD_FACE_ARTIST))
+                    cardFace.cmc = result.getFloat(result.getColumnIndex(CARD_FACE_CMC)).toDouble()
+                    cardFace.colors = colorStringtoArray(result.getString(result.getColumnIndex(CARD_FACE_COLORS)))
+                    cardFace.flavor_text = result.getStringOrNull(result.getColumnIndex(CARD_FACE_FLAVOR_TEXT))
+                    cardFace.image_uris?.png = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_PNG)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_PNG))) else null
+                    cardFace.image_uris?.border_crop = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_BORDER_CROP)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_BORDER_CROP))) else null
+                    cardFace.image_uris?.art_crop = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_ART_CROP)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_ART_CROP))) else null
+                    cardFace.image_uris?.large = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_LARGE)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_LARGE))) else null
+                    cardFace.image_uris?.normal = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_NORMAL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_NORMAL))) else null
+                    cardFace.image_uris?.small = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_SMALL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_SMALL))) else null
+                    cardFace.layout = result.getStringOrNull(result.getColumnIndex(CARD_FACE_LAYOUT))
+                    cardFace.loyalty = result.getStringOrNull(result.getColumnIndex(CARD_FACE_LOYALTY))
+                    cardFace.mana_cost = result.getStringOrNull(result.getColumnIndex(CARD_FACE_MANA_COST))
+                    cardFace.name = result.getStringOrNull(result.getColumnIndex(CARD_FACE_NAME))
+                    cardFace.oracle_text = result.getStringOrNull(result.getColumnIndex(CARD_FACE_ORACLE_TEXT))
+                    cardFace.power = result.getStringOrNull(result.getColumnIndex(CARD_FACE_POWER))
+                    cardFace.toughness = result.getStringOrNull(result.getColumnIndex(CARD_FACE_TOUGHNESS))
+                    cardFace.type_line = result.getStringOrNull(result.getColumnIndex(CARD_FACE_TYPE_LINE))
+                    card.card_faces = arrayOf(cardFace)
+                }
                 list.add(card)
             } while (result.moveToNext())
         }
@@ -981,7 +1004,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     fun getCardNameCatalog (str: String): MutableList<String> {
         val list: MutableList<String> = ArrayList()
         val db = this.readableDatabase
-        var query = "SELECT $CARD_NAME FROM $CARD_TABLE_NAME WHERE $CARD_NAME LIKE '%$str%' ORDER BY $CARD_NAME"
+        var query = "SELECT $CARD_NAME FROM $CARD_TABLE_NAME WHERE $CARD_NAME LIKE '%${str.replace("'", "_")}%' AND NOT $CARD_LAYOUT == 'planar' AND NOT $CARD_LAYOUT == 'scheme' AND NOT $CARD_LAYOUT == 'vanguard' AND NOT $CARD_LAYOUT == 'token' AND NOT $CARD_LAYOUT == 'double_faced_token' AND NOT $CARD_LAYOUT == 'emblem' AND NOT $CARD_LAYOUT == 'art_series' AND NOT $CARD_LAYOUT == 'reversible_card' ORDER BY $CARD_NAME"
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
             do {

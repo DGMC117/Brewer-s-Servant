@@ -2,30 +2,52 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/selectableItemBackground">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/card_image"
         android:layout_width="100dp"
-        android:layout_height="75dp"
-        android:scaleType="centerCrop"/>
+        android:layout_height="70dp"
+        android:scaleType="centerCrop"
+        android:padding="5dp"
+        android:adjustViewBounds="true"
+        android:layout_centerVertical="true"
+        app:shapeAppearanceOverlay="@style/roundedImageView"/>
 
     <TextView
-        android:id="@+id/card_title"
-        android:layout_width="match_parent"
+        android:id="@+id/card_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/card_image"
-        android:maxLines="1"
-        android:textAppearance="?attr/textAppearanceSubtitle1"/>
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:padding="5dp"
+        android:layout_toEndOf="@+id/card_image"/>
+
+    <TextView
+        android:id="@+id/card_mana_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentEnd="true"/>
+
+    <TextView
+        android:id="@+id/card_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:padding="5dp"
+        android:layout_below="@+id/card_name"
+        android:layout_toEndOf="@id/card_image"/>
 
     <TextView
         android:id="@+id/card_text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/card_title"
-        android:layout_gravity="center_vertical"
-        android:layout_toEndOf="@id/card_image"
-        android:maxLines="2"
-        android:textAppearance="?attr/textAppearanceBody2"/>
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:padding="5dp"
+        android:layout_below="@+id/card_type"
+        android:layout_toEndOf="@id/card_image"/>
 
 </RelativeLayout>

@@ -2,7 +2,6 @@ package magicchief.main.brewersservant
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
@@ -25,11 +24,34 @@ class CardListAdapter(val cardList: MutableList<Card>, context: Context): Recycl
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemTitle.text = cardList[position].name
-        holder.itemDetail.text = stringToSpannableString (cardList[position].mana_cost.toString(), holder.itemDetail.textSize.toInt())
+        if (cardList[position].card_faces == null) {
+            holder.itemName.text = cardList[position].name
+            holder.itemText.text = stringToSpannableString(
+                cardList[position].oracle_text.toString(),
+                holder.itemText.textSize.toInt()
+            )
+            holder.itemCost.text = stringToSpannableString(
+                cardList[position].mana_cost.toString(),
+                holder.itemCost.textSize.toInt()
+            )
+            holder.itemType.text = cardList[position].type_line
+            Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).into(holder.itemImage)
+        }
+        else {
+            holder.itemName.text = cardList[position].card_faces?.get(0)?.name
+            holder.itemText.text = stringToSpannableString(
+                cardList[position].card_faces?.get(0)?.oracle_text.toString(),
+                holder.itemText.textSize.toInt()
+            )
+            holder.itemCost.text = stringToSpannableString(
+                cardList[position].card_faces?.get(0)?.mana_cost.toString(),
+                holder.itemCost.textSize.toInt()
+            )
+            holder.itemType.text = cardList[position].card_faces?.get(0)?.type_line
 
-        if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null) Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).into(holder.itemImage)
-        else holder.itemImage.setImageResource(R.drawable.ic_baseline_image_not_supported_24)
+            if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null && cardList[position].image_uris?.art_crop?.toString() != "null") Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).into(holder.itemImage)
+            else Picasso.get().load(cardList[position].card_faces?.get(0)?.image_uris?.art_crop?.toString()).into(holder.itemImage)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -38,13 +60,17 @@ class CardListAdapter(val cardList: MutableList<Card>, context: Context): Recycl
 
     inner class ViewHolder (itemView: View): RecyclerView.ViewHolder (itemView) {
         var itemImage: ImageView
-        var itemTitle: TextView
-        var itemDetail: TextView
+        var itemName: TextView
+        var itemText: TextView
+        var itemCost: TextView
+        var itemType: TextView
 
         init {
             itemImage = itemView.findViewById(R.id.card_image)
-            itemTitle = itemView.findViewById(R.id.card_title)
-            itemDetail= itemView.findViewById(R.id.card_text)
+            itemName = itemView.findViewById(R.id.card_name)
+            itemText= itemView.findViewById(R.id.card_text)
+            itemCost = itemView.findViewById(R.id.card_mana_cost)
+            itemType= itemView.findViewById(R.id.card_type)
         }
     }
 

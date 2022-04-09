@@ -3,17 +3,17 @@ package magicchief.main.brewersservant.dataclass
 import java.util.*
 
 class CardFace (
-    val artist: String,
-    val cmc: Double,
-    val colors: Array<String>,
-    val flavor_text: String,
-    val image_uris: ImageURIs,
-    val layout: String,
-    val loyalty: String,
-    val mana_cost: String,
-    val name: String,
-    val oracle_text: String,
-    val power: String,
-    val toughness: String,
-    val type_line: String
+    var artist: String? = null,
+    var cmc: Double? = null,
+    var colors: Array<String>? = null,
+    var flavor_text: String? = null,
+    var image_uris: ImageURIs? = ImageURIs(),
+    var layout: String? = null,
+    var loyalty: String? = null,
+    var mana_cost: String? = null,
+    var name: String? = null,
+    var oracle_text: String? = null,
+    var power: String? = null,
+    var toughness: String? = null,
+    var type_line: String? = null
         )

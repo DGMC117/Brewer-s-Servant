@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.divider.MaterialDividerItemDecoration
 
 class CardListActivity : AppCompatActivity() {
 
@@ -47,6 +49,9 @@ class CardListActivity : AppCompatActivity() {
         manaCost, cardColor, colorOperator, cardColorIdentity, cardProducedMana, cardFlavorText, priceCoin, priceOperator, priceValue, cardSet, cardArtist)
 
         var cardList = findViewById<RecyclerView>(R.id.card_list)
+        val divider = DividerItemDecoration (this, DividerItemDecoration.VERTICAL)
+        divider.setDrawable(getDrawable(R.drawable.divider)!!)
+        cardList.addItemDecoration(divider)
         layoutManager = LinearLayoutManager (this)
         cardList.layoutManager = layoutManager
         adapter = CardListAdapter(cards, this)
