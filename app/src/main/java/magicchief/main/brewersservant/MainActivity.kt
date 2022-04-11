@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var intent: Intent
         val sharedPref = Preferences(applicationContext)
         if (!sharedPref.databaseDownloadDone) intent = Intent (this, CardDownloadActivity::class.java)
-        else intent = Intent (this, CardSearchActivity::class.java)
+        else intent = Intent (this, HubActivity::class.java)
         startActivity(intent)
         finish()
     }
