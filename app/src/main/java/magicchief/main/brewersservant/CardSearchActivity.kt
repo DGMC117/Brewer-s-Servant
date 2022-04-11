@@ -1018,6 +1018,17 @@ class CardSearchActivity : AppCompatActivity() {
         var artistAdapter = ArrayAdapter(applicationContext, R.layout.list_item, artistCatalog)
         (artistTextView.editText as? AutoCompleteTextView)?.setAdapter(artistAdapter)
 
+        val similarToTextView = findViewById<TextInputLayout>(R.id.card_name_similar_to)
+        var similarToCatalog: MutableList<String> = ArrayList()
+        var similarToAdapter = ArrayAdapter(applicationContext, R.layout.list_item, similarToCatalog)
+        (similarToTextView.editText as? AutoCompleteTextView)?.setAdapter(similarToAdapter)
+        similarToTextView.editText?.doOnTextChanged { text, start, before, count ->
+            if (text != null && text!!.length > 2) similarToCatalog = dbHelper.getCardNameCatalog (text.toString())
+            else similarToCatalog = ArrayList()
+            similarToAdapter = ArrayAdapter(applicationContext, R.layout.list_item, similarToCatalog)
+            (similarToTextView.editText as? AutoCompleteTextView)?.setAdapter(similarToAdapter)
+        }
+
         val searchButton = findViewById<FloatingActionButton>(R.id.search_fab)
         searchButton.setOnClickListener {
             var cardTypesList = mutableListOf<String>()
@@ -1079,32 +1090,36 @@ class CardSearchActivity : AppCompatActivity() {
                 ++k
             }
             val colorOperator = if (colorOperatorToggle.checkedButtonId == R.id.color_exactly_button) "exactly" else if (colorOperatorToggle.checkedButtonId == R.id.color_including_button) "including" else "at_most"
-
-            val intent = Intent (this, CardListActivity::class.java)
-            intent.putExtra("card_name", nameTextView.editText?.text.toString())
-            intent.putExtra("card_types", cardTypesList.toTypedArray())
-            intent.putExtra("is_card_types", isCardTypesList.toBooleanArray())
-            intent.putExtra("card_type_and", (cardTypesAndOrChipGroup.get(0) as Chip).isChecked)
-            intent.putExtra("card_text", cardTextTextView.editText?.text.toString())
-            intent.putExtra("mana_value_params", manaValueParameters.toTypedArray())
-            intent.putExtra("power_params", powerParameters.toTypedArray())
-            intent.putExtra("toughness_params", toughnessParameters.toTypedArray())
-            intent.putExtra("loyalty_params", loyaltyParameters.toTypedArray())
-            intent.putExtra("rarity_params", rarityParameters.toTypedArray())
-            intent.putExtra("legality_params", legalityParameters.toTypedArray())
-            intent.putExtra("layout_params", layoutParameters.toTypedArray())
-            intent.putExtra("mana_cost", manaCostTextInput.editText?.text.toString())
-            intent.putExtra("color", getColorsSelectedArray(colorToggleGroup, "color"))
-            intent.putExtra("color_operator", colorOperator)
-            intent.putExtra("color_identity", getColorsSelectedArray(colorIdentityToggleGroup, "identity"))
-            intent.putExtra("produced_mana", getColorsSelectedArray(producedManaToggleGroup, "produced"))
-            intent.putExtra("card_flavor_text", cardFlavorTextTextView.editText?.text.toString())
-            intent.putExtra("price_coin", if (priceCoinToggle.checkedButtonId == R.id.price_usd_button) "usd" else if (priceCoinToggle.checkedButtonId == R.id.price_eur_button) "eur" else "tix")
-            intent.putExtra("price_operator", priceMathRelationTextView.editText?.text.toString())
-            intent.putExtra("price_value", priceValueInput.editText?.text.toString())
-            intent.putExtra("card_set", setTextView.editText?.text.toString())
-            intent.putExtra("card_artist", artistTextView.editText?.text.toString())
-            startActivity(intent)
+            val db = DBHelper (applicationContext)
+            if (similarToTextView.editText?.text.toString() == "" || db.isCardNameValid(similarToTextView.editText?.text.toString())) {
+                val intent = Intent (this, CardListActivity::class.java)
+                intent.putExtra("card_name", nameTextView.editText?.text.toString())
+                intent.putExtra("card_types", cardTypesList.toTypedArray())
+                intent.putExtra("is_card_types", isCardTypesList.toBooleanArray())
+                intent.putExtra("card_type_and", (cardTypesAndOrChipGroup.get(0) as Chip).isChecked)
+                intent.putExtra("card_text", cardTextTextView.editText?.text.toString())
+                intent.putExtra("mana_value_params", manaValueParameters.toTypedArray())
+                intent.putExtra("power_params", powerParameters.toTypedArray())
+                intent.putExtra("toughness_params", toughnessParameters.toTypedArray())
+                intent.putExtra("loyalty_params", loyaltyParameters.toTypedArray())
+                intent.putExtra("rarity_params", rarityParameters.toTypedArray())
+                intent.putExtra("legality_params", legalityParameters.toTypedArray())
+                intent.putExtra("layout_params", layoutParameters.toTypedArray())
+                intent.putExtra("mana_cost", manaCostTextInput.editText?.text.toString())
+                intent.putExtra("color", getColorsSelectedArray(colorToggleGroup, "color"))
+                intent.putExtra("color_operator", colorOperator)
+                intent.putExtra("color_identity", getColorsSelectedArray(colorIdentityToggleGroup, "identity"))
+                intent.putExtra("produced_mana", getColorsSelectedArray(producedManaToggleGroup, "produced"))
+                intent.putExtra("card_flavor_text", cardFlavorTextTextView.editText?.text.toString())
+                intent.putExtra("price_coin", if (priceCoinToggle.checkedButtonId == R.id.price_usd_button) "usd" else if (priceCoinToggle.checkedButtonId == R.id.price_eur_button) "eur" else "tix")
+                intent.putExtra("price_operator", priceMathRelationTextView.editText?.text.toString())
+                intent.putExtra("price_value", priceValueInput.editText?.text.toString())
+                intent.putExtra("card_set", setTextView.editText?.text.toString())
+                intent.putExtra("card_artist", artistTextView.editText?.text.toString())
+                intent.putExtra("similar_to_card_name", similarToTextView.editText?.text.toString())
+                startActivity(intent)
+            }
+            else Toast.makeText(applicationContext, getString(R.string.not_valid_similar_to), Toast.LENGTH_SHORT).show()
         }
     }
 

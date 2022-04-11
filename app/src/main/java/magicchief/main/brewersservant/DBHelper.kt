@@ -570,9 +570,15 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         priceOperator: String?,
         priceValue: String?,
         cardSet: String?,
-        cardArtist: String?
+        cardArtist: String?,
+        similarToCardName: String?
     ): MutableList<Card> {
         var whereStarted = false
+        var similarSearch = false
+        if (similarToCardName != null && similarToCardName != "") {
+            similarWordTableInitialise (similarToCardName)
+            similarSearch = true
+        }
         var query = "SELECT * FROM $CARD_TABLE_NAME c LEFT JOIN $CARD_FACE_TABLE_NAME cf ON c.$CARD_SCRYFALL_ID == cf.$CARD_FACE_SCRYFALL_ID_MAIN_CARD"
         if (cardName != null && cardName != "") {
             query += if (whereStarted) " AND" else " WHERE"
@@ -819,7 +825,12 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             query += " c.$CARD_ARTIST LIKE '%${cardArtist}%'"
             whereStarted = true
         }
-        query += " ORDER BY $CARD_NAME LIMIT 50" // OFFSET 50
+        if (similarSearch) {
+            query += " ORDER BY (SELECT COUNT (*) FROM similarCard s WHERE c.$CARD_ORACLE_TEXT LIKE '%' || s.textWord || '%') DESC"
+        }
+        else query += " ORDER BY $CARD_NAME"
+        query += " LIMIT 100" // OFFSET 50
+        println(query)
 
         val list: MutableList<Card> = ArrayList()
         val db = this.readableDatabase
@@ -1014,6 +1025,19 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         }
         return list
     }
+    fun isCardNameValid (str: String): Boolean {
+        var res = false
+        val db = this.readableDatabase
+        var query = "SELECT $CARD_NAME FROM $CARD_TABLE_NAME WHERE $CARD_NAME LIKE '%${str.replace("'", "_")}%' AND NOT $CARD_LAYOUT == 'planar' AND NOT $CARD_LAYOUT == 'scheme' AND NOT $CARD_LAYOUT == 'vanguard' AND NOT $CARD_LAYOUT == 'token' AND NOT $CARD_LAYOUT == 'double_faced_token' AND NOT $CARD_LAYOUT == 'emblem' AND NOT $CARD_LAYOUT == 'art_series' AND NOT $CARD_LAYOUT == 'reversible_card' ORDER BY $CARD_NAME"
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                val name = result.getStringOrNull(result.getColumnIndex(CARD_NAME))
+                if (name?.lowercase() == str.lowercase()) res = true
+            } while (result.moveToNext())
+        }
+        return res
+    }
 
     private fun colorArrayToString(colors: Array<String>?): String {
         var result = if (colors.isNullOrEmpty()) "" else colors[0]
@@ -1049,6 +1073,28 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             println(str)
         }
         return result
+    }
+
+    private fun similarWordTableInitialise (cardName: String) {
+        var query = "DROP TABLE IF EXISTS similarCard"
+        val dbW = this.writableDatabase
+        dbW.execSQL(query)
+        query = "CREATE TABLE similarCard (textWord text)"
+        dbW.execSQL(query)
+        query = "SELECT $CARD_ORACLE_TEXT FROM $CARD_TABLE_NAME WHERE $CARD_NAME LIKE '${cardName.replace("'", "_")}'"
+        val db = this.readableDatabase
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            val words = result.getStringOrNull(result.getColumnIndex(CARD_ORACLE_TEXT))?.split(" ")
+            words?.forEach {
+                val contentValues = ContentValues()
+                contentValues.put("textWord", it.lowercase().replace(".", "").replace(":", "").replace(",", "").replace("'", "_"))
+                val res = dbW.insert("similarCard", null, contentValues)
+                println(res.toString() + "   " + it.lowercase().replace(".", "").replace(":", "").replace(",", "").replace("'", "_"))
+            }
+        }
+        dbW.close()
+        db.close()
     }
 
     fun getSymbolDrawable(str: String): Drawable {

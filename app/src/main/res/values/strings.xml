@@ -34,6 +34,8 @@
     <string name="set_hint">Set</string>
     <string name="artist_hint">Artist</string>
     <string name="amount">Amount</string>
+    <string name="similar_to">Cards Similar To</string>
+    <string name="not_valid_similar_to">Similar to\'s card name is not valid!</string>
 
     <string name="w"></string>
     <string name="u"></string>
