@@ -819,7 +819,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             query += " c.$CARD_ARTIST LIKE '%${cardArtist}%'"
             whereStarted = true
         }
-        query += " ORDER BY $CARD_NAME LIMIT 50"
+        query += " ORDER BY $CARD_NAME LIMIT 50" // OFFSET 50
 
         val list: MutableList<Card> = ArrayList()
         val db = this.readableDatabase
