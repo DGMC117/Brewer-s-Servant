@@ -9,7 +9,7 @@ class Card (
 
     // Gameplay Fields
     val all_parts: Array<RelatedCard>? = null,
-    val card_faces: Array<CardFace>? = null,
+    var card_faces: Array<CardFace>? = null,
     var cmc: Double? = null,
     var color_identity: Array<String>? = null,
     var colors: Array<String>? = null,

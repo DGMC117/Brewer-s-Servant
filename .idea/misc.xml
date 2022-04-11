@@ -3,10 +3,90 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/circle_button.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/divider.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_0_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_1000000_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_100_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_10_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_11_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_12_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_13_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_14_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_15_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_16_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_17_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_18_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_19_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_1_2_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_1_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_20_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_2_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_2b_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_2g_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_2r_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_2u_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_2w_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_3_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_4_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_5_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_6_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_7_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_8_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_9_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_G_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_R_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_acorn_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_b_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_bg_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_bgp_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_bp_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_br_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_brp_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_c_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_chaos_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_e_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_g_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_gu_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_gup_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_gw_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_gwp.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_hr_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_infinity_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_mana.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_p_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_pw_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_q_cost.xml" value="0.3165" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_rg_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_rgp_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_rw_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_rwp_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_s_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_t_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_u_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_ub_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_ur_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_w_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_wb_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_wu_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_x_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_y_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_z_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/rounded_corners.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/activity_card_download.xml" value="0.31354166666666666" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/activity_card_list.xml" value="0.33" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/activity_card_search.xml" value="0.4381294964028777" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/activity_main.xml" value="0.47690217391304346" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/card_list_row.xml" value="0.31354166666666666" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/card_parameter_and_or_chip_item.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/card_parameter_chip_item.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/chip_item.xml" value="0.31354166666666666" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/divider.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/entry_chip_item.xml" value="0.4995471014492754" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/list_item.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/mana_cost_symbol_dialog.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/text_symbol_dialog.xml" value="1.0" />
       </map>
     </option>
   </component>
