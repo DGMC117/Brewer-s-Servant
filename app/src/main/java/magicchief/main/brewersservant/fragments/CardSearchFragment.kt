@@ -1,22 +1,17 @@
-package magicchief.main.brewersservant
+package magicchief.main.brewersservant.fragments
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.graphics.alpha
 import androidx.core.view.get
 import androidx.core.view.size
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -25,35 +20,45 @@ import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import okhttp3.internal.wait
-import org.w3c.dom.Text
-import kotlin.system.exitProcess
+import magicchief.main.brewersservant.DBHelper
+import magicchief.main.brewersservant.R
 
-class CardSearchActivity : AppCompatActivity() {
-    @SuppressLint("SetTextI18n")
+class CardSearchFragment : Fragment() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_card_search)
+    }
 
-        val dbHelper = DBHelper (applicationContext)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for requireContext() fragment
+        return inflater.inflate(R.layout.fragment_card_search, container, false)
+    }
 
-        val nameTextView = findViewById<TextInputLayout>(R.id.card_name)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val dbHelper = DBHelper (requireContext())
+
+        val nameTextView = requireView().findViewById<TextInputLayout>(R.id.card_name)
         var nameCatalog: MutableList<String> = ArrayList()
-        var nameAdapter = ArrayAdapter(applicationContext, R.layout.list_item, nameCatalog)
+        var nameAdapter = ArrayAdapter(requireContext(), R.layout.list_item, nameCatalog)
         (nameTextView.editText as? AutoCompleteTextView)?.setAdapter(nameAdapter)
         nameTextView.editText?.doOnTextChanged { text, start, before, count ->
             if (text != null && text!!.length > 2) nameCatalog = dbHelper.getCardNameCatalog (text.toString())
             else nameCatalog = ArrayList()
-            nameAdapter = ArrayAdapter(applicationContext, R.layout.list_item, nameCatalog)
+            nameAdapter = ArrayAdapter(requireContext(), R.layout.list_item, nameCatalog)
             (nameTextView.editText as? AutoCompleteTextView)?.setAdapter(nameAdapter)
         }
 
-        val cardTypesDivider = findViewById<MaterialDivider>(R.id.card_type_divider)
-        val cardTypesChipGroup = findViewById<ChipGroup>(R.id.card_type_chip_group)
+        val cardTypesDivider = requireView().findViewById<MaterialDivider>(R.id.card_type_divider)
+        val cardTypesChipGroup = requireView().findViewById<ChipGroup>(R.id.card_type_chip_group)
 
-        val typeLineTextView = findViewById<TextInputLayout>(R.id.card_type_text)
+        val typeLineTextView = requireView().findViewById<TextInputLayout>(R.id.card_type_text)
         val cardTypes = dbHelper.getAllTypeCatalogs()
-        val adapter = ArrayAdapter(applicationContext, R.layout.list_item, cardTypes)
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, cardTypes)
         (typeLineTextView.editText as? AutoCompleteTextView)?.setAdapter(adapter)
         (typeLineTextView.editText as? AutoCompleteTextView)?.setOnItemClickListener { adapterView, view, i, l ->
             cardTypesChipGroup.visibility = View.VISIBLE
@@ -67,7 +72,7 @@ class CardSearchActivity : AppCompatActivity() {
                 ++k
             }
             if (notRepeated) {
-                val inflater = LayoutInflater.from(this)
+                val inflater = LayoutInflater.from(requireContext())
                 val chipItem = inflater.inflate(R.layout.entry_chip_item, null, false) as Chip
                 chipItem.text = row
                 chipItem.setOnCloseIconClickListener {
@@ -80,18 +85,18 @@ class CardSearchActivity : AppCompatActivity() {
                 cardTypesChipGroup.addView(chipItem)
                 chipItem.isChecked = true
             }
-            else Toast.makeText(applicationContext, R.string.card_type_repeated, Toast.LENGTH_SHORT).show()
+            else Toast.makeText(activity, R.string.card_type_repeated, Toast.LENGTH_SHORT).show()
             (typeLineTextView.editText as? AutoCompleteTextView)?.setText("")
         }
 
-        val cardTypesAndOrChipGroup = findViewById<ChipGroup>(R.id.type_line_and_or_chip_group)
+        val cardTypesAndOrChipGroup = requireView().findViewById<ChipGroup>(R.id.type_line_and_or_chip_group)
 
-        val cardTextTextView = findViewById<TextInputLayout>(R.id.card_text_search)
+        val cardTextTextView = requireView().findViewById<TextInputLayout>(R.id.card_text_search)
 
-        val textAddSymbolButton = findViewById<Button>(R.id.text_add_mana_symbol_button)
+        val textAddSymbolButton = requireView().findViewById<Button>(R.id.text_add_mana_symbol_button)
         textAddSymbolButton.setOnClickListener {
-            val textSymbolDialog = LayoutInflater.from(this).inflate(R.layout.text_symbol_dialog, null, false)
-            val dialog = MaterialAlertDialogBuilder(this)
+            val textSymbolDialog = LayoutInflater.from(requireContext()).inflate(R.layout.text_symbol_dialog, null, false)
+            val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setView(textSymbolDialog)
                 .setTitle(R.string.add_mana_symbol)
                 .show()
@@ -332,37 +337,37 @@ class CardSearchActivity : AppCompatActivity() {
             }
         }
 
-        val manaValueLayout = findViewById<LinearLayout>(R.id.mana_value_selected_layout)
-        val manaValueInputLayout = findViewById<LinearLayout>(R.id.mana_value_input_layout)
-        val manaValueChipGroup = findViewById<ChipGroup>(R.id.mana_value_conditions_chip_group)
+        val manaValueLayout = requireView().findViewById<LinearLayout>(R.id.mana_value_selected_layout)
+        val manaValueInputLayout = requireView().findViewById<LinearLayout>(R.id.mana_value_input_layout)
+        val manaValueChipGroup = requireView().findViewById<ChipGroup>(R.id.mana_value_conditions_chip_group)
 
-        val powerLayout = findViewById<LinearLayout>(R.id.power_selected_layout)
-        val powerInputLayout = findViewById<LinearLayout>(R.id.power_input_layout)
-        val powerChipGroup = findViewById<ChipGroup>(R.id.power_conditions_chip_group)
+        val powerLayout = requireView().findViewById<LinearLayout>(R.id.power_selected_layout)
+        val powerInputLayout = requireView().findViewById<LinearLayout>(R.id.power_input_layout)
+        val powerChipGroup = requireView().findViewById<ChipGroup>(R.id.power_conditions_chip_group)
 
-        val toughnessLayout = findViewById<LinearLayout>(R.id.toughness_selected_layout)
-        val toughnessInputLayout = findViewById<LinearLayout>(R.id.toughness_input_layout)
-        val toughnessChipGroup = findViewById<ChipGroup>(R.id.toughness_conditions_chip_group)
+        val toughnessLayout = requireView().findViewById<LinearLayout>(R.id.toughness_selected_layout)
+        val toughnessInputLayout = requireView().findViewById<LinearLayout>(R.id.toughness_input_layout)
+        val toughnessChipGroup = requireView().findViewById<ChipGroup>(R.id.toughness_conditions_chip_group)
 
-        val loyaltyLayout = findViewById<LinearLayout>(R.id.loyalty_selected_layout)
-        val loyaltyInputLayout = findViewById<LinearLayout>(R.id.loyalty_input_layout)
-        val loyaltyChipGroup = findViewById<ChipGroup>(R.id.loyalty_conditions_chip_group)
+        val loyaltyLayout = requireView().findViewById<LinearLayout>(R.id.loyalty_selected_layout)
+        val loyaltyInputLayout = requireView().findViewById<LinearLayout>(R.id.loyalty_input_layout)
+        val loyaltyChipGroup = requireView().findViewById<ChipGroup>(R.id.loyalty_conditions_chip_group)
 
-        val rarityLayout = findViewById<LinearLayout>(R.id.rarity_selected_layout)
-        val rarityInputLayout = findViewById<LinearLayout>(R.id.rarity_input_layout)
-        val rarityChipGroup = findViewById<ChipGroup>(R.id.rarity_conditions_chip_group)
+        val rarityLayout = requireView().findViewById<LinearLayout>(R.id.rarity_selected_layout)
+        val rarityInputLayout = requireView().findViewById<LinearLayout>(R.id.rarity_input_layout)
+        val rarityChipGroup = requireView().findViewById<ChipGroup>(R.id.rarity_conditions_chip_group)
 
-        val legalityLayout = findViewById<LinearLayout>(R.id.legality_selected_layout)
-        val legalityInputLayout = findViewById<LinearLayout>(R.id.legality_input_layout)
-        val legalityChipGroup = findViewById<ChipGroup>(R.id.legality_conditions_chip_group)
+        val legalityLayout = requireView().findViewById<LinearLayout>(R.id.legality_selected_layout)
+        val legalityInputLayout = requireView().findViewById<LinearLayout>(R.id.legality_input_layout)
+        val legalityChipGroup = requireView().findViewById<ChipGroup>(R.id.legality_conditions_chip_group)
 
-        val layoutLayout = findViewById<LinearLayout>(R.id.layout_selected_layout)
-        val layoutInputLayout = findViewById<LinearLayout>(R.id.layout_input_layout)
-        val layoutChipGroup = findViewById<ChipGroup>(R.id.layout_conditions_chip_group)
+        val layoutLayout = requireView().findViewById<LinearLayout>(R.id.layout_selected_layout)
+        val layoutInputLayout = requireView().findViewById<LinearLayout>(R.id.layout_input_layout)
+        val layoutChipGroup = requireView().findViewById<ChipGroup>(R.id.layout_conditions_chip_group)
 
-        val cardParametersTextView = findViewById<TextInputLayout>(R.id.card_parameter_selector)
+        val cardParametersTextView = requireView().findViewById<TextInputLayout>(R.id.card_parameter_selector)
         val parametersValues = listOf("Mana Value", "Power", "Toughness", "Loyalty", "Rarity", "Legality", "Layout")
-        val parametersAdapter = ArrayAdapter(applicationContext, R.layout.list_item, parametersValues)
+        val parametersAdapter = ArrayAdapter(requireContext(), R.layout.list_item, parametersValues)
         (cardParametersTextView.editText as? AutoCompleteTextView)?.setAdapter(parametersAdapter)
         (cardParametersTextView.editText as? AutoCompleteTextView)?.setText(parametersValues[0], false)
         (cardParametersTextView.editText as? AutoCompleteTextView)?.setOnItemClickListener { adapterView, view, i, l ->
@@ -433,63 +438,63 @@ class CardSearchActivity : AppCompatActivity() {
             }
         }
 
-        val cardParametersMathRelationTextView = findViewById<TextInputLayout>(R.id.card_parameter_math_relation_selector)
+        val cardParametersMathRelationTextView = requireView().findViewById<TextInputLayout>(R.id.card_parameter_math_relation_selector)
         val parametersMathValues = listOf("==", "!=", "<", ">", "<=", ">=")
-        val parametersMathAdapter = ArrayAdapter(applicationContext, R.layout.list_item, parametersMathValues)
+        val parametersMathAdapter = ArrayAdapter(requireContext(), R.layout.list_item, parametersMathValues)
         (cardParametersMathRelationTextView.editText as? AutoCompleteTextView)?.setAdapter(parametersMathAdapter)
         (cardParametersMathRelationTextView.editText as? AutoCompleteTextView)?.setText(parametersMathValues[0], false)
 
-        val powerMathRelationTextView = findViewById<TextInputLayout>(R.id.power_math_relation_selector)
+        val powerMathRelationTextView = requireView().findViewById<TextInputLayout>(R.id.power_math_relation_selector)
         (powerMathRelationTextView.editText as? AutoCompleteTextView)?.setAdapter(parametersMathAdapter)
         (powerMathRelationTextView.editText as? AutoCompleteTextView)?.setText(parametersMathValues[0], false)
 
-        val toughnessMathRelationTextView = findViewById<TextInputLayout>(R.id.toughness_math_relation_selector)
+        val toughnessMathRelationTextView = requireView().findViewById<TextInputLayout>(R.id.toughness_math_relation_selector)
         (toughnessMathRelationTextView.editText as? AutoCompleteTextView)?.setAdapter(parametersMathAdapter)
         (toughnessMathRelationTextView.editText as? AutoCompleteTextView)?.setText(parametersMathValues[0], false)
 
-        val loyaltyMathRelationTextView = findViewById<TextInputLayout>(R.id.loyalty_math_relation_selector)
+        val loyaltyMathRelationTextView = requireView().findViewById<TextInputLayout>(R.id.loyalty_math_relation_selector)
         (loyaltyMathRelationTextView.editText as? AutoCompleteTextView)?.setAdapter(parametersMathAdapter)
         (loyaltyMathRelationTextView.editText as? AutoCompleteTextView)?.setText(parametersMathValues[0], false)
 
-        val cardManaValueInput = findViewById<TextInputLayout>(R.id.card_mana_value_input)
-        val powerValueInput = findViewById<TextInputLayout>(R.id.card_power_input)
-        val toughnessValueInput = findViewById<TextInputLayout>(R.id.card_toughness_input)
-        val loyaltyValueInput = findViewById<TextInputLayout>(R.id.card_loyalty_input)
-        val rarityValueInput = findViewById<TextInputLayout>(R.id.card_rarity_input)
+        val cardManaValueInput = requireView().findViewById<TextInputLayout>(R.id.card_mana_value_input)
+        val powerValueInput = requireView().findViewById<TextInputLayout>(R.id.card_power_input)
+        val toughnessValueInput = requireView().findViewById<TextInputLayout>(R.id.card_toughness_input)
+        val loyaltyValueInput = requireView().findViewById<TextInputLayout>(R.id.card_loyalty_input)
+        val rarityValueInput = requireView().findViewById<TextInputLayout>(R.id.card_rarity_input)
         val rarityValues = listOf("Common", "Uncommon", "Rare", "Mythic")
-        val rarityAdapter = ArrayAdapter(applicationContext, R.layout.list_item, rarityValues)
+        val rarityAdapter = ArrayAdapter(requireContext(), R.layout.list_item, rarityValues)
         (rarityValueInput.editText as? AutoCompleteTextView)?.setAdapter(rarityAdapter)
         (rarityValueInput.editText as? AutoCompleteTextView)?.setText(rarityValues[0], false)
-        val legalityTypeInput = findViewById<TextInputLayout>(R.id.legality_type_selector)
+        val legalityTypeInput = requireView().findViewById<TextInputLayout>(R.id.legality_type_selector)
         val legalityTypeValues = listOf("Legal", "Restricted", "Banned")
-        val legalityTypeAdapter = ArrayAdapter(applicationContext, R.layout.list_item, legalityTypeValues)
+        val legalityTypeAdapter = ArrayAdapter(requireContext(), R.layout.list_item, legalityTypeValues)
         (legalityTypeInput.editText as? AutoCompleteTextView)?.setAdapter(legalityTypeAdapter)
         (legalityTypeInput.editText as? AutoCompleteTextView)?.setText(legalityTypeValues[0], false)
-        val legalityFormatInput = findViewById<TextInputLayout>(R.id.legality_format_selector)
+        val legalityFormatInput = requireView().findViewById<TextInputLayout>(R.id.legality_format_selector)
         val legalityFormatValues = listOf("Standard", "Pioneer", "Modern", "Legacy", "Vintage", "Brawl", "Historic", "Pauper", "Penny", "Commander")
-        val legalityFormatAdapter = ArrayAdapter(applicationContext, R.layout.list_item, legalityFormatValues)
+        val legalityFormatAdapter = ArrayAdapter(requireContext(), R.layout.list_item, legalityFormatValues)
         (legalityFormatInput.editText as? AutoCompleteTextView)?.setAdapter(legalityFormatAdapter)
         (legalityFormatInput.editText as? AutoCompleteTextView)?.setText(legalityFormatValues[0], false)
-        val layoutValueInput = findViewById<TextInputLayout>(R.id.card_layout_input)
+        val layoutValueInput = requireView().findViewById<TextInputLayout>(R.id.card_layout_input)
         val layoutValues = listOf("Normal", "Split", "Flip", "Transform", "Modal DFC", "Meld", "Leveler", "Class", "Saga", "Adventure", "Planar", "Scheme", "Vanguard", "Token", "Double Faced Token", "Emblem", "Augment", "Host", "Art Series", "Reversible Card")
-        val layoutAdapter = ArrayAdapter(applicationContext, R.layout.list_item, layoutValues)
+        val layoutAdapter = ArrayAdapter(requireContext(), R.layout.list_item, layoutValues)
         (layoutValueInput.editText as? AutoCompleteTextView)?.setAdapter(layoutAdapter)
         (layoutValueInput.editText as? AutoCompleteTextView)?.setText(layoutValues[0], false)
 
-        val addParameterButton = findViewById<Button>(R.id.add_parameter_button)
+        val addParameterButton = requireView().findViewById<Button>(R.id.add_parameter_button)
         addParameterButton.setOnClickListener {
             when (cardParametersTextView.editText?.text.toString())  {
                 "Mana Value" ->
-                    if (cardManaValueInput.editText?.text.toString() == "") Toast.makeText(applicationContext, R.string.no_mana_value_selected, Toast.LENGTH_SHORT).show()
+                    if (cardManaValueInput.editText?.text.toString() == "") Toast.makeText(requireContext(), R.string.no_mana_value_selected, Toast.LENGTH_SHORT).show()
                     else {
                         manaValueLayout.visibility = View.VISIBLE
                         if (manaValueChipGroup.size != 0) {
-                            val inflater = LayoutInflater.from(this)
+                            val inflater = LayoutInflater.from(requireContext())
                             val chipItem = inflater.inflate(R.layout.card_parameter_and_or_chip_item, null, false) as Chip
                             chipItem.text = resources.getString(R.string.and)
                             chipItem.setOnClickListener { chipItem.text = if (chipItem.text == resources.getString(R.string.or)) resources.getString(R.string.and) else resources.getString(R.string.or) }
                             manaValueChipGroup.addView(chipItem)
-                            val inflater2 = LayoutInflater.from(this)
+                            val inflater2 = LayoutInflater.from(requireContext())
                             val chipItem2 = inflater2.inflate(R.layout.card_parameter_chip_item, null, false) as Chip
                             chipItem2.text = cardParametersMathRelationTextView.editText?.text.toString() + " "  + cardManaValueInput.editText?.text.toString()
                             chipItem2.setOnCloseIconClickListener {
@@ -501,7 +506,7 @@ class CardSearchActivity : AppCompatActivity() {
                             manaValueChipGroup.addView(chipItem2)
                         }
                         else {
-                            val inflater = LayoutInflater.from(this)
+                            val inflater = LayoutInflater.from(requireContext())
                             val chipItem = inflater.inflate(R.layout.card_parameter_chip_item,null,false) as Chip
                             chipItem.text = cardParametersMathRelationTextView.editText?.text.toString() + " " + cardManaValueInput.editText?.text.toString()
                             chipItem.setOnCloseIconClickListener {
@@ -514,16 +519,16 @@ class CardSearchActivity : AppCompatActivity() {
                         (cardManaValueInput.editText as? TextInputEditText)?.setText("")
                     }
                 "Power" ->
-                    if (powerValueInput.editText?.text.toString() == "") Toast.makeText(applicationContext, R.string.no_power_selected, Toast.LENGTH_SHORT).show()
+                    if (powerValueInput.editText?.text.toString() == "") Toast.makeText(requireContext(), R.string.no_power_selected, Toast.LENGTH_SHORT).show()
                     else {
                         powerLayout.visibility = View.VISIBLE
                         if (powerChipGroup.size != 0) {
-                            val inflater = LayoutInflater.from(this)
+                            val inflater = LayoutInflater.from(requireContext())
                             val chipItem = inflater.inflate(R.layout.card_parameter_and_or_chip_item, null, false) as Chip
                             chipItem.text = resources.getString(R.string.and)
                             chipItem.setOnClickListener { chipItem.text = if (chipItem.text == resources.getString(R.string.or)) resources.getString(R.string.and) else resources.getString(R.string.or) }
                             powerChipGroup.addView(chipItem)
-                            val inflater2 = LayoutInflater.from(this)
+                            val inflater2 = LayoutInflater.from(requireContext())
                             val chipItem2 = inflater2.inflate(R.layout.card_parameter_chip_item, null, false) as Chip
                             chipItem2.text = powerMathRelationTextView.editText?.text.toString() + " "  + powerValueInput.editText?.text.toString()
                             chipItem2.setOnCloseIconClickListener {
@@ -535,7 +540,7 @@ class CardSearchActivity : AppCompatActivity() {
                             powerChipGroup.addView(chipItem2)
                         }
                         else {
-                            val inflater = LayoutInflater.from(this)
+                            val inflater = LayoutInflater.from(requireContext())
                             val chipItem = inflater.inflate(R.layout.card_parameter_chip_item,null,false) as Chip
                             chipItem.text = powerMathRelationTextView.editText?.text.toString() + " " + powerValueInput.editText?.text.toString()
                             chipItem.setOnCloseIconClickListener {
@@ -548,16 +553,16 @@ class CardSearchActivity : AppCompatActivity() {
                         (powerValueInput.editText as? TextInputEditText)?.setText("")
                     }
                 "Toughness" ->
-                    if (toughnessValueInput.editText?.text.toString() == "") Toast.makeText(applicationContext, R.string.no_toughness_selected, Toast.LENGTH_SHORT).show()
+                    if (toughnessValueInput.editText?.text.toString() == "") Toast.makeText(requireContext(), R.string.no_toughness_selected, Toast.LENGTH_SHORT).show()
                     else {
                         toughnessLayout.visibility = View.VISIBLE
                         if (toughnessChipGroup.size != 0) {
-                            val inflater = LayoutInflater.from(this)
+                            val inflater = LayoutInflater.from(requireContext())
                             val chipItem = inflater.inflate(R.layout.card_parameter_and_or_chip_item, null, false) as Chip
                             chipItem.text = resources.getString(R.string.and)
                             chipItem.setOnClickListener { chipItem.text = if (chipItem.text == resources.getString(R.string.or)) resources.getString(R.string.and) else resources.getString(R.string.or) }
                             toughnessChipGroup.addView(chipItem)
-                            val inflater2 = LayoutInflater.from(this)
+                            val inflater2 = LayoutInflater.from(requireContext())
                             val chipItem2 = inflater2.inflate(R.layout.card_parameter_chip_item, null, false) as Chip
                             chipItem2.text = toughnessMathRelationTextView.editText?.text.toString() + " "  + toughnessValueInput.editText?.text.toString()
                             chipItem2.setOnCloseIconClickListener {
@@ -569,7 +574,7 @@ class CardSearchActivity : AppCompatActivity() {
                             toughnessChipGroup.addView(chipItem2)
                         }
                         else {
-                            val inflater = LayoutInflater.from(this)
+                            val inflater = LayoutInflater.from(requireContext())
                             val chipItem = inflater.inflate(R.layout.card_parameter_chip_item,null,false) as Chip
                             chipItem.text = toughnessMathRelationTextView.editText?.text.toString() + " " + toughnessValueInput.editText?.text.toString()
                             chipItem.setOnCloseIconClickListener {
@@ -582,16 +587,16 @@ class CardSearchActivity : AppCompatActivity() {
                         (toughnessValueInput.editText as? TextInputEditText)?.setText("")
                     }
                 "Loyalty" ->
-                    if (loyaltyValueInput.editText?.text.toString() == "") Toast.makeText(applicationContext, R.string.no_loyalty_selected, Toast.LENGTH_SHORT).show()
+                    if (loyaltyValueInput.editText?.text.toString() == "") Toast.makeText(requireContext(), R.string.no_loyalty_selected, Toast.LENGTH_SHORT).show()
                     else {
                         loyaltyLayout.visibility = View.VISIBLE
                         if (loyaltyChipGroup.size != 0) {
-                            val inflater = LayoutInflater.from(this)
+                            val inflater = LayoutInflater.from(requireContext())
                             val chipItem = inflater.inflate(R.layout.card_parameter_and_or_chip_item, null, false) as Chip
                             chipItem.text = resources.getString(R.string.and)
                             chipItem.setOnClickListener { chipItem.text = if (chipItem.text == resources.getString(R.string.or)) resources.getString(R.string.and) else resources.getString(R.string.or) }
                             loyaltyChipGroup.addView(chipItem)
-                            val inflater2 = LayoutInflater.from(this)
+                            val inflater2 = LayoutInflater.from(requireContext())
                             val chipItem2 = inflater2.inflate(R.layout.card_parameter_chip_item, null, false) as Chip
                             chipItem2.text = loyaltyMathRelationTextView.editText?.text.toString() + " "  + loyaltyValueInput.editText?.text.toString()
                             chipItem2.setOnCloseIconClickListener {
@@ -603,7 +608,7 @@ class CardSearchActivity : AppCompatActivity() {
                             loyaltyChipGroup.addView(chipItem2)
                         }
                         else {
-                            val inflater = LayoutInflater.from(this)
+                            val inflater = LayoutInflater.from(requireContext())
                             val chipItem = inflater.inflate(R.layout.card_parameter_chip_item,null,false) as Chip
                             chipItem.text = loyaltyMathRelationTextView.editText?.text.toString() + " " + loyaltyValueInput.editText?.text.toString()
                             chipItem.setOnCloseIconClickListener {
@@ -616,76 +621,76 @@ class CardSearchActivity : AppCompatActivity() {
                         (loyaltyValueInput.editText as? TextInputEditText)?.setText("")
                     }
                 "Rarity" -> {
-                        rarityLayout.visibility = View.VISIBLE
-                        if (rarityChipGroup.size != 0) {
-                            val inflater = LayoutInflater.from(this)
-                            val chipItem = inflater.inflate(R.layout.card_parameter_and_or_chip_item, null, false) as Chip
-                            chipItem.text = resources.getString(R.string.and)
-                            chipItem.setOnClickListener { chipItem.text = if (chipItem.text == resources.getString(R.string.or)) resources.getString(R.string.and) else resources.getString(R.string.or) }
-                            rarityChipGroup.addView(chipItem)
-                            val inflater2 = LayoutInflater.from(this)
-                            val chipItem2 = inflater2.inflate(R.layout.card_parameter_chip_item, null, false) as Chip
-                            chipItem2.text = rarityValueInput.editText?.text.toString()
-                            chipItem2.setOnCloseIconClickListener {
-                                rarityChipGroup.removeView(chipItem)
-                                rarityChipGroup.removeView(it)
-                                if (rarityChipGroup.size == 0) rarityLayout.visibility = View.GONE
-                                else if ((rarityChipGroup.get(0) as Chip).text == resources.getString(R.string.and) || (rarityChipGroup.get(0) as Chip).text == resources.getString(R.string.or)) rarityChipGroup.removeView(rarityChipGroup[0])
-                            }
-                            rarityChipGroup.addView(chipItem2)
+                    rarityLayout.visibility = View.VISIBLE
+                    if (rarityChipGroup.size != 0) {
+                        val inflater = LayoutInflater.from(requireContext())
+                        val chipItem = inflater.inflate(R.layout.card_parameter_and_or_chip_item, null, false) as Chip
+                        chipItem.text = resources.getString(R.string.and)
+                        chipItem.setOnClickListener { chipItem.text = if (chipItem.text == resources.getString(R.string.or)) resources.getString(R.string.and) else resources.getString(R.string.or) }
+                        rarityChipGroup.addView(chipItem)
+                        val inflater2 = LayoutInflater.from(requireContext())
+                        val chipItem2 = inflater2.inflate(R.layout.card_parameter_chip_item, null, false) as Chip
+                        chipItem2.text = rarityValueInput.editText?.text.toString()
+                        chipItem2.setOnCloseIconClickListener {
+                            rarityChipGroup.removeView(chipItem)
+                            rarityChipGroup.removeView(it)
+                            if (rarityChipGroup.size == 0) rarityLayout.visibility = View.GONE
+                            else if ((rarityChipGroup.get(0) as Chip).text == resources.getString(R.string.and) || (rarityChipGroup.get(0) as Chip).text == resources.getString(R.string.or)) rarityChipGroup.removeView(rarityChipGroup[0])
                         }
-                        else {
-                            val inflater = LayoutInflater.from(this)
-                            val chipItem = inflater.inflate(R.layout.card_parameter_chip_item,null,false) as Chip
-                            chipItem.text = rarityValueInput.editText?.text.toString()
-                            chipItem.setOnCloseIconClickListener {
-                                rarityChipGroup.removeView(it)
-                                if (rarityChipGroup.size == 0) rarityLayout.visibility = View.GONE
-                                else if ((rarityChipGroup.get(0) as Chip).text == resources.getString(R.string.and) || (rarityChipGroup.get(0) as Chip).text == resources.getString(R.string.or)) rarityChipGroup.removeView(rarityChipGroup[0])
-                            }
-                            rarityChipGroup.addView(chipItem)
-                        }
+                        rarityChipGroup.addView(chipItem2)
                     }
+                    else {
+                        val inflater = LayoutInflater.from(requireContext())
+                        val chipItem = inflater.inflate(R.layout.card_parameter_chip_item,null,false) as Chip
+                        chipItem.text = rarityValueInput.editText?.text.toString()
+                        chipItem.setOnCloseIconClickListener {
+                            rarityChipGroup.removeView(it)
+                            if (rarityChipGroup.size == 0) rarityLayout.visibility = View.GONE
+                            else if ((rarityChipGroup.get(0) as Chip).text == resources.getString(R.string.and) || (rarityChipGroup.get(0) as Chip).text == resources.getString(R.string.or)) rarityChipGroup.removeView(rarityChipGroup[0])
+                        }
+                        rarityChipGroup.addView(chipItem)
+                    }
+                }
                 "Legality" -> {
-                        legalityLayout.visibility = View.VISIBLE
-                        if (legalityChipGroup.size != 0) {
-                            val inflater = LayoutInflater.from(this)
-                            val chipItem = inflater.inflate(R.layout.card_parameter_and_or_chip_item, null, false) as Chip
-                            chipItem.text = resources.getString(R.string.and)
-                            chipItem.setOnClickListener { chipItem.text = if (chipItem.text == resources.getString(R.string.or)) resources.getString(R.string.and) else resources.getString(R.string.or) }
-                            legalityChipGroup.addView(chipItem)
-                            val inflater2 = LayoutInflater.from(this)
-                            val chipItem2 = inflater2.inflate(R.layout.card_parameter_chip_item, null, false) as Chip
-                            chipItem2.text = legalityTypeInput.editText?.text.toString() + " "  + legalityFormatInput.editText?.text.toString()
-                            chipItem2.setOnCloseIconClickListener {
-                                legalityChipGroup.removeView(chipItem)
-                                legalityChipGroup.removeView(it)
-                                if (legalityChipGroup.size == 0) legalityLayout.visibility = View.GONE
-                                else if ((legalityChipGroup.get(0) as Chip).text == resources.getString(R.string.and) || (legalityChipGroup.get(0) as Chip).text == resources.getString(R.string.or)) legalityChipGroup.removeView(legalityChipGroup[0])
-                            }
-                            legalityChipGroup.addView(chipItem2)
+                    legalityLayout.visibility = View.VISIBLE
+                    if (legalityChipGroup.size != 0) {
+                        val inflater = LayoutInflater.from(requireContext())
+                        val chipItem = inflater.inflate(R.layout.card_parameter_and_or_chip_item, null, false) as Chip
+                        chipItem.text = resources.getString(R.string.and)
+                        chipItem.setOnClickListener { chipItem.text = if (chipItem.text == resources.getString(R.string.or)) resources.getString(R.string.and) else resources.getString(R.string.or) }
+                        legalityChipGroup.addView(chipItem)
+                        val inflater2 = LayoutInflater.from(requireContext())
+                        val chipItem2 = inflater2.inflate(R.layout.card_parameter_chip_item, null, false) as Chip
+                        chipItem2.text = legalityTypeInput.editText?.text.toString() + " "  + legalityFormatInput.editText?.text.toString()
+                        chipItem2.setOnCloseIconClickListener {
+                            legalityChipGroup.removeView(chipItem)
+                            legalityChipGroup.removeView(it)
+                            if (legalityChipGroup.size == 0) legalityLayout.visibility = View.GONE
+                            else if ((legalityChipGroup.get(0) as Chip).text == resources.getString(R.string.and) || (legalityChipGroup.get(0) as Chip).text == resources.getString(R.string.or)) legalityChipGroup.removeView(legalityChipGroup[0])
                         }
-                        else {
-                            val inflater = LayoutInflater.from(this)
-                            val chipItem = inflater.inflate(R.layout.card_parameter_chip_item,null,false) as Chip
-                            chipItem.text = legalityTypeInput.editText?.text.toString() + " " + legalityFormatInput.editText?.text.toString()
-                            chipItem.setOnCloseIconClickListener {
-                                legalityChipGroup.removeView(it)
-                                if (legalityChipGroup.size == 0) legalityLayout.visibility = View.GONE
-                                else if ((legalityChipGroup.get(0) as Chip).text == resources.getString(R.string.and) || (legalityChipGroup.get(0) as Chip).text == resources.getString(R.string.or)) legalityChipGroup.removeView(legalityChipGroup[0])
-                            }
-                            legalityChipGroup.addView(chipItem)
-                        }
+                        legalityChipGroup.addView(chipItem2)
                     }
+                    else {
+                        val inflater = LayoutInflater.from(requireContext())
+                        val chipItem = inflater.inflate(R.layout.card_parameter_chip_item,null,false) as Chip
+                        chipItem.text = legalityTypeInput.editText?.text.toString() + " " + legalityFormatInput.editText?.text.toString()
+                        chipItem.setOnCloseIconClickListener {
+                            legalityChipGroup.removeView(it)
+                            if (legalityChipGroup.size == 0) legalityLayout.visibility = View.GONE
+                            else if ((legalityChipGroup.get(0) as Chip).text == resources.getString(R.string.and) || (legalityChipGroup.get(0) as Chip).text == resources.getString(R.string.or)) legalityChipGroup.removeView(legalityChipGroup[0])
+                        }
+                        legalityChipGroup.addView(chipItem)
+                    }
+                }
                 else -> {
                     layoutLayout.visibility = View.VISIBLE
                     if (layoutChipGroup.size != 0) {
-                        val inflater = LayoutInflater.from(this)
+                        val inflater = LayoutInflater.from(requireContext())
                         val chipItem = inflater.inflate(R.layout.card_parameter_and_or_chip_item, null, false) as Chip
                         chipItem.text = resources.getString(R.string.and)
                         chipItem.setOnClickListener { chipItem.text = if (chipItem.text == resources.getString(R.string.or)) resources.getString(R.string.and) else resources.getString(R.string.or) }
                         layoutChipGroup.addView(chipItem)
-                        val inflater2 = LayoutInflater.from(this)
+                        val inflater2 = LayoutInflater.from(requireContext())
                         val chipItem2 = inflater2.inflate(R.layout.card_parameter_chip_item, null, false) as Chip
                         chipItem2.text = layoutValueInput.editText?.text.toString()
                         chipItem2.setOnCloseIconClickListener {
@@ -697,7 +702,7 @@ class CardSearchActivity : AppCompatActivity() {
                         layoutChipGroup.addView(chipItem2)
                     }
                     else {
-                        val inflater = LayoutInflater.from(this)
+                        val inflater = LayoutInflater.from(requireContext())
                         val chipItem = inflater.inflate(R.layout.card_parameter_chip_item,null,false) as Chip
                         chipItem.text = layoutValueInput.editText?.text.toString()
                         chipItem.setOnCloseIconClickListener {
@@ -711,12 +716,12 @@ class CardSearchActivity : AppCompatActivity() {
             }
         }
 
-        val manaCostTextInput = findViewById<TextInputLayout>(R.id.mana_cost_text_input)
+        val manaCostTextInput = requireView().findViewById<TextInputLayout>(R.id.mana_cost_text_input)
 
-        val manaCostAddSymbolButton = findViewById<Button>(R.id.add_mana_symbol_button)
+        val manaCostAddSymbolButton = requireView().findViewById<Button>(R.id.add_mana_symbol_button)
         manaCostAddSymbolButton.setOnClickListener {
-            val manaCostSymbolDialog = LayoutInflater.from(this).inflate(R.layout.mana_cost_symbol_dialog, null, false)
-            val dialog = MaterialAlertDialogBuilder(this)
+            val manaCostSymbolDialog = LayoutInflater.from(requireContext()).inflate(R.layout.mana_cost_symbol_dialog, null, false)
+            val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setView(manaCostSymbolDialog)
                 .setTitle(R.string.add_mana_symbol)
                 .show()
@@ -967,10 +972,10 @@ class CardSearchActivity : AppCompatActivity() {
             }
         }
 
-        val colorOperatorToggle = findViewById<MaterialButtonToggleGroup>(R.id.color_operator_toggle_group)
+        val colorOperatorToggle = requireView().findViewById<MaterialButtonToggleGroup>(R.id.color_operator_toggle_group)
         colorOperatorToggle.check(R.id.color_exactly_button)
 
-        val colorToggleGroup = findViewById<MaterialButtonToggleGroup>(R.id.color_toggle_group)
+        val colorToggleGroup = requireView().findViewById<MaterialButtonToggleGroup>(R.id.color_toggle_group)
         colorToggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {
                 if (checkedId == R.id.color_colorless_button) {
@@ -982,7 +987,7 @@ class CardSearchActivity : AppCompatActivity() {
             }
         }
 
-        val colorIdentityToggleGroup = findViewById<MaterialButtonToggleGroup>(R.id.color_identity_toggle_group)
+        val colorIdentityToggleGroup = requireView().findViewById<MaterialButtonToggleGroup>(R.id.color_identity_toggle_group)
         colorIdentityToggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {
                 if (checkedId == R.id.color_identity_colorless_button) {
@@ -994,42 +999,42 @@ class CardSearchActivity : AppCompatActivity() {
             }
         }
 
-        val producedManaToggleGroup = findViewById<MaterialButtonToggleGroup>(R.id.produced_mana_toggle_group)
+        val producedManaToggleGroup = requireView().findViewById<MaterialButtonToggleGroup>(R.id.produced_mana_toggle_group)
 
-        val cardFlavorTextTextView = findViewById<TextInputLayout>(R.id.card_flavor_text_search)
+        val cardFlavorTextTextView = requireView().findViewById<TextInputLayout>(R.id.card_flavor_text_search)
 
-        val priceCoinToggle = findViewById<MaterialButtonToggleGroup>(R.id.price_coin_toggle_group)
+        val priceCoinToggle = requireView().findViewById<MaterialButtonToggleGroup>(R.id.price_coin_toggle_group)
         priceCoinToggle.check(R.id.price_usd_button)
 
-        val priceMathRelationTextView = findViewById<TextInputLayout>(R.id.price_math_relation_selector)
-        val priceMathAdapter = ArrayAdapter(applicationContext, R.layout.list_item, parametersMathValues)
+        val priceMathRelationTextView = requireView().findViewById<TextInputLayout>(R.id.price_math_relation_selector)
+        val priceMathAdapter = ArrayAdapter(requireContext(), R.layout.list_item, parametersMathValues)
         (priceMathRelationTextView.editText as? AutoCompleteTextView)?.setAdapter(priceMathAdapter)
         (priceMathRelationTextView.editText as? AutoCompleteTextView)?.setText(parametersMathValues[0], false)
 
-        val priceValueInput = findViewById<TextInputLayout>(R.id.price_value_input)
+        val priceValueInput = requireView().findViewById<TextInputLayout>(R.id.price_value_input)
 
-        val setTextView = findViewById<TextInputLayout>(R.id.set_text_input)
+        val setTextView = requireView().findViewById<TextInputLayout>(R.id.set_text_input)
         var setCatalog: MutableList<String> = dbHelper.getSetCatalog()
-        var setAdapter = ArrayAdapter(applicationContext, R.layout.list_item, setCatalog)
+        var setAdapter = ArrayAdapter(requireContext(), R.layout.list_item, setCatalog)
         (setTextView.editText as? AutoCompleteTextView)?.setAdapter(setAdapter)
 
-        val artistTextView = findViewById<TextInputLayout>(R.id.artist_text_input)
+        val artistTextView = requireView().findViewById<TextInputLayout>(R.id.artist_text_input)
         var artistCatalog: MutableList<String> = dbHelper.getArtistCatalog()
-        var artistAdapter = ArrayAdapter(applicationContext, R.layout.list_item, artistCatalog)
+        var artistAdapter = ArrayAdapter(requireContext(), R.layout.list_item, artistCatalog)
         (artistTextView.editText as? AutoCompleteTextView)?.setAdapter(artistAdapter)
 
-        val similarToTextView = findViewById<TextInputLayout>(R.id.card_name_similar_to)
+        val similarToTextView = requireView().findViewById<TextInputLayout>(R.id.card_name_similar_to)
         var similarToCatalog: MutableList<String> = ArrayList()
-        var similarToAdapter = ArrayAdapter(applicationContext, R.layout.list_item, similarToCatalog)
+        var similarToAdapter = ArrayAdapter(requireContext(), R.layout.list_item, similarToCatalog)
         (similarToTextView.editText as? AutoCompleteTextView)?.setAdapter(similarToAdapter)
         similarToTextView.editText?.doOnTextChanged { text, start, before, count ->
             if (text != null && text!!.length > 2) similarToCatalog = dbHelper.getCardNameCatalog (text.toString())
             else similarToCatalog = ArrayList()
-            similarToAdapter = ArrayAdapter(applicationContext, R.layout.list_item, similarToCatalog)
+            similarToAdapter = ArrayAdapter(requireContext(), R.layout.list_item, similarToCatalog)
             (similarToTextView.editText as? AutoCompleteTextView)?.setAdapter(similarToAdapter)
         }
 
-        val searchButton = findViewById<FloatingActionButton>(R.id.search_fab)
+        val searchButton = requireView().findViewById<FloatingActionButton>(R.id.search_fab)
         searchButton.setOnClickListener {
             var cardTypesList = mutableListOf<String>()
             var isCardTypesList = mutableListOf<Boolean>()
@@ -1090,36 +1095,38 @@ class CardSearchActivity : AppCompatActivity() {
                 ++k
             }
             val colorOperator = if (colorOperatorToggle.checkedButtonId == R.id.color_exactly_button) "exactly" else if (colorOperatorToggle.checkedButtonId == R.id.color_including_button) "including" else "at_most"
-            val db = DBHelper (applicationContext)
+            val db = DBHelper (requireContext())
             if (similarToTextView.editText?.text.toString() == "" || db.isCardNameValid(similarToTextView.editText?.text.toString())) {
-                val intent = Intent (this, CardListActivity::class.java)
-                intent.putExtra("card_name", nameTextView.editText?.text.toString())
-                intent.putExtra("card_types", cardTypesList.toTypedArray())
-                intent.putExtra("is_card_types", isCardTypesList.toBooleanArray())
-                intent.putExtra("card_type_and", (cardTypesAndOrChipGroup.get(0) as Chip).isChecked)
-                intent.putExtra("card_text", cardTextTextView.editText?.text.toString())
-                intent.putExtra("mana_value_params", manaValueParameters.toTypedArray())
-                intent.putExtra("power_params", powerParameters.toTypedArray())
-                intent.putExtra("toughness_params", toughnessParameters.toTypedArray())
-                intent.putExtra("loyalty_params", loyaltyParameters.toTypedArray())
-                intent.putExtra("rarity_params", rarityParameters.toTypedArray())
-                intent.putExtra("legality_params", legalityParameters.toTypedArray())
-                intent.putExtra("layout_params", layoutParameters.toTypedArray())
-                intent.putExtra("mana_cost", manaCostTextInput.editText?.text.toString())
-                intent.putExtra("color", getColorsSelectedArray(colorToggleGroup, "color"))
-                intent.putExtra("color_operator", colorOperator)
-                intent.putExtra("color_identity", getColorsSelectedArray(colorIdentityToggleGroup, "identity"))
-                intent.putExtra("produced_mana", getColorsSelectedArray(producedManaToggleGroup, "produced"))
-                intent.putExtra("card_flavor_text", cardFlavorTextTextView.editText?.text.toString())
-                intent.putExtra("price_coin", if (priceCoinToggle.checkedButtonId == R.id.price_usd_button) "usd" else if (priceCoinToggle.checkedButtonId == R.id.price_eur_button) "eur" else "tix")
-                intent.putExtra("price_operator", priceMathRelationTextView.editText?.text.toString())
-                intent.putExtra("price_value", priceValueInput.editText?.text.toString())
-                intent.putExtra("card_set", setTextView.editText?.text.toString())
-                intent.putExtra("card_artist", artistTextView.editText?.text.toString())
-                intent.putExtra("similar_to_card_name", similarToTextView.editText?.text.toString())
-                startActivity(intent)
+                val fragment = CardListFragment()
+                fragment.cardName = nameTextView.editText?.text.toString()
+                fragment.cardTypesArray = cardTypesList.toTypedArray()
+                fragment.isCardTypesArray = isCardTypesList.toBooleanArray()
+                fragment.cardTypesAnd = (cardTypesAndOrChipGroup.get(0) as Chip).isChecked
+                fragment.cardText = cardTextTextView.editText?.text.toString()
+                fragment.manaValueParamsArray = manaValueParameters.toTypedArray()
+                fragment.powerParamsArray = powerParameters.toTypedArray()
+                fragment.toughnessParamsArray = toughnessParameters.toTypedArray()
+                fragment.loyaltyParamsArray = loyaltyParameters.toTypedArray()
+                fragment.rarityParamsArray = rarityParameters.toTypedArray()
+                fragment.legalityParamsArray = legalityParameters.toTypedArray()
+                fragment.layoutParamsArray = layoutParameters.toTypedArray()
+                fragment.manaCost = manaCostTextInput.editText?.text.toString()
+                fragment.cardColor = getColorsSelectedArray(colorToggleGroup, "color")
+                fragment.colorOperator = colorOperator
+                fragment.cardColorIdentity = getColorsSelectedArray(colorIdentityToggleGroup, "identity")
+                fragment.cardProducedMana = getColorsSelectedArray(producedManaToggleGroup, "produced")
+                fragment.cardFlavorText = cardFlavorTextTextView.editText?.text.toString()
+                fragment.priceCoin = if (priceCoinToggle.checkedButtonId == R.id.price_usd_button) "usd" else if (priceCoinToggle.checkedButtonId == R.id.price_eur_button) "eur" else "tix"
+                fragment.priceOperator = priceMathRelationTextView.editText?.text.toString()
+                fragment.priceValue = priceValueInput.editText?.text.toString()
+                fragment.cardSet = setTextView.editText?.text.toString()
+                fragment.cardArtist = artistTextView.editText?.text.toString()
+                fragment.similarToCardName = similarToTextView.editText?.text.toString()
+                val transaction: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+                transaction.replace(R.id.hub_fragment_container, fragment).addToBackStack("search")
+                transaction.commit()
             }
-            else Toast.makeText(applicationContext, getString(R.string.not_valid_similar_to), Toast.LENGTH_SHORT).show()
+            else Toast.makeText(requireContext(), getString(R.string.not_valid_similar_to), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -1170,120 +1177,120 @@ class CardSearchActivity : AppCompatActivity() {
 
     fun getSymbolDrawable (str: String): Drawable {
         when (str) {
-            "{T}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_t_cost)!!
-            "{Q}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_q_cost)!!
-            "{E}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_e_cost)!!
-            "{PW}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_pw_cost)!!
+            "{T}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_t_cost)!!
+            "{Q}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_q_cost)!!
+            "{E}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_e_cost)!!
+            "{PW}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_pw_cost)!!
             "{CHAOS}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_chaos_cost
             )!!
-            "{A}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_a_cost)!!
-            "{X}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_x_cost)!!
-            "{Y}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_y_cost)!!
-            "{Z}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_z_cost)!!
-            "{0}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_0_cost)!!
-            "{1}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_1_cost)!!
-            "{2}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2_cost)!!
-            "{3}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_3_cost)!!
-            "{4}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_4_cost)!!
-            "{5}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_5_cost)!!
-            "{6}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_6_cost)!!
-            "{7}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_7_cost)!!
-            "{8}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_8_cost)!!
-            "{9}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_9_cost)!!
-            "{10}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_10_cost)!!
-            "{11}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_11_cost)!!
-            "{12}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_12_cost)!!
-            "{13}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_13_cost)!!
-            "{14}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_14_cost)!!
-            "{15}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_15_cost)!!
-            "{16}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_16_cost)!!
-            "{17}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_17_cost)!!
-            "{18}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_18_cost)!!
-            "{19}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_19_cost)!!
-            "{20}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_20_cost)!!
+            "{A}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_a_cost)!!
+            "{X}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_x_cost)!!
+            "{Y}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_y_cost)!!
+            "{Z}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_z_cost)!!
+            "{0}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_0_cost)!!
+            "{1}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_1_cost)!!
+            "{2}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_2_cost)!!
+            "{3}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_3_cost)!!
+            "{4}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_4_cost)!!
+            "{5}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_5_cost)!!
+            "{6}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_6_cost)!!
+            "{7}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_7_cost)!!
+            "{8}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_8_cost)!!
+            "{9}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_9_cost)!!
+            "{10}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_10_cost)!!
+            "{11}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_11_cost)!!
+            "{12}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_12_cost)!!
+            "{13}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_13_cost)!!
+            "{14}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_14_cost)!!
+            "{15}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_15_cost)!!
+            "{16}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_16_cost)!!
+            "{17}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_17_cost)!!
+            "{18}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_18_cost)!!
+            "{19}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_19_cost)!!
+            "{20}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_20_cost)!!
             "{100}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_100_cost
             )!!
             "{1000000}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_1000000_cost
             )!!
             "{∞}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_infinity_cost
             )!!
-            "{W/U}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_wu_cost)!!
-            "{W/B}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_wb_cost)!!
-            "{B/R}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_br_cost)!!
-            "{B/G}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_bg_cost)!!
-            "{U/B}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_ub_cost)!!
-            "{U/R}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_ur_cost)!!
-            "{R/G}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_rg_cost)!!
-            "{R/W}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_rw_cost)!!
-            "{G/W}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_gw_cost)!!
-            "{G/U}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_gu_cost)!!
+            "{W/U}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_wu_cost)!!
+            "{W/B}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_wb_cost)!!
+            "{B/R}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_br_cost)!!
+            "{B/G}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_bg_cost)!!
+            "{U/B}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_ub_cost)!!
+            "{U/R}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_ur_cost)!!
+            "{R/G}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_rg_cost)!!
+            "{R/W}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_rw_cost)!!
+            "{G/W}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_gw_cost)!!
+            "{G/U}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_gu_cost)!!
             "{W/U/P}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_wup_cost
             )!!
             "{W/B/P}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_wbp_cost
             )!!
             "{B/R/P}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_brp_cost
             )!!
             "{B/G/P}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_bgp_cost
             )!!
             "{U/B/P}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_ubp_cost
             )!!
             "{U/R/P}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_urp_cost
             )!!
             "{R/G/P}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_rgp_cost
             )!!
             "{R/W/P}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_rwp_cost
             )!!
             "{G/W/P}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_gwp_cost
             )!!
             "{G/U/P}" -> return AppCompatResources.getDrawable(
-                this,
+                requireContext(),
                 R.drawable.ic_gup_cost
             )!!
-            "{2W}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2w_cost)!!
-            "{2U}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2u_cost)!!
-            "{2B}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2b_cost)!!
-            "{2R}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2r_cost)!!
-            "{2G}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_2g_cost)!!
-            "{W}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_w_cost)!!
-            "{U}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_u_cost)!!
-            "{B}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_b_cost)!!
-            "{R}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_r_cost)!!
-            "{G}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_g_cost)!!
-            "{P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_p_cost)!!
-            "{W/P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_wp_cost)!!
-            "{U/P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_up_cost)!!
-            "{B/P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_bp_cost)!!
-            "{R/P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_rp_cost)!!
-            "{G/P}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_gp_cost)!!
-            "{C}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_c_cost)!!
-            "{S}" -> return AppCompatResources.getDrawable(this, R.drawable.ic_s_cost)!!
-            else -> return AppCompatResources.getDrawable(this, R.drawable.ic_chaos_cost)!!
+            "{2W}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_2w_cost)!!
+            "{2U}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_2u_cost)!!
+            "{2B}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_2b_cost)!!
+            "{2R}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_2r_cost)!!
+            "{2G}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_2g_cost)!!
+            "{W}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_w_cost)!!
+            "{U}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_u_cost)!!
+            "{B}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_b_cost)!!
+            "{R}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_r_cost)!!
+            "{G}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_g_cost)!!
+            "{P}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_p_cost)!!
+            "{W/P}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_wp_cost)!!
+            "{U/P}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_up_cost)!!
+            "{B/P}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_bp_cost)!!
+            "{R/P}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_rp_cost)!!
+            "{G/P}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_gp_cost)!!
+            "{C}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_c_cost)!!
+            "{S}" -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_s_cost)!!
+            else -> return AppCompatResources.getDrawable(requireContext(), R.drawable.ic_chaos_cost)!!
         }
     }
 }
