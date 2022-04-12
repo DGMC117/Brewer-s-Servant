@@ -90,7 +90,7 @@ class CardDownloadActivity : AppCompatActivity() {
                         while (reader.hasNext()) {
                             val currentCard: Card = gson.fromJson(reader, Card::class.java)
                             dbHelper.addCard(currentCard)
-                            if (!currentCard.all_parts.isNullOrEmpty()) currentCard.all_parts.forEach { dbHelper.addRelatedCard(currentCard.id!!, it.id, it.component) }
+                            if (!currentCard.all_parts.isNullOrEmpty()) currentCard.all_parts!!.forEach { dbHelper.addRelatedCard(currentCard.id!!, it.id!!, it.component!!, it.name!!) }
                             if (!currentCard.card_faces.isNullOrEmpty()) currentCard.card_faces!!.forEach { dbHelper.addCardFace(it, currentCard.id!!) }
                         }
                         reader.endArray()

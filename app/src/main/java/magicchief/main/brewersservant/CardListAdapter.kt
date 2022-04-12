@@ -10,10 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.view.get
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
 import com.squareup.picasso.Picasso
 import magicchief.main.brewersservant.dataclass.Card
+import magicchief.main.brewersservant.fragments.CardListFragmentDirections
+import magicchief.main.brewersservant.fragments.CardSearchFragmentDirections
 
 class CardListAdapter(val cardList: MutableList<Card>, context: Context): RecyclerView.Adapter<CardListAdapter.ViewHolder> () {
     val parentContext = context
@@ -51,6 +57,10 @@ class CardListAdapter(val cardList: MutableList<Card>, context: Context): Recycl
 
             if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null && cardList[position].image_uris?.art_crop?.toString() != "null") Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).into(holder.itemImage)
             else Picasso.get().load(cardList[position].card_faces?.get(0)?.image_uris?.art_crop?.toString()).into(holder.itemImage)
+        }
+        holder.itemView.setOnClickListener {
+            val action = CardListFragmentDirections.actionCardListFragmentToCardDetailsFragment(cardId = cardList[position].id.toString())
+            holder.itemView.findNavController().navigate(action)
         }
     }
 

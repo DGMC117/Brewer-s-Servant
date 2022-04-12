@@ -114,5 +114,17 @@
             android:name="similarToCardName"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_cardListFragment_to_cardDetailsFragment"
+            app:destination="@id/cardDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cardDetailsFragment"
+        android:name="magicchief.main.brewersservant.fragments.CardDetailsFragment"
+        android:label="fragment_card_details"
+        tools:layout="@layout/fragment_card_details" >
+        <argument
+            android:name="cardId"
+            app:argType="string" />
     </fragment>
 </navigation>

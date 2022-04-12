@@ -1101,36 +1101,6 @@ class CardSearchFragment : Fragment() {
             val colorOperator = if (colorOperatorToggle.checkedButtonId == R.id.color_exactly_button) "exactly" else if (colorOperatorToggle.checkedButtonId == R.id.color_including_button) "including" else "at_most"
             val db = DBHelper (requireContext())
             if (similarToTextView.editText?.text.toString() == "" || db.isCardNameValid(similarToTextView.editText?.text.toString())) {
-                /*val fragment = CardListFragment()
-                fragment.cardName = nameTextView.editText?.text.toString()
-                fragment.cardTypesArray = cardTypesList.toTypedArray()
-                fragment.isCardTypesArray = isCardTypesList.toBooleanArray()
-                fragment.cardTypesAnd = (cardTypesAndOrChipGroup.get(0) as Chip).isChecked
-                fragment.cardText = cardTextTextView.editText?.text.toString()
-                fragment.manaValueParamsArray = manaValueParameters.toTypedArray()
-                fragment.powerParamsArray = powerParameters.toTypedArray()
-                fragment.toughnessParamsArray = toughnessParameters.toTypedArray()
-                fragment.loyaltyParamsArray = loyaltyParameters.toTypedArray()
-                fragment.rarityParamsArray = rarityParameters.toTypedArray()
-                fragment.legalityParamsArray = legalityParameters.toTypedArray()
-                fragment.layoutParamsArray = layoutParameters.toTypedArray()
-                fragment.manaCost = manaCostTextInput.editText?.text.toString()
-                fragment.cardColor = getColorsSelectedArray(colorToggleGroup, "color")
-                fragment.colorOperator = colorOperator
-                fragment.cardColorIdentity = getColorsSelectedArray(colorIdentityToggleGroup, "identity")
-                fragment.cardProducedMana = getColorsSelectedArray(producedManaToggleGroup, "produced")
-                fragment.cardFlavorText = cardFlavorTextTextView.editText?.text.toString()
-                fragment.priceCoin = if (priceCoinToggle.checkedButtonId == R.id.price_usd_button) "usd" else if (priceCoinToggle.checkedButtonId == R.id.price_eur_button) "eur" else "tix"
-                fragment.priceOperator = priceMathRelationTextView.editText?.text.toString()
-                fragment.priceValue = priceValueInput.editText?.text.toString()
-                fragment.cardSet = setTextView.editText?.text.toString()
-                fragment.cardArtist = artistTextView.editText?.text.toString()
-                fragment.similarToCardName = similarToTextView.editText?.text.toString()
-                val action = CardSearchFragmentDirections.actionCardSearchFragmentToCardListFragment()
-                view.findNavController().navigate(action)
-                val transaction: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.hub_fragment_container, fragment).addToBackStack("search")
-                transaction.commit()*/
                 val action = CardSearchFragmentDirections.actionCardSearchFragmentToCardListFragment(
                     cardName = nameTextView.editText?.text.toString(),
                     cardTypesArray = cardTypesList.toTypedArray(),
