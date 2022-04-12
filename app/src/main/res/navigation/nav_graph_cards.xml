@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_cards"
+    app:startDestination="@id/cardSearchFragment">
+
+    <fragment
+        android:id="@+id/cardSearchFragment"
+        android:name="magicchief.main.brewersservant.fragments.CardSearchFragment"
+        android:label="CardSearchFragment"
+        tools:layout="@layout/fragment_card_search">
+        <action
+            android:id="@+id/action_cardSearchFragment_to_cardListFragment"
+            app:destination="@id/cardListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cardListFragment"
+        android:name="magicchief.main.brewersservant.fragments.CardListFragment"
+        android:label="CardListFragment"
+        tools:layout="@layout/fragment_card_list">
+        <argument
+            android:name="cardName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="cardTypesArray"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="isCardTypesArray"
+            app:argType="boolean[]"
+            app:nullable="true" />
+        <argument
+            android:name="cardTypesAnd"
+            app:argType="boolean" />
+        <argument
+            android:name="cardText"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="manaValueParamsArray"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="powerParamsArray"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="toughnessParamsArray"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="loyaltyParamsArray"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="rarityParamsArray"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="legalityParamsArray"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="layoutParamsArray"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="manaCost"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="cardColor"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="colorOperator"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="cardColorIdentity"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="cardProducedMana"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="cardFlavorText"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="priceCoin"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="priceOperator"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="priceValue"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="cardSet"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="cardArtist"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="similarToCardName"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+</navigation>

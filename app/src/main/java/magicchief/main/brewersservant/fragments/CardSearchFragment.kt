@@ -12,6 +12,10 @@ import androidx.core.view.size
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -1097,7 +1101,7 @@ class CardSearchFragment : Fragment() {
             val colorOperator = if (colorOperatorToggle.checkedButtonId == R.id.color_exactly_button) "exactly" else if (colorOperatorToggle.checkedButtonId == R.id.color_including_button) "including" else "at_most"
             val db = DBHelper (requireContext())
             if (similarToTextView.editText?.text.toString() == "" || db.isCardNameValid(similarToTextView.editText?.text.toString())) {
-                val fragment = CardListFragment()
+                /*val fragment = CardListFragment()
                 fragment.cardName = nameTextView.editText?.text.toString()
                 fragment.cardTypesArray = cardTypesList.toTypedArray()
                 fragment.isCardTypesArray = isCardTypesList.toBooleanArray()
@@ -1122,9 +1126,38 @@ class CardSearchFragment : Fragment() {
                 fragment.cardSet = setTextView.editText?.text.toString()
                 fragment.cardArtist = artistTextView.editText?.text.toString()
                 fragment.similarToCardName = similarToTextView.editText?.text.toString()
+                val action = CardSearchFragmentDirections.actionCardSearchFragmentToCardListFragment()
+                view.findNavController().navigate(action)
                 val transaction: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.hub_fragment_container, fragment).addToBackStack("search")
-                transaction.commit()
+                transaction.commit()*/
+                val action = CardSearchFragmentDirections.actionCardSearchFragmentToCardListFragment(
+                    cardName = nameTextView.editText?.text.toString(),
+                    cardTypesArray = cardTypesList.toTypedArray(),
+                    isCardTypesArray = isCardTypesList.toBooleanArray(),
+                    cardTypesAnd = (cardTypesAndOrChipGroup.get(0) as Chip).isChecked,
+                    cardText = cardTextTextView.editText?.text.toString(),
+                    manaValueParamsArray = manaValueParameters.toTypedArray(),
+                    powerParamsArray = powerParameters.toTypedArray(),
+                    toughnessParamsArray = toughnessParameters.toTypedArray(),
+                    loyaltyParamsArray = loyaltyParameters.toTypedArray(),
+                    rarityParamsArray = rarityParameters.toTypedArray(),
+                    legalityParamsArray = legalityParameters.toTypedArray(),
+                    layoutParamsArray = layoutParameters.toTypedArray(),
+                    manaCost = manaCostTextInput.editText?.text.toString(),
+                    cardColor = getColorsSelectedArray(colorToggleGroup, "color"),
+                    colorOperator = colorOperator,
+                    cardColorIdentity = getColorsSelectedArray(colorIdentityToggleGroup, "identity"),
+                    cardProducedMana = getColorsSelectedArray(producedManaToggleGroup, "produced"),
+                    cardFlavorText = cardFlavorTextTextView.editText?.text.toString(),
+                    priceCoin = if (priceCoinToggle.checkedButtonId == R.id.price_usd_button) "usd" else if (priceCoinToggle.checkedButtonId == R.id.price_eur_button) "eur" else "tix",
+                    priceOperator = priceMathRelationTextView.editText?.text.toString(),
+                    priceValue = priceValueInput.editText?.text.toString(),
+                    cardSet = setTextView.editText?.text.toString(),
+                    cardArtist = artistTextView.editText?.text.toString(),
+                    similarToCardName = similarToTextView.editText?.text.toString()
+                )
+                view.findNavController().navigate(action)
             }
             else Toast.makeText(requireContext(), getString(R.string.not_valid_similar_to), Toast.LENGTH_SHORT).show()
         }
