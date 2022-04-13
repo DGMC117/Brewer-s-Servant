@@ -281,11 +281,11 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         private val RELATED_CARD_TABLE_NAME = "RelatedCard"
 
         // RelatedCard table column names
-        private val RELATED_CARD_ID = "id"
-        private val RELATED_CARD_SCRYFALL_ID_MAIN = "id_main_scryfall"
-        private val RELATED_CARD_SCRYFALL_ID_RELATED = "id_related_scryfall"
-        private val RELATED_CARD_COMPONENT = "component"
-        private val RELATED_CARD_NAME = "name"
+        private val RELATED_CARD_ID = "related_card_id"
+        private val RELATED_CARD_SCRYFALL_ID_MAIN = "related_card_id_main_scryfall"
+        private val RELATED_CARD_SCRYFALL_ID_RELATED = "related_card_id_related_scryfall"
+        private val RELATED_CARD_COMPONENT = "related_card_component"
+        private val RELATED_CARD_NAME = "related_card_name"
 
         // CardSet table name
         private val CARD_SET_TABLE_NAME = "CardSet"
@@ -910,7 +910,10 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
 
     @SuppressLint("Range")
     fun getCard (scryfallId: String): Card {
-        val query = "SELECT * FROM $CARD_TABLE_NAME c LEFT JOIN $CARD_FACE_TABLE_NAME cf LEFT JOIN $RELATED_CARD_TABLE_NAME cr ON c.$CARD_SCRYFALL_ID == cf.$CARD_FACE_SCRYFALL_ID_MAIN_CARD AND c.$CARD_SCRYFALL_ID == cr.$RELATED_CARD_SCRYFALL_ID_MAIN WHERE c.$CARD_SCRYFALL_ID == '$scryfallId'"
+        val query = "SELECT * " +
+                "FROM $CARD_TABLE_NAME c LEFT JOIN $CARD_FACE_TABLE_NAME cf ON c.$CARD_SCRYFALL_ID == cf.$CARD_FACE_SCRYFALL_ID_MAIN_CARD " +
+                "LEFT JOIN $RELATED_CARD_TABLE_NAME cr ON c.$CARD_SCRYFALL_ID == cr.$RELATED_CARD_SCRYFALL_ID_MAIN " +
+                "WHERE c.$CARD_SCRYFALL_ID == '$scryfallId'"
         var card = Card()
         val cardFaces: MutableList<CardFace> = ArrayList()
         val relatedCards: MutableList<RelatedCard> = ArrayList()
@@ -979,7 +982,9 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                     cardFace.power = result.getStringOrNull(result.getColumnIndex(CARD_FACE_POWER))
                     cardFace.toughness = result.getStringOrNull(result.getColumnIndex(CARD_FACE_TOUGHNESS))
                     cardFace.type_line = result.getStringOrNull(result.getColumnIndex(CARD_FACE_TYPE_LINE))
-                    cardFaces.add(cardFace)
+                    var found = false
+                    cardFaces.forEach { if (it.name == cardFace.name) found = true }
+                    if (!found) cardFaces.add(cardFace)
                 }
                 val relatedCardScryfallIdRelated = result.getStringOrNull(result.getColumnIndex(RELATED_CARD_SCRYFALL_ID_RELATED))
                 if (relatedCardScryfallIdRelated != null) {
@@ -987,7 +992,9 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                     relatedCard.id = UUID.fromString(relatedCardScryfallIdRelated)
                     relatedCard.component = result.getStringOrNull(result.getColumnIndex(RELATED_CARD_COMPONENT))
                     relatedCard.name = result.getStringOrNull(result.getColumnIndex(RELATED_CARD_NAME))
-                    relatedCards.add(relatedCard)
+                    var found = false
+                    relatedCards.forEach { if (it.name == relatedCard.name) found = true }
+                    if (!found) relatedCards.add(relatedCard)
                 }
             } while (result.moveToNext())
             card.card_faces = cardFaces.toTypedArray()
@@ -1159,7 +1166,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             val draw = getSymbolDrawable(subString)
             val proportion = draw.intrinsicWidth / draw.intrinsicHeight
             draw.setBounds(0, 0, textSize * proportion, textSize)
-            val imageSpan = ImageSpan(draw, ImageSpan.ALIGN_BASELINE)
+            val imageSpan = ImageSpan(draw, ImageSpan.ALIGN_BOTTOM)
             result.setSpan(imageSpan, subStart, subEnd + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
             str = str.replaceFirst('{', '0')
             str = str.replaceFirst('}', '0')

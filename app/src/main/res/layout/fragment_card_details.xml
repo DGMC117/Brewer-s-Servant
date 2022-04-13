@@ -1,17 +1,593 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.CardDetailsFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragments.CardSearchFragment">
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardElevation="2dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardBackgroundColor="@color/colorBackground"
+            app:cardCornerRadius="0dp">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".fragments.CardDetailsFragment">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/card_details_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        app:layout_constraintTop_toTopOf="parent"/>
+                <LinearLayout
+                    android:id="@+id/card_details_images_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:orientation="horizontal">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/card_details_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:scaleType="centerCrop"
+                        android:adjustViewBounds="true"/>
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/card_details_image2"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:scaleType="centerCrop"
+                        android:adjustViewBounds="true"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/rotate_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_rotate_24"
+                    app:fabSize="mini"
+                    app:layout_constraintTop_toBottomOf="@+id/card_details_images_layout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:translationY="-24dp"
+                    android:contentDescription="@string/flip"
+                    android:visibility="gone"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/card_details_no_split_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/rotate_fab">
+
+                    <TextView
+                        android:id="@+id/card_details_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@string/name_hint"
+                        android:textColor="@color/colorOnBackground"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/card_details_mana_cost"
+                        style="@style/TextAppearance.MaterialComponents.Headline6"/>
+
+                    <TextView
+                        android:id="@+id/card_details_mana_cost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@string/mana_cost_hint"
+                        android:textColor="@color/colorOnBackground"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        style="@style/TextAppearance.MaterialComponents.Headline6"/>
+
+                    <TextView
+                        android:id="@+id/card_details_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@string/type_hint"
+                        android:textColor="@color/colorOnBackground"
+                        app:layout_constraintTop_toBottomOf="@id/card_details_name"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/card_details_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@string/text_hint"
+                        android:textColor="@color/colorOnBackground"
+                        app:layout_constraintTop_toBottomOf="@id/card_details_type"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+                    <LinearLayout
+                        android:id="@+id/card_details_stats_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/card_details_text"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/card_details_pow_tou_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/card_details_power"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingVertical="5dp"
+                                android:paddingStart="5dp"
+                                android:text="0"
+                                android:textColor="@color/colorOnBackground"
+                                style="@style/TextAppearance.MaterialComponents.Headline6"/>
+
+                            <TextView
+                                android:id="@+id/slash"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="/"
+                                android:textColor="@color/colorOnBackground"
+                                style="@style/TextAppearance.MaterialComponents.Headline6"/>
+
+                            <TextView
+                                android:id="@+id/card_details_toughness"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingVertical="5dp"
+                                android:paddingEnd="5dp"
+                                android:text="0"
+                                android:textColor="@color/colorOnBackground"
+                                style="@style/TextAppearance.MaterialComponents.Headline6"/>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/card_details_loyalty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="0"
+                            android:textColor="@color/colorOnBackground"
+                            android:visibility="gone"
+                            style="@style/TextAppearance.MaterialComponents.Headline6"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/card_details_flavor_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@string/flavor_text_hint"
+                        android:textColor="@color/colorOnBackground"
+                        app:layout_constraintTop_toBottomOf="@id/card_details_stats_layout"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:textStyle="italic"/>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/legalities_divider"
+                        app:layout_constraintTop_toBottomOf="@id/card_details_flavor_text"
+                        style="@style/SearchViewDivider"
+                        android:padding="5dp"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/card_details_split_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/card_details_no_split_layout"
+                    android:visibility="gone"/>
+
+                <LinearLayout
+                    android:id="@+id/legalities_layout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    app:layout_constraintTop_toBottomOf="@id/card_details_split_recycler"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/standard_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/standard_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/standard"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/standard_legality"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/legal"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/legality_border"
+                            android:backgroundTintMode="multiply"
+                            android:backgroundTint="@color/colorTriadic2"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/pioneer_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/pioneer_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/pioneer"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/pioneer_legality"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/legal"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/legality_border"
+                            android:backgroundTintMode="multiply"
+                            android:backgroundTint="@color/colorTriadic2"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/legalities_layout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    app:layout_constraintTop_toBottomOf="@id/legalities_layout1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/modern_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/modern_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/modern"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/modern_legality"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/legal"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/legality_border"
+                            android:backgroundTintMode="multiply"
+                            android:backgroundTint="@color/colorTriadic2"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/legacy_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/legacy_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/legacy"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/legacy_legality"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/legal"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/legality_border"
+                            android:backgroundTintMode="multiply"
+                            android:backgroundTint="@color/colorTriadic2"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/legalities_layout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    app:layout_constraintTop_toBottomOf="@id/legalities_layout2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/vintage_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/vintage_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/vintage"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/vintage_legality"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/legal"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/legality_border"
+                            android:backgroundTintMode="multiply"
+                            android:backgroundTint="@color/colorTriadic2"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/brawl_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/brawl_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/brawl"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/brawl_legality"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/legal"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/legality_border"
+                            android:backgroundTintMode="multiply"
+                            android:backgroundTint="@color/colorTriadic2"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/legalities_layout4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    app:layout_constraintTop_toBottomOf="@id/legalities_layout3"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/historic_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/historic_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/historic"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/historic_legality"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/legal"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/legality_border"
+                            android:backgroundTintMode="multiply"
+                            android:backgroundTint="@color/colorTriadic2"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/pauper_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/pauper_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/pauper"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/pauper_legality"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/legal"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/legality_border"
+                            android:backgroundTintMode="multiply"
+                            android:backgroundTint="@color/colorTriadic2"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/legalities_layout5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    app:layout_constraintTop_toBottomOf="@id/legalities_layout4"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/penny_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/penny_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/penny"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/penny_legality"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/legal"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/legality_border"
+                            android:backgroundTintMode="multiply"
+                            android:backgroundTint="@color/colorTriadic2"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/commander_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/commander_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/commander"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"/>
+
+                        <TextView
+                            android:id="@+id/commander_legality"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="@string/legal"
+                            android:textColor="@color/colorOnBackground"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/legality_border"
+                            android:backgroundTintMode="multiply"
+                            android:backgroundTint="@color/colorTriadic2"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/card_details_related_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/legalities_layout5"
+                    android:visibility="gone">
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/related_divider"
+                        app:layout_constraintTop_toTopOf="parent"
+                        style="@style/SearchViewDivider"
+                        android:padding="5dp"/>
+
+                    <TextView
+                        android:id="@+id/card_details_related_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@string/related_cards"
+                        android:textColor="@color/colorOnBackground"
+                        android:layout_weight="1"
+                        app:layout_constraintTop_toBottomOf="@+id/related_divider"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/card_details_related_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/card_details_related_text"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

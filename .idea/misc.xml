@@ -73,6 +73,7 @@
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_x_cost.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_y_cost.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_z_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/legality_border.xml" value="0.5225" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/rounded_corners.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/activity_card_download.xml" value="0.31354166666666666" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/activity_card_list.xml" value="0.33" />
@@ -83,12 +84,14 @@
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/card_parameter_and_or_chip_item.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/card_parameter_chip_item.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/chip_item.xml" value="0.31354166666666666" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/details_related_row.xml" value="0.19067028985507245" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/details_split_row.xml" value="0.1" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/divider.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/entry_chip_item.xml" value="0.4995471014492754" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_blank.xml" value="0.5541666666666667" />
-        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_card_details.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_card_details.xml" value="0.33" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_card_list.xml" value="0.3171875" />
-        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_card_search.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_card_search.xml" value="0.33" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_combo_search.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_decks_list.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/list_item.xml" value="0.5541666666666667" />

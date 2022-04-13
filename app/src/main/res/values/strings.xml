@@ -40,6 +40,26 @@
     <string name="combos">Combos</string>
     <string name="decks">Decks</string>
     <string name="settings">Settings</string>
+    <string name="standard">Standard</string>
+    <string name="pioneer">Pioneer</string>
+    <string name="modern">Modern</string>
+    <string name="legacy">Legacy</string>
+    <string name="vintage">Vintage</string>
+    <string name="brawl">Brawl</string>
+    <string name="historic">Historic</string>
+    <string name="pauper">Pauper</string>
+    <string name="penny">Penny</string>
+    <string name="commander">Commander</string>
+    <string name="legal">Legal</string>
+    <string name="not_legal">Not Legal</string>
+    <string name="restricted">Restricted</string>
+    <string name="banned">Banned</string>
+    <string name="flip">Flip</string>
+    <string name="related_cards">Related Cards</string>
+    <string name="token">Token</string>
+    <string name="meld_part">Meld Part</string>
+    <string name="meld_result">Meld Result</string>
+    <string name="combo_piece">Combo Piece</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

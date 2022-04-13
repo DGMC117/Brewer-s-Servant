@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="2dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardBackgroundColor="@color/colorBackground"
+    app:cardCornerRadius="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_details_split_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/rotate_fab">
+
+        <TextView
+            android:id="@+id/card_details_related_row_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@color/colorOnBackground"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/hyphen"
+            android:gravity="end"/>
+
+        <TextView
+            android:id="@+id/hyphen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="―"
+            android:textColor="@color/colorOnBackground"
+            app:layout_constraintTop_toBottomOf="@+id/row_divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/card_details_related_row_component"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@color/colorOnBackground"
+            app:layout_constraintTop_toBottomOf="@+id/row_divider"
+            app:layout_constraintStart_toEndOf="@+id/hyphen"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="start"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/row_divider"
+            app:layout_constraintTop_toBottomOf="@+id/card_details_related_row_component"
+            style="@style/SearchViewDivider"
+            android:padding="5dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
