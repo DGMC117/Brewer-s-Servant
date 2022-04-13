@@ -4,7 +4,7 @@ import java.net.URI
 import java.util.*
 
 class RelatedCard (
-    val id: UUID,
-    val component: String,  // token, meld_part, meld_result, combo_piece
-    val name: String
+    var id: UUID? = null,
+    var component: String? = null,  // token, meld_part, meld_result, combo_piece
+    var name: String? = null
         )

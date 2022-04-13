@@ -13,23 +13,10 @@ import magicchief.main.brewersservant.CardListAdapter
 import magicchief.main.brewersservant.DBHelper
 import magicchief.main.brewersservant.R
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CardListFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CardListFragment : Fragment() {
 
     private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapter: RecyclerView.Adapter<CardListAdapter.ViewHolder>? = null/*
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null*/
+    private var adapter: RecyclerView.Adapter<CardListAdapter.ViewHolder>? = null
 
     var cardName: String? = null
     var cardTypesArray: Array<String>? = null
@@ -57,11 +44,33 @@ class CardListFragment : Fragment() {
     var similarToCardName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)/*
+        super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }*/
+            cardName = it.getString("cardName").toString()
+            cardTypesArray = it.getStringArray("cardTypesArray")
+            isCardTypesArray = it.getBooleanArray("isCardTypesArray")
+            cardTypesAnd = it.getBoolean("cardTypesAnd")
+            cardText = it.getString("cardText").toString()
+            manaValueParamsArray = it.getStringArray("manaValueParamsArray")
+            powerParamsArray = it.getStringArray("powerParamsArray")
+            toughnessParamsArray = it.getStringArray("toughnessParamsArray")
+            loyaltyParamsArray = it.getStringArray("loyaltyParamsArray")
+            rarityParamsArray = it.getStringArray("rarityParamsArray")
+            legalityParamsArray = it.getStringArray("legalityParamsArray")
+            layoutParamsArray = it.getStringArray("layoutParamsArray")
+            manaCost = it.getString("manaCost").toString()
+            cardColor = it.getString("cardColor").toString()
+            colorOperator = it.getString("colorOperator").toString()
+            cardColorIdentity = it.getString("cardColorIdentity").toString()
+            cardProducedMana = it.getString("cardProducedMana").toString()
+            cardFlavorText = it.getString("cardFlavorText").toString()
+            priceCoin = it.getString("priceCoin").toString()
+            priceOperator = it.getString("priceOperator").toString()
+            priceValue = it.getString("priceValue").toString()
+            cardSet = it.getString("cardSet").toString()
+            cardArtist = it.getString("cardArtist").toString()
+            similarToCardName = it.getString("similarToCardName").toString()
+        }
     }
 
     override fun onCreateView(
@@ -88,24 +97,4 @@ class CardListFragment : Fragment() {
         adapter = CardListAdapter(cards, requireContext())
         cardList.adapter = adapter
     }
-/*
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CardListFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CardListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }*/
 }

@@ -8,7 +8,7 @@ class Card (
     var id: UUID? = null,
 
     // Gameplay Fields
-    val all_parts: Array<RelatedCard>? = null,
+    var all_parts: Array<RelatedCard>? = null,
     var card_faces: Array<CardFace>? = null,
     var cmc: Double? = null,
     var color_identity: Array<String>? = null,

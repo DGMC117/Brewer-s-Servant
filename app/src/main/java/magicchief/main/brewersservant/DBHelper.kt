@@ -14,6 +14,7 @@ import androidx.core.database.getDoubleOrNull
 import androidx.core.database.getStringOrNull
 import magicchief.main.brewersservant.dataclass.Card
 import magicchief.main.brewersservant.dataclass.CardFace
+import magicchief.main.brewersservant.dataclass.RelatedCard
 import magicchief.main.brewersservant.dataclass.Set
 import java.net.URI
 import java.util.*
@@ -100,6 +101,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         + RELATED_CARD_SCRYFALL_ID_MAIN + " char(36) not null,"
                         + RELATED_CARD_SCRYFALL_ID_RELATED + " char(36) not null,"
                         + RELATED_CARD_COMPONENT + " varchar(25) not null,"
+                        + RELATED_CARD_NAME + " varchar(255) not null,"
                         + "foreign key ($RELATED_CARD_SCRYFALL_ID_MAIN) references $CARD_TABLE_NAME($CARD_SCRYFALL_ID),"
                         + "foreign key ($RELATED_CARD_SCRYFALL_ID_RELATED) references $CARD_TABLE_NAME($CARD_SCRYFALL_ID)"
                         + ")"
@@ -279,10 +281,11 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         private val RELATED_CARD_TABLE_NAME = "RelatedCard"
 
         // RelatedCard table column names
-        private val RELATED_CARD_ID = "id"
-        private val RELATED_CARD_SCRYFALL_ID_MAIN = "id_main_scryfall"
-        private val RELATED_CARD_SCRYFALL_ID_RELATED = "id_related_scryfall"
-        private val RELATED_CARD_COMPONENT = "component"
+        private val RELATED_CARD_ID = "related_card_id"
+        private val RELATED_CARD_SCRYFALL_ID_MAIN = "related_card_id_main_scryfall"
+        private val RELATED_CARD_SCRYFALL_ID_RELATED = "related_card_id_related_scryfall"
+        private val RELATED_CARD_COMPONENT = "related_card_component"
+        private val RELATED_CARD_NAME = "related_card_name"
 
         // CardSet table name
         private val CARD_SET_TABLE_NAME = "CardSet"
@@ -454,14 +457,14 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         return result
     }
 
-    fun addRelatedCard(mainCardId: UUID, relatedCardId: UUID, componentType: String): Long {
+    fun addRelatedCard(mainCardId: UUID, relatedCardId: UUID, componentType: String, name: String): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(RELATED_CARD_SCRYFALL_ID_MAIN, mainCardId.toString())
         contentValues.put(RELATED_CARD_SCRYFALL_ID_RELATED, relatedCardId.toString())
         contentValues.put(RELATED_CARD_COMPONENT, componentType)
-        val result = db.insert(RELATED_CARD_TABLE_NAME, null, contentValues)
-        return result
+        contentValues.put(RELATED_CARD_NAME, name)
+        return db.insert(RELATED_CARD_TABLE_NAME, null, contentValues)
     }
 
     fun addArtistCatalog(name: String): Long {
@@ -580,6 +583,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             similarSearch = true
         }
         var query = "SELECT * FROM $CARD_TABLE_NAME c LEFT JOIN $CARD_FACE_TABLE_NAME cf ON c.$CARD_SCRYFALL_ID == cf.$CARD_FACE_SCRYFALL_ID_MAIN_CARD"
+        query += " WHERE c.$CARD_NAME NOT LIKE 'A-%'"
+        whereStarted = true
         if (cardName != null && cardName != "") {
             query += if (whereStarted) " AND" else " WHERE"
             query += " c.$CARD_NAME LIKE '%${cardName.replace("'", "_")}%'"
@@ -903,6 +908,101 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         return list
     }
 
+    @SuppressLint("Range")
+    fun getCard (scryfallId: String): Card {
+        val query = "SELECT * " +
+                "FROM $CARD_TABLE_NAME c LEFT JOIN $CARD_FACE_TABLE_NAME cf ON c.$CARD_SCRYFALL_ID == cf.$CARD_FACE_SCRYFALL_ID_MAIN_CARD " +
+                "LEFT JOIN $RELATED_CARD_TABLE_NAME cr ON c.$CARD_SCRYFALL_ID == cr.$RELATED_CARD_SCRYFALL_ID_MAIN " +
+                "WHERE c.$CARD_SCRYFALL_ID == '$scryfallId'"
+        var card = Card()
+        val cardFaces: MutableList<CardFace> = ArrayList()
+        val relatedCards: MutableList<RelatedCard> = ArrayList()
+        val db = readableDatabase
+        val result = db.rawQuery(query, null)
+        var first = true
+        if (result.moveToFirst()) {
+            do {
+                if (first) {
+                    card.id = UUID.fromString(result.getString(result.getColumnIndex(CARD_SCRYFALL_ID)))
+                    card.cmc = result.getFloat(result.getColumnIndex(CARD_CMC)).toDouble()
+                    card.color_identity = colorStringtoArray(result.getString(result.getColumnIndex(CARD_COLOR_IDENTITY)))
+                    card.colors = colorStringtoArray(result.getString(result.getColumnIndex(CARD_COLORS)))
+                    card.layout = result.getString(result.getColumnIndex(CARD_LAYOUT))
+                    card.loyalty = result.getStringOrNull(result.getColumnIndex(CARD_LOYALTY))
+                    card.mana_cost = result.getStringOrNull(result.getColumnIndex(CARD_MANA_COST))
+                    card.name = result.getString(result.getColumnIndex(CARD_NAME))
+                    card.oracle_text = result.getStringOrNull(result.getColumnIndex(CARD_ORACLE_TEXT))
+                    card.power = result.getStringOrNull(result.getColumnIndex(CARD_POWER))
+                    card.produced_mana = colorStringtoArray(result.getStringOrNull(result.getColumnIndex(CARD_PRODUCED_MANA)))
+                    card.toughness = result.getStringOrNull(result.getColumnIndex(CARD_TOUGHNESS))
+                    card.type_line = result.getString(result.getColumnIndex(CARD_TYPE_LINE))
+                    card.artist = result.getStringOrNull(result.getColumnIndex(CARD_ARTIST))
+                    card.flavor_text = result.getStringOrNull(result.getColumnIndex(CARD_FLAVOR_TEXT))
+                    card.rarity = result.getString(result.getColumnIndex(CARD_RARITY))
+                    card.set_id = result.getString(result.getColumnIndex(CARD_SET_SCRYFALL_ID))
+                    card.prices?.usd = result.getDoubleOrNull(result.getColumnIndex(CARD_PRICE_USD)).toString()
+                    card.prices?.eur = result.getDoubleOrNull(result.getColumnIndex(CARD_PRICE_EUR)).toString()
+                    card.prices?.tix = result.getDoubleOrNull(result.getColumnIndex(CARD_PRICE_TIX)).toString()
+                    card.legalities?.standard = result.getString(result.getColumnIndex(CARD_LEGAL_STANDARD))
+                    card.legalities?.pioneer = result.getString(result.getColumnIndex(CARD_LEGAL_PIONEER))
+                    card.legalities?.modern = result.getString(result.getColumnIndex(CARD_LEGAL_MODERN))
+                    card.legalities?.legacy = result.getString(result.getColumnIndex(CARD_LEGAL_LEGACY))
+                    card.legalities?.vintage = result.getString(result.getColumnIndex(CARD_LEGAL_VINTAGE))
+                    card.legalities?.brawl = result.getString(result.getColumnIndex(CARD_LEGAL_BRAWL))
+                    card.legalities?.historic = result.getString(result.getColumnIndex(CARD_LEGAL_HISTORIC))
+                    card.legalities?.pauper = result.getString(result.getColumnIndex(CARD_LEGAL_PAUPER))
+                    card.legalities?.penny = result.getString(result.getColumnIndex(CARD_LEGAL_PENNY))
+                    card.legalities?.commander = result.getString(result.getColumnIndex(CARD_LEGAL_COMMANDER))
+                    card.image_uris?.png = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_PNG)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_PNG))) else null
+                    card.image_uris?.border_crop = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_BORDER_CROP)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_BORDER_CROP))) else null
+                    card.image_uris?.art_crop = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_ART_CROP)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_ART_CROP))) else null
+                    card.image_uris?.large = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_LARGE)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_LARGE))) else null
+                    card.image_uris?.normal = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_NORMAL))) else null
+                    card.image_uris?.small = if (result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_IMAGE_SMALL))) else null
+                    first = false
+                }
+                val cardFaceName = result.getStringOrNull(result.getColumnIndex(CARD_FACE_NAME))
+                if (cardFaceName != null) {
+                    var cardFace = CardFace()
+                    cardFace.artist = result.getStringOrNull(result.getColumnIndex(CARD_FACE_ARTIST))
+                    cardFace.cmc = result.getFloat(result.getColumnIndex(CARD_FACE_CMC)).toDouble()
+                    cardFace.colors = colorStringtoArray(result.getString(result.getColumnIndex(CARD_FACE_COLORS)))
+                    cardFace.flavor_text = result.getStringOrNull(result.getColumnIndex(CARD_FACE_FLAVOR_TEXT))
+                    cardFace.image_uris?.png = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_PNG)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_PNG))) else null
+                    cardFace.image_uris?.border_crop = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_BORDER_CROP)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_BORDER_CROP))) else null
+                    cardFace.image_uris?.art_crop = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_ART_CROP)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_ART_CROP))) else null
+                    cardFace.image_uris?.large = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_LARGE)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_LARGE))) else null
+                    cardFace.image_uris?.normal = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_NORMAL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_NORMAL))) else null
+                    cardFace.image_uris?.small = if (result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_SMALL)) != null) URI.create(result.getStringOrNull(result.getColumnIndex(CARD_FACE_IMAGE_SMALL))) else null
+                    cardFace.layout = result.getStringOrNull(result.getColumnIndex(CARD_FACE_LAYOUT))
+                    cardFace.loyalty = result.getStringOrNull(result.getColumnIndex(CARD_FACE_LOYALTY))
+                    cardFace.mana_cost = result.getStringOrNull(result.getColumnIndex(CARD_FACE_MANA_COST))
+                    cardFace.name = result.getStringOrNull(result.getColumnIndex(CARD_FACE_NAME))
+                    cardFace.oracle_text = result.getStringOrNull(result.getColumnIndex(CARD_FACE_ORACLE_TEXT))
+                    cardFace.power = result.getStringOrNull(result.getColumnIndex(CARD_FACE_POWER))
+                    cardFace.toughness = result.getStringOrNull(result.getColumnIndex(CARD_FACE_TOUGHNESS))
+                    cardFace.type_line = result.getStringOrNull(result.getColumnIndex(CARD_FACE_TYPE_LINE))
+                    var found = false
+                    cardFaces.forEach { if (it.name == cardFace.name) found = true }
+                    if (!found) cardFaces.add(cardFace)
+                }
+                val relatedCardScryfallIdRelated = result.getStringOrNull(result.getColumnIndex(RELATED_CARD_SCRYFALL_ID_RELATED))
+                if (relatedCardScryfallIdRelated != null) {
+                    var relatedCard = RelatedCard()
+                    relatedCard.id = UUID.fromString(relatedCardScryfallIdRelated)
+                    relatedCard.component = result.getStringOrNull(result.getColumnIndex(RELATED_CARD_COMPONENT))
+                    relatedCard.name = result.getStringOrNull(result.getColumnIndex(RELATED_CARD_NAME))
+                    var found = false
+                    relatedCards.forEach { if (it.name == relatedCard.name) found = true }
+                    if (!found) relatedCards.add(relatedCard)
+                }
+            } while (result.moveToNext())
+            card.card_faces = cardFaces.toTypedArray()
+            card.all_parts = relatedCards.toTypedArray()
+        }
+        return card
+    }
+
     fun getSetID (name: String): String {
         var id = ""
         val db = this.readableDatabase
@@ -1066,7 +1166,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             val draw = getSymbolDrawable(subString)
             val proportion = draw.intrinsicWidth / draw.intrinsicHeight
             draw.setBounds(0, 0, textSize * proportion, textSize)
-            val imageSpan = ImageSpan(draw, ImageSpan.ALIGN_BASELINE)
+            val imageSpan = ImageSpan(draw, ImageSpan.ALIGN_BOTTOM)
             result.setSpan(imageSpan, subStart, subEnd + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
             str = str.replaceFirst('{', '0')
             str = str.replaceFirst('}', '0')

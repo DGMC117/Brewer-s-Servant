@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -19,69 +20,69 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.squareup.picasso.Picasso
 import magicchief.main.brewersservant.dataclass.Card
+import magicchief.main.brewersservant.dataclass.CardFace
 import magicchief.main.brewersservant.fragments.CardListFragmentDirections
 import magicchief.main.brewersservant.fragments.CardSearchFragmentDirections
 
-class CardListAdapter(val cardList: MutableList<Card>, context: Context): RecyclerView.Adapter<CardListAdapter.ViewHolder> () {
+class CardDetailsSplitAdapter(val cardFaces: Array<CardFace>, context: Context): RecyclerView.Adapter<CardDetailsSplitAdapter.ViewHolder> () {
     val parentContext = context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.card_list_row, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.details_split_row, parent, false)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (cardList[position].card_faces == null) {
-            holder.itemName.text = cardList[position].name
-            holder.itemText.text = stringToSpannableString(
-                cardList[position].oracle_text.toString(),
-                holder.itemText.textSize.toInt()
-            )
-            holder.itemCost.text = stringToSpannableString(
-                cardList[position].mana_cost.toString(),
-                holder.itemCost.textSize.toInt()
-            )
-            holder.itemType.text = cardList[position].type_line
-            Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).into(holder.itemImage)
+        holder.itemName.text = cardFaces[position].name
+        if (cardFaces[position].mana_cost != null && cardFaces[position].mana_cost != "") holder.itemCost.text = stringToSpannableString(cardFaces[position].mana_cost!!, holder.itemCost.textSize.toInt())
+        else holder.itemCost.text = ""
+        if (cardFaces[position].type_line != null && cardFaces[position].type_line != "") holder.itemType.text = cardFaces[position].type_line
+        else holder.itemType.text = ""
+        if (cardFaces[position].oracle_text != null && cardFaces[position].oracle_text != "") holder.itemText.text = stringToSpannableString(cardFaces[position].oracle_text!!, holder.itemText.textSize.toInt())
+        else holder.itemText.visibility = View.GONE
+        if (cardFaces[position].power != null && cardFaces[position].power != "") {
+            holder.itemPowTouLayout.visibility = View.VISIBLE
+            holder.itemPower.text = cardFaces[position].power
+            holder.itemToughness.text = cardFaces[position].toughness
         }
-        else {
-            holder.itemName.text = cardList[position].card_faces?.get(0)?.name
-            holder.itemText.text = stringToSpannableString(
-                cardList[position].card_faces?.get(0)?.oracle_text.toString(),
-                holder.itemText.textSize.toInt()
-            )
-            holder.itemCost.text = stringToSpannableString(
-                cardList[position].card_faces?.get(0)?.mana_cost.toString(),
-                holder.itemCost.textSize.toInt()
-            )
-            holder.itemType.text = cardList[position].card_faces?.get(0)?.type_line
-
-            if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null && cardList[position].image_uris?.art_crop?.toString() != "null") Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).into(holder.itemImage)
-            else Picasso.get().load(cardList[position].card_faces?.get(0)?.image_uris?.art_crop?.toString()).into(holder.itemImage)
+        else holder.itemPowTouLayout.visibility = View.GONE
+        if (cardFaces[position].loyalty != null && cardFaces[position].loyalty != "") {
+            holder.itemLoyalty.visibility = View.VISIBLE
+            holder.itemLoyalty.text = cardFaces[position].loyalty
         }
-        holder.itemView.setOnClickListener {
-            val action = CardListFragmentDirections.actionCardListFragmentToCardDetailsFragment(cardId = cardList[position].id.toString())
-            holder.itemView.findNavController().navigate(action)
+        else holder.itemLoyalty.visibility = View.GONE
+        if (cardFaces[position].flavor_text != null && cardFaces[position].flavor_text != "") {
+            holder.itemFlavorText.visibility = View.VISIBLE
+            holder.itemFlavorText.text = "\"${cardFaces[position].flavor_text!!.replace("\"", "")}\""
         }
+        else holder.itemFlavorText.visibility = View.GONE
     }
 
     override fun getItemCount(): Int {
-        return cardList.size
+        return cardFaces.size
     }
 
     inner class ViewHolder (itemView: View): RecyclerView.ViewHolder (itemView) {
-        var itemImage: ImageView
         var itemName: TextView
-        var itemText: TextView
         var itemCost: TextView
         var itemType: TextView
+        var itemText: TextView
+        var itemPower: TextView
+        var itemToughness: TextView
+        var itemLoyalty: TextView
+        var itemFlavorText: TextView
+        var itemPowTouLayout: LinearLayout
 
         init {
-            itemImage = itemView.findViewById(R.id.card_image)
-            itemName = itemView.findViewById(R.id.card_name)
-            itemText= itemView.findViewById(R.id.card_text)
-            itemCost = itemView.findViewById(R.id.card_mana_cost)
-            itemType= itemView.findViewById(R.id.card_type)
+            itemName = itemView.findViewById(R.id.card_details_split_row_name)
+            itemCost = itemView.findViewById(R.id.card_details_split_row_mana_cost)
+            itemType = itemView.findViewById(R.id.card_details_split_row_type)
+            itemText = itemView.findViewById(R.id.card_details_split_row_text)
+            itemPower = itemView.findViewById(R.id.card_details_split_row_power)
+            itemToughness = itemView.findViewById(R.id.card_details_split_row_toughness)
+            itemLoyalty = itemView.findViewById(R.id.card_details_split_row_loyalty)
+            itemFlavorText = itemView.findViewById(R.id.card_details_split_row_flavor_text)
+            itemPowTouLayout = itemView.findViewById(R.id.card_details_split_row_pow_tou_layout)
         }
     }
 

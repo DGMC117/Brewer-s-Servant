@@ -1,53 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?attr/selectableItemBackground">
+    app:cardElevation="2dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardBackgroundColor="@color/colorBackground"
+    app:cardCornerRadius="0dp">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/card_image"
-        android:layout_width="100dp"
-        android:layout_height="70dp"
-        android:scaleType="centerCrop"
-        android:padding="5dp"
-        android:adjustViewBounds="true"
-        android:layout_centerVertical="true"
-        app:shapeAppearanceOverlay="@style/roundedImageView"/>
-
-    <TextView
-        android:id="@+id/card_name"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:padding="5dp"
-        android:layout_toEndOf="@+id/card_image"/>
+        android:background="?attr/selectableItemBackground">
 
-    <TextView
-        android:id="@+id/card_mana_cost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:padding="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_alignParentEnd="true"/>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/card_image"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:scaleType="centerCrop"
+            android:padding="5dp"
+            android:adjustViewBounds="true"
+            android:layout_centerVertical="true"
+            app:shapeAppearanceOverlay="@style/roundedImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/card_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:padding="5dp"
-        android:layout_below="@+id/card_name"
-        android:layout_toEndOf="@id/card_image"/>
+        <TextView
+            android:id="@+id/card_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:padding="5dp"
+            app:layout_constraintStart_toEndOf="@+id/card_image"
+            app:layout_constraintEnd_toStartOf="@id/card_mana_cost"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/card_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:padding="5dp"
-        android:layout_below="@+id/card_type"
-        android:layout_toEndOf="@id/card_image"/>
+        <TextView
+            android:id="@+id/card_mana_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/card_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:padding="5dp"
+            android:layout_below="@+id/card_name"
+            app:layout_constraintStart_toEndOf="@id/card_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_name"/>
+
+        <TextView
+            android:id="@+id/card_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:padding="5dp"
+            android:layout_below="@+id/card_type"
+            app:layout_constraintStart_toEndOf="@id/card_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_type"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
