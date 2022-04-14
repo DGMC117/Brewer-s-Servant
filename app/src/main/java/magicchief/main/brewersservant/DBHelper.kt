@@ -12,9 +12,7 @@ import android.text.style.ImageSpan
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.database.getDoubleOrNull
 import androidx.core.database.getStringOrNull
-import magicchief.main.brewersservant.dataclass.Card
-import magicchief.main.brewersservant.dataclass.CardFace
-import magicchief.main.brewersservant.dataclass.RelatedCard
+import magicchief.main.brewersservant.dataclass.*
 import magicchief.main.brewersservant.dataclass.Set
 import java.net.URI
 import java.util.*
@@ -171,6 +169,24 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                         + CARD_SUPER_TYPE_CATALOG_TYPE + " varchar(50) not null"
                         + ")"
                 )
+        val createCombosDB = (
+                "CREATE TABLE $COMBO_TABLE_NAME ("
+                        + COMBO_ID + " int auto_increment primary key,"
+                        + COMBO_COLOR_IDENTITY + " varchar(50) not null,"
+                        + COMBO_PREREQUISITES + " text not null,"
+                        + COMBO_STEPS + " text not null,"
+                        + COMBO_RESULTS + " text not null"
+                        + ")"
+                )
+        val createCardsInCombosDB = (
+                "CREATE TABLE $CIC_TABLE_NAME ("
+                        + CIC_COMBO_ID + " int,"
+                        + CIC_CARD_NAME + " varchar(255),"
+                        + "primary key ($CIC_COMBO_ID, $CIC_CARD_NAME),"
+                        + "foreign key ($CIC_COMBO_ID) references $COMBO_TABLE_NAME($COMBO_ID),"
+                        + "foreign key ($CIC_CARD_NAME) references $CARD_TABLE_NAME($CARD_NAME)"
+                        + ")"
+                )
 
         // Execute SQL code
         db.execSQL(createCardSetDB)
@@ -186,6 +202,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         db.execSQL(createSpellTypeCatalogDB)
         db.execSQL(createCardTypeCatalogDB)
         db.execSQL(createCardSuperTypeCatalogDB)
+        db.execSQL(createCombosDB)
+        db.execSQL(createCardsInCombosDB)
 
         initialiseCardTypesAndSuperTypes (db)
 
@@ -193,6 +211,17 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
 
     override fun onUpgrade(db: SQLiteDatabase, p1: Int, p2: Int) {
         // This method drops the tables if they existed and creates them again
+        db.execSQL("DROP TABLE IF EXISTS $CIC_TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $COMBO_TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $CARD_SUPER_TYPE_CATALOG_TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $CARD_TYPE_CATALOG_TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $SPELL_TYPE_CATALOG_TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $ENCHANTMENT_TYPE_CATALOG_TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $ARTIFACT_TYPE_CATALOG_TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $LAND_TYPE_CATALOG_TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $PLANESWALKER_TYPE_CATALOG_TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $CREATURE_TYPE_CATALOG_TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $ARTIST_CATALOG_TABLE_NAME")
         db.execSQL("DROP TABLE IF EXISTS $CARD_FACE_TABLE_NAME")
         db.execSQL("DROP TABLE IF EXISTS $RELATED_CARD_TABLE_NAME")
         db.execSQL("DROP TABLE IF EXISTS $CARD_TABLE_NAME")
@@ -333,6 +362,20 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         private val CARD_SUPER_TYPE_CATALOG_TABLE_NAME = "CardSuperTypeCatalog"
         private val CARD_SUPER_TYPE_CATALOG_ID = "id"
         private val CARD_SUPER_TYPE_CATALOG_TYPE = "type"
+
+        // Card Combos
+        private val COMBO_TABLE_NAME = "Combo"
+
+        private val COMBO_ID = "combo_id"
+        private val COMBO_COLOR_IDENTITY = "combo_color_identity"
+        private val COMBO_PREREQUISITES = "combo_prerequisites"
+        private val COMBO_STEPS = "combo_steps"
+        private val COMBO_RESULTS = "combo_results"
+
+        private val CIC_TABLE_NAME = "CardsInCombos"
+
+        private val CIC_CARD_NAME = "cic_card_name"
+        private val CIC_COMBO_ID = "cic_combo_id"
     }
 
     fun addCardSet(cardSet: Set): Long {
@@ -534,6 +577,33 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         val contentValues = ContentValues()
         contentValues.put(CARD_SUPER_TYPE_CATALOG_TYPE, type)
         val result = db.insert(CARD_SUPER_TYPE_CATALOG_TABLE_NAME, null, contentValues)
+        return result
+    }
+
+    fun addCombo(combo: Combo): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COMBO_COLOR_IDENTITY, combo.colorIdentity.uppercase())
+        contentValues.put(COMBO_PREREQUISITES, combo.prerequisites)
+        contentValues.put(COMBO_STEPS, combo.steps)
+        contentValues.put(COMBO_RESULTS, combo.results)
+        val result = db.insert(COMBO_TABLE_NAME, null, contentValues)
+        db.close()
+        if (result > -1) {
+            combo.cards.forEach {
+                //val cardId = getCardIdFromName(it)
+                addComboInCard (result.toInt(), it)
+            }
+        }
+        return result
+    }
+
+    fun addComboInCard(comboId: Int, cardId: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(CIC_COMBO_ID, comboId)
+        contentValues.put(CIC_CARD_NAME, cardId)
+        val result = db.insert(CIC_TABLE_NAME, null, contentValues)
         return result
     }
 
@@ -1010,6 +1080,17 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
             id = result.getStringOrNull(result.getColumnIndex(CARD_SET_SCRYFALL_SET_ID))!!
+        }
+        return id
+    }
+
+    fun getCardIdFromName (name: String): String {
+        var id = ""
+        val db = this.readableDatabase
+        val query = "SELECT $CARD_SCRYFALL_ID FROM $CARD_TABLE_NAME WHERE $CARD_NAME LIKE '${name.replace("'", "_")}' ORDER BY $CARD_NAME"
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            id = result.getStringOrNull(result.getColumnIndex(CARD_SCRYFALL_ID))!!
         }
         return id
     }
