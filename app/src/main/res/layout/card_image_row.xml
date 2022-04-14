@@ -6,6 +6,5 @@
     android:id="@+id/row_combo_details_card_image"
     android:layout_width="wrap_content"
     android:layout_height="300dp"
-    android:scaleType="fitXY"
     android:adjustViewBounds="true"
     android:layout_gravity="center_horizontal"/>

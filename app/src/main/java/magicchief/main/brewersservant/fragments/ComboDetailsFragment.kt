@@ -58,8 +58,6 @@ class ComboDetailsFragment : Fragment() {
         adapter = ComboDetailsNamesAdapter(combo.cards!!, requireContext())
         cardNamesRecycler.adapter = adapter
 
-        val snapHelper = PagerSnapHelper()
-        snapHelper.attachToRecyclerView(cardImagesRecycler)
         layoutManagerImages = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         cardImagesRecycler.layoutManager = layoutManagerImages
         adapterImages = ComboDetailsImagesAdapter(cardImages, requireContext())
