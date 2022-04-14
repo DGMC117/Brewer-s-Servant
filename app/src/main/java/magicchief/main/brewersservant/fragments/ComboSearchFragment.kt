@@ -5,29 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Toast
+import androidx.core.view.get
+import androidx.core.view.size
+import androidx.core.widget.doOnTextChanged
+import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.android.material.textfield.TextInputLayout
+import magicchief.main.brewersservant.DBHelper
 import magicchief.main.brewersservant.R
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ComboSearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ComboSearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -38,23 +32,63 @@ class ComboSearchFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_combo_search, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ComboSearchFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ComboSearchFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        
+        val dbHelper = DBHelper(requireContext())
+
+        val cardNamesChipGroup = requireView().findViewById<ChipGroup>(R.id.combo_card_name_chip_group)
+        val cardNameAndOrChipGroup = requireView().findViewById<ChipGroup>(R.id.combo_card_name_and_or_chip_group)
+        val cardNameTextView = requireView().findViewById<TextInputLayout>(R.id.combo_card_name_text)
+        var nameCatalog: MutableList<String> = ArrayList()
+        var nameAdapter = ArrayAdapter(requireContext(), R.layout.list_item, nameCatalog)
+        (cardNameTextView.editText as? AutoCompleteTextView)?.setAdapter(nameAdapter)
+        cardNameTextView.editText?.doOnTextChanged { text, start, before, count ->
+            if (text != null && text!!.length > 2) nameCatalog = dbHelper.getCardNameCatalog (text.toString())
+            else nameCatalog = ArrayList()
+            nameAdapter = ArrayAdapter(requireContext(), R.layout.list_item, nameCatalog)
+            (cardNameTextView.editText as? AutoCompleteTextView)?.setAdapter(nameAdapter)
+        }
+        (cardNameTextView.editText as? AutoCompleteTextView)?.setOnItemClickListener { adapterView, view, i, l ->
+            cardNamesChipGroup.visibility = View.VISIBLE
+            val row = nameAdapter.getItem(0)
+            var notRepeated = true
+            var k = 0
+            while (notRepeated && k < cardNamesChipGroup.size) {
+                val chip = cardNamesChipGroup.get(k) as Chip
+                if (row == chip.text.toString()) notRepeated = false
+                ++k
+            }
+            if (notRepeated) {
+                val inflater = LayoutInflater.from(requireContext())
+                val chipItem = inflater.inflate(R.layout.card_parameter_chip_item, null, false) as Chip
+                chipItem.text = row
+                chipItem.setOnCloseIconClickListener {
+                    cardNamesChipGroup.removeView(it)
+                    if (cardNamesChipGroup.size < 1) cardNamesChipGroup.visibility = View.GONE
+                }
+                cardNamesChipGroup.addView(chipItem)
+                chipItem.isChecked = true
+            }
+            else Toast.makeText(activity, R.string.card_name_repeated, Toast.LENGTH_SHORT).show()
+            (cardNameTextView.editText as? AutoCompleteTextView)?.setText("")
+        }
+
+        val colorOperatorToggle = requireView().findViewById<MaterialButtonToggleGroup>(R.id.combo_color_operator_toggle_group)
+        colorOperatorToggle.check(R.id.combo_color_exactly_button)
+
+        val colorToggleGroup = requireView().findViewById<MaterialButtonToggleGroup>(R.id.combo_color_toggle_group)
+        colorToggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            if (isChecked) {
+                if (checkedId == R.id.combo_color_colorless_button) {
+                    group.clearChecked()
+                    group.check(checkedId)
+                } else {
+                    group.uncheck(R.id.combo_color_colorless_button)
                 }
             }
+        }
+
+        val resultTextView = requireView().findViewById<TextInputLayout>(R.id.combo_result)
     }
 }
