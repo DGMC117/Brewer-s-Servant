@@ -5,28 +5,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import magicchief.main.brewersservant.R
+import android.widget.TextView
+import androidx.recyclerview.widget.*
+import magicchief.main.brewersservant.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ComboDetailsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ComboDetailsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    var comboId = 1
+
+    private var layoutManager: RecyclerView.LayoutManager? = null
+    private var adapter: RecyclerView.Adapter<ComboDetailsNamesAdapter.ViewHolder>? = null
+
+    private var layoutManagerImages: RecyclerView.LayoutManager? = null
+    private var adapterImages: RecyclerView.Adapter<ComboDetailsImagesAdapter.ViewHolder>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            comboId = it.getInt("comboId")
         }
     }
 
@@ -38,23 +34,49 @@ class ComboDetailsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_combo_details, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ComboDetailsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ComboDetailsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val db = DBHelper (requireContext())
+        val combo = db.getCombo (comboId)
+        val cards = db.getComboCards (comboId)
+        val cardImages: MutableList<String> = ArrayList()
+        cards.forEach {
+            if (it.image_uris != null && it.image_uris.border_crop != null && it.image_uris.border_crop?.toString() != "null") cardImages.add (it.image_uris.border_crop.toString())
+            else cardImages.add (it.card_faces?.get(0)?.image_uris?.border_crop.toString())
+        }
+
+        val cardNamesRecycler = requireView().findViewById<RecyclerView>(R.id.combo_details_card_names_recycler)
+        val cardImagesRecycler = requireView().findViewById<RecyclerView>(R.id.combo_details_card_images_recycler)
+        val colorIdentity = requireView().findViewById<TextView>(R.id.combo_details_color_identity)
+        val prerequisitesTextView = requireView().findViewById<TextView>(R.id.combo_details_prerequisites)
+        val stepsTextView = requireView().findViewById<TextView>(R.id.combo_details_steps)
+        val resultsTextView = requireView().findViewById<TextView>(R.id.combo_details_results)
+
+        layoutManager = LinearLayoutManager (requireContext())
+        cardNamesRecycler.layoutManager = layoutManager
+        adapter = ComboDetailsNamesAdapter(combo.cards!!, requireContext())
+        cardNamesRecycler.adapter = adapter
+
+        val snapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(cardImagesRecycler)
+        layoutManagerImages = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        cardImagesRecycler.layoutManager = layoutManagerImages
+        adapterImages = ComboDetailsImagesAdapter(cardImages, requireContext())
+        cardImagesRecycler.adapter = adapterImages
+
+        colorIdentity.text = db.stringToSpannableString(combo.colorIdentity!!
+            .uppercase()
+            .replace(",", "")
+            .replace("W", "{W}")
+            .replace("U", "{U}")
+            .replace("B", "{B}")
+            .replace("R", "{R}")
+            .replace("G", "{G}")
+            .replace("C", "{C}"), colorIdentity.textSize.toInt())
+
+        prerequisitesTextView.text = db.stringToSpannableString(combo.prerequisites!!, prerequisitesTextView.textSize.toInt())
+        stepsTextView.text = db.stringToSpannableString(combo.steps!!, stepsTextView.textSize.toInt())
+        resultsTextView.text = db.stringToSpannableString(combo.results!!, resultsTextView.textSize.toInt())
     }
 }

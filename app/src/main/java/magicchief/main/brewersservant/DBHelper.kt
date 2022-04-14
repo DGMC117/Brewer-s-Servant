@@ -731,6 +731,47 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     @SuppressLint("Range")
+    fun getCombo(comboId: Int): Combo {
+        var query = "SELECT * FROM $COMBO_TABLE_NAME WHERE $COMBO_ID == $comboId"
+        val combo = Combo ()
+        val db = this.writableDatabase
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            var cardsInCombo: MutableList<String> = ArrayList()
+            combo.id = result.getInt(result.getColumnIndex(COMBO_ID))
+            combo.colorIdentity = result.getString(result.getColumnIndex(COMBO_COLOR_IDENTITY))
+            combo.prerequisites = result.getString(result.getColumnIndex(COMBO_PREREQUISITES))
+            combo.steps = result.getString(result.getColumnIndex(COMBO_STEPS))
+            combo.results = result.getString(result.getColumnIndex(COMBO_RESULTS))
+            query = "SELECT $CIC_CARD_NAME FROM $CIC_TABLE_NAME WHERE $CIC_COMBO_ID == ${combo.id} ORDER BY $CIC_CARD_NAME"
+            val res = db.rawQuery(query, null)
+            if (res.moveToFirst()) {
+                do {
+                    cardsInCombo.add(res.getString(res.getColumnIndex(CIC_CARD_NAME)))
+                } while (res.moveToNext())
+            }
+            combo.cards = cardsInCombo.toTypedArray()
+        }
+        return combo
+    }
+
+    @SuppressLint("Range")
+    fun getComboCards(comboId: Int): MutableList<Card> {
+        var query = "SELECT ca.$CARD_SCRYFALL_ID FROM $COMBO_TABLE_NAME co LEFT JOIN $CIC_TABLE_NAME cic ON co.$COMBO_ID == cic.$CIC_COMBO_ID" +
+                " LEFT JOIN $CARD_TABLE_NAME ca ON cic.$CIC_CARD_NAME == ca.$CARD_NAME" +
+                " WHERE $COMBO_ID == $comboId"
+        val cardList: MutableList<Card> = ArrayList()
+        val db = this.writableDatabase
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                cardList.add(getCard(result.getString(result.getColumnIndex(CARD_SCRYFALL_ID))))
+            } while (result.moveToNext())
+        }
+        return cardList
+    }
+
+    @SuppressLint("Range")
     fun getCards(
         cardName: String?,
         cardTypes: Array<String>?,
@@ -1354,7 +1395,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             val subStart = str.indexOf('{')
             val subEnd = str.indexOf('}')
             val subString = str.substring(subStart, subEnd + 1)
-            val draw = getSymbolDrawable(subString)
+            val draw = getSymbolDrawable(subString.uppercase())
             val proportion = draw.intrinsicWidth / draw.intrinsicHeight
             draw.setBounds(0, 0, textSize * proportion, textSize)
             val imageSpan = ImageSpan(draw, ImageSpan.ALIGN_BOTTOM)

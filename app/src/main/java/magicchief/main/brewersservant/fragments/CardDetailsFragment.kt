@@ -60,7 +60,7 @@ class CardDetailsFragment : Fragment() {
 
         val cardImage = requireView().findViewById<ShapeableImageView>(R.id.card_details_image)
         val cardImage2 = requireView().findViewById<ShapeableImageView>(R.id.card_details_image2)
-        if (card.image_uris != null && card.image_uris?.art_crop != null && card.image_uris?.art_crop?.toString() != "null") Picasso.get().load(card.image_uris?.art_crop?.toString()).into(cardImage)
+        if (card.image_uris != null && card.image_uris.art_crop != null && card.image_uris.art_crop?.toString() != "null") Picasso.get().load(card.image_uris.art_crop?.toString()).into(cardImage)
         else {
             Picasso.get().load(card.card_faces?.get(0)?.image_uris?.art_crop?.toString()).into(cardImage)
             Picasso.get().load(card.card_faces?.get(1)?.image_uris?.art_crop?.toString()).into(cardImage2)
