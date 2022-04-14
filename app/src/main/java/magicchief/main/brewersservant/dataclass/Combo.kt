@@ -1,9 +1,10 @@
 package magicchief.main.brewersservant.dataclass
 
 data class Combo (
-    val cards: Array<String>,
-    val colorIdentity: String,
-    val prerequisites: String,
-    val steps: String,
-    val results: String
+    var id: Int? = null,
+    var cards: Array<String>? = null,
+    var colorIdentity: String? = null,
+    var prerequisites: String? = null,
+    var steps: String? = null,
+    var results: String? = null
         )

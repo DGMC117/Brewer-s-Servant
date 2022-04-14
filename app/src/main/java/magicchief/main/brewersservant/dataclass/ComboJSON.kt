@@ -3,6 +3,8 @@ package magicchief.main.brewersservant.dataclass
 import com.google.gson.annotations.SerializedName
 
 data class ComboJSON (
+        @SerializedName("")
+        val id: Int,
         @SerializedName("Card 1")
         val card1: String?,
         @SerializedName("Card 2")

@@ -35,5 +35,20 @@
             android:name="comboResult"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="cardNamesAnd"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_comboListFragment_to_comboDetailsFragment"
+            app:destination="@id/comboDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/comboDetailsFragment"
+        android:name="magicchief.main.brewersservant.fragments.ComboDetailsFragment"
+        android:label="fragment_combo_details"
+        tools:layout="@layout/fragment_combo_details" >
+        <argument
+            android:name="comboId"
+            app:argType="integer" />
     </fragment>
 </navigation>

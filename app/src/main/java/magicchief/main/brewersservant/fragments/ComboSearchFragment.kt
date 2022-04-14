@@ -101,6 +101,7 @@ class ComboSearchFragment : Fragment() {
             val colorOperator = if (colorOperatorToggle.checkedButtonId == R.id.combo_color_exactly_button) "exactly" else if (colorOperatorToggle.checkedButtonId == R.id.combo_color_including_button) "including" else "at_most"
             val action = ComboSearchFragmentDirections.actionComboSearchFragmentToComboListFragment(
                 cardNamesArray = cardNamesList.toTypedArray(),
+                cardNamesAnd = (cardNameAndOrChipGroup.get(0) as Chip).isChecked,
                 comboColorOperator = colorOperator,
                 comboColor = getColorsSelectedArray(colorToggleGroup),
                 comboResult = resultTextView.editText?.text.toString()

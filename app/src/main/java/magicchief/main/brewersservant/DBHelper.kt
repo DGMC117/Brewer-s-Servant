@@ -171,7 +171,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                 )
         val createCombosDB = (
                 "CREATE TABLE $COMBO_TABLE_NAME ("
-                        + COMBO_ID + " int auto_increment primary key,"
+                        + COMBO_ID + " int primary key,"
                         + COMBO_COLOR_IDENTITY + " varchar(50) not null,"
                         + COMBO_PREREQUISITES + " text not null,"
                         + COMBO_STEPS + " text not null,"
@@ -243,7 +243,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         private val CARD_TABLE_NAME = "Card"
 
         // Card table column names
-        private val CARD_ID = "id"
+        private val CARD_ID = "card_id"
         private val CARD_SCRYFALL_ID = "scryfall_id"
         private val CARD_CMC = "cmc"
         private val CARD_COLOR_IDENTITY = "color_identity"
@@ -320,7 +320,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         private val CARD_SET_TABLE_NAME = "CardSet"
 
         // CardSet table column names
-        private val CARD_SET_SET_ID = "id"
+        private val CARD_SET_SET_ID = "set_id"
         private val CARD_SET_SCRYFALL_SET_ID = "scryfall_set_id"
         private val CARD_SET_CODE = "code"
         private val CARD_SET_NAME = "name"
@@ -328,39 +328,39 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
 
         // Catalog Tables
         private val ARTIST_CATALOG_TABLE_NAME = "ArtistCatalog"
-        private val ARTIST_CATALOG_ID = "id"
+        private val ARTIST_CATALOG_ID = "artist_id"
         private val ARTIST_CATALOG_NAME = "name"
 
         private val CREATURE_TYPE_CATALOG_TABLE_NAME = "CreatureTypeCatalog"
-        private val CREATURE_TYPE_CATALOG_ID = "id"
+        private val CREATURE_TYPE_CATALOG_ID = "creature_id"
         private val CREATURE_TYPE_CATALOG_TYPE = "type"
 
         private val PLANESWALKER_TYPE_CATALOG_TABLE_NAME = "PlaneswalkerTypeCatalog"
-        private val PLANESWALKER_TYPE_CATALOG_ID = "id"
+        private val PLANESWALKER_TYPE_CATALOG_ID = "planeswalker_id"
         private val PLANESWALKER_TYPE_CATALOG_TYPE = "type"
 
         private val LAND_TYPE_CATALOG_TABLE_NAME = "LandTypeCatalog"
-        private val LAND_TYPE_CATALOG_ID = "id"
+        private val LAND_TYPE_CATALOG_ID = "land_id"
         private val LAND_TYPE_CATALOG_TYPE = "type"
 
         private val ARTIFACT_TYPE_CATALOG_TABLE_NAME = "ArtifactTypeCatalog"
-        private val ARTIFACT_TYPE_CATALOG_ID = "id"
+        private val ARTIFACT_TYPE_CATALOG_ID = "artifact_id"
         private val ARTIFACT_TYPE_CATALOG_TYPE = "type"
 
         private val ENCHANTMENT_TYPE_CATALOG_TABLE_NAME = "EnchantmentTypeCatalog"
-        private val ENCHANTMENT_TYPE_CATALOG_ID = "id"
+        private val ENCHANTMENT_TYPE_CATALOG_ID = "enchantment_id"
         private val ENCHANTMENT_TYPE_CATALOG_TYPE = "type"
 
         private val SPELL_TYPE_CATALOG_TABLE_NAME = "SpellTypeCatalog"
-        private val SPELL_TYPE_CATALOG_ID = "id"
+        private val SPELL_TYPE_CATALOG_ID = "spell_id"
         private val SPELL_TYPE_CATALOG_TYPE = "type"
 
         private val CARD_TYPE_CATALOG_TABLE_NAME = "CardTypeCatalog"
-        private val CARD_TYPE_CATALOG_ID = "id"
+        private val CARD_TYPE_CATALOG_ID = "cardtype_id"
         private val CARD_TYPE_CATALOG_TYPE = "type"
 
         private val CARD_SUPER_TYPE_CATALOG_TABLE_NAME = "CardSuperTypeCatalog"
-        private val CARD_SUPER_TYPE_CATALOG_ID = "id"
+        private val CARD_SUPER_TYPE_CATALOG_ID = "supertype_id"
         private val CARD_SUPER_TYPE_CATALOG_TYPE = "type"
 
         // Card Combos
@@ -583,16 +583,17 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     fun addCombo(combo: Combo): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(COMBO_COLOR_IDENTITY, combo.colorIdentity.uppercase())
+        contentValues.put(COMBO_ID, combo.id)
+        contentValues.put(COMBO_COLOR_IDENTITY, combo.colorIdentity!!.uppercase())
         contentValues.put(COMBO_PREREQUISITES, combo.prerequisites)
         contentValues.put(COMBO_STEPS, combo.steps)
         contentValues.put(COMBO_RESULTS, combo.results)
         val result = db.insert(COMBO_TABLE_NAME, null, contentValues)
         db.close()
         if (result > -1) {
-            combo.cards.forEach {
+            combo.cards!!.forEach {
                 //val cardId = getCardIdFromName(it)
-                addComboInCard (result.toInt(), it)
+                addComboInCard (combo.id!!, it)
             }
         }
         return result
@@ -617,6 +618,116 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         cardSuperTypes.forEach {
             addCardSuperTypeCatalog(it, db)
         }
+    }
+
+    @SuppressLint("Range")
+    fun getCombos(cardNamesArray: Array<String>?, cardNamesAnd: Boolean, comboColorOperator: String?, comboColor: String?, comboResult: String?): MutableList<Combo> {
+        var whereStarted = false
+        var query = "SELECT co.$COMBO_ID, co.$COMBO_COLOR_IDENTITY, co.$COMBO_RESULTS FROM $COMBO_TABLE_NAME co LEFT JOIN $CIC_TABLE_NAME cic ON co.$COMBO_ID == cic.$CIC_COMBO_ID"
+        if (comboColor != null && comboColor != "") {
+            if (comboColor == "C") query += if (!whereStarted) " WHERE (co.$COMBO_COLOR_IDENTITY == ''" else " AND (co.$COMBO_COLOR_IDENTITY == ''"
+            else {
+                when (comboColorOperator) {
+                    "exactly" -> {
+                        val colors = colorStringtoArray(comboColor)
+                        val colorsNotSelected = mutableListOf("W", "U", "B", "R", "G")
+                        var k = 0
+                        while (k < colors.size) {
+                            query += if (!whereStarted) " WHERE (co.$COMBO_COLOR_IDENTITY LIKE '%${colors[k]}%'" else if (k == 0) " AND (co.$COMBO_COLOR_IDENTITY LIKE '%${colors[k]}%'" else " AND co.$COMBO_COLOR_IDENTITY LIKE '%${colors[k]}%'"
+                            colorsNotSelected.remove(colors[k])
+                            whereStarted = true
+                            ++k
+                        }
+                        k = 0
+                        while (k < colorsNotSelected.size) {
+                            query += if (k == 0) ") AND (co.$COMBO_COLOR_IDENTITY NOT LIKE '%${colorsNotSelected[k]}%'" else " AND co.$COMBO_COLOR_IDENTITY NOT LIKE '%${colorsNotSelected[k]}%'"
+                            ++k
+                        }
+                    }
+                    "including" -> {
+                        val colors = colorStringtoArray(comboColor)
+                        var k = 0
+                        while (k < colors.size) {
+                            query += if (!whereStarted) " WHERE (co.$COMBO_COLOR_IDENTITY LIKE '%${colors[k]}%'" else if (k == 0) " AND (co.$COMBO_COLOR_IDENTITY LIKE '%${colors[k]}%'" else " AND co.$COMBO_COLOR_IDENTITY LIKE '%${colors[k]}%'"
+                            whereStarted = true
+                            ++k
+                        }
+                    }
+                    else -> {
+                        val colors = colorStringtoArray(comboColor)
+                        val colorsNotSelected = mutableListOf("W", "U", "B", "R", "G")
+                        var k = 0
+                        while (k < colors.size) {
+                            query += if (!whereStarted) " WHERE (co.$COMBO_COLOR_IDENTITY LIKE '%${colors[k]}%'" else if (k == 0) " AND (co.$COMBO_COLOR_IDENTITY LIKE '%${colors[k]}%'" else " OR co.$COMBO_COLOR_IDENTITY LIKE '%${colors[k]}%'"
+                            colorsNotSelected.remove(colors[k])
+                            whereStarted = true
+                            ++k
+                        }
+                        k = 0
+                        while (k < colorsNotSelected.size) {
+                            query += if (k == 0) ") AND (co.$COMBO_COLOR_IDENTITY NOT LIKE '%${colorsNotSelected[k]}%'" else " AND co.$COMBO_COLOR_IDENTITY NOT LIKE '%${colorsNotSelected[k]}%'"
+                            ++k
+                        }
+                    }
+                }
+            }
+            whereStarted = true
+            query += ")"
+        }
+        if (comboResult != null && comboResult != "") {
+            val words = comboResult.replace("'", "_").split(" ")
+            var first = true
+            words.forEach {
+                query += if (!whereStarted) " WHERE (" else if (first) " AND (" else " AND"
+                query += " co.$COMBO_RESULTS LIKE '%${it}%'"
+                whereStarted = true
+                first = false
+            }
+            query += ")"
+        }
+        if (!cardNamesArray.isNullOrEmpty()) {
+            val subquery = query
+            var first = true
+            cardNamesArray.forEach {
+                if (first) {
+                    query += if (!whereStarted) " WHERE (" else " AND ("
+                    query += " cic.$CIC_CARD_NAME LIKE '${it.replace("'", "_")}') GROUP BY $COMBO_ID"
+                    first = false
+                }
+                else {
+                    query += if (cardNamesAnd) " INTERSECT " else " UNION "
+                    query += subquery
+                    query += if (!whereStarted) " WHERE (" else " AND ("
+                    query += " cic.$CIC_CARD_NAME LIKE '${it.replace("'", "_")}') GROUP BY $COMBO_ID"
+                }
+                whereStarted = true
+            }
+            query += "  ORDER BY $COMBO_ID LIMIT 100"
+        }
+        else query += " GROUP BY $COMBO_ID ORDER BY $COMBO_ID LIMIT 100" // OFFSET 100
+        val list: MutableList<Combo> = ArrayList()
+        val db = this.writableDatabase
+        println(query)
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                var currentCombo = Combo()
+                var cardsInCombo: MutableList<String> = ArrayList()
+                currentCombo.id = result.getInt(result.getColumnIndex(COMBO_ID))
+                currentCombo.colorIdentity = result.getString(result.getColumnIndex(COMBO_COLOR_IDENTITY))
+                currentCombo.results = result.getString(result.getColumnIndex(COMBO_RESULTS))
+                query = "SELECT $CIC_CARD_NAME FROM $CIC_TABLE_NAME WHERE $CIC_COMBO_ID == ${currentCombo.id} ORDER BY $CIC_CARD_NAME"
+                val res = db.rawQuery(query, null)
+                if (res.moveToFirst()) {
+                    do {
+                        cardsInCombo.add(res.getString(res.getColumnIndex(CIC_CARD_NAME)))
+                    } while (res.moveToNext())
+                }
+                currentCombo.cards = cardsInCombo.toTypedArray()
+                list.add(currentCombo)
+            } while (result.moveToNext())
+        }
+        return list
     }
 
     @SuppressLint("Range")
@@ -905,7 +1016,6 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         }
         else query += " ORDER BY $CARD_NAME"
         query += " LIMIT 100" // OFFSET 50
-        println(query)
 
         val list: MutableList<Card> = ArrayList()
         val db = this.readableDatabase

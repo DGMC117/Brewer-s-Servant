@@ -71,7 +71,7 @@ class CardDownloadActivity : AppCompatActivity() {
             if (currentComboJSON.card8 != null && currentComboJSON.card8 != "") cards.add(currentComboJSON.card8)
             if (currentComboJSON.card9 != null && currentComboJSON.card9 != "") cards.add(currentComboJSON.card9)
             if (currentComboJSON.card10 != null && currentComboJSON.card10 != "") cards.add(currentComboJSON.card10)
-            val currentCombo = Combo (cards.toTypedArray(), currentComboJSON.colorIdentity, currentComboJSON.prerequisites, currentComboJSON.steps, currentComboJSON.results)
+            val currentCombo = Combo (currentComboJSON.id, cards.toTypedArray(), currentComboJSON.colorIdentity, currentComboJSON.prerequisites, currentComboJSON.steps, currentComboJSON.results)
             dbHelper.addCombo(currentCombo)
             k++
             combosAddedText.text = k.toString() + " " + getString(R.string.combos_downloaded)
