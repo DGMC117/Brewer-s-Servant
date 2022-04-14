@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
+import androidx.core.view.forEach
 import androidx.core.view.get
 import androidx.core.view.size
 import androidx.core.widget.doOnTextChanged
+import androidx.navigation.findNavController
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
 import magicchief.main.brewersservant.DBHelper
 import magicchief.main.brewersservant.R
@@ -90,5 +93,38 @@ class ComboSearchFragment : Fragment() {
         }
 
         val resultTextView = requireView().findViewById<TextInputLayout>(R.id.combo_result)
+
+        val searchButton = requireView().findViewById<FloatingActionButton>(R.id.combo_search_fab)
+        searchButton.setOnClickListener {
+            var cardNamesList = mutableListOf<String>()
+            cardNamesChipGroup.forEach { cardNamesList.add((it as Chip).text.toString()) }
+            val colorOperator = if (colorOperatorToggle.checkedButtonId == R.id.combo_color_exactly_button) "exactly" else if (colorOperatorToggle.checkedButtonId == R.id.combo_color_including_button) "including" else "at_most"
+            val action = ComboSearchFragmentDirections.actionComboSearchFragmentToComboListFragment(
+                cardNamesArray = cardNamesList.toTypedArray(),
+                comboColorOperator = colorOperator,
+                comboColor = getColorsSelectedArray(colorToggleGroup),
+                comboResult = resultTextView.editText?.text.toString()
+            )
+            view.findNavController().navigate(action)
+        }
+    }
+
+    fun getColorsSelectedArray(colorToggleGroup: MaterialButtonToggleGroup): String {
+        var result = ""
+        val checkedIds = colorToggleGroup.checkedButtonIds
+        if (checkedIds.size < 1) return result
+        else {
+            checkedIds.forEach {
+                when (it) {
+                    R.id.combo_color_white_button -> result += if (result.length < 1) "W" else ",W"
+                    R.id.combo_color_blue_button -> result += if (result.length < 1) "U" else ",U"
+                    R.id.combo_color_black_button -> result += if (result.length < 1) "B" else ",B"
+                    R.id.combo_color_red_button -> result += if (result.length < 1) "R" else ",R"
+                    R.id.combo_color_green_button -> result += if (result.length < 1) "G" else ",G"
+                    else -> result = "C"
+                }
+            }
+        }
+        return result
     }
 }

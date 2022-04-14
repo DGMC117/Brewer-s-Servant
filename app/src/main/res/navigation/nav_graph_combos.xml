@@ -9,5 +9,31 @@
         android:id="@+id/comboSearchFragment"
         android:name="magicchief.main.brewersservant.fragments.ComboSearchFragment"
         android:label="fragment_combo_search"
-        tools:layout="@layout/fragment_combo_search" />
+        tools:layout="@layout/fragment_combo_search" >
+        <action
+            android:id="@+id/action_comboSearchFragment_to_comboListFragment"
+            app:destination="@id/comboListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/comboListFragment"
+        android:name="magicchief.main.brewersservant.fragments.ComboListFragment"
+        android:label="fragment_combo_list"
+        tools:layout="@layout/fragment_combo_list" >
+        <argument
+            android:name="cardNamesArray"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="comboColorOperator"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="comboColor"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="comboResult"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>
