@@ -60,6 +60,16 @@
     <string name="meld_part">Meld Part</string>
     <string name="meld_result">Meld Result</string>
     <string name="combo_piece">Combo Piece</string>
+    <string name="database_download_in_progress">Database download in progress, please do not turn off the application.</string>
+    <string name="sets_downloaded">sets downloaded.</string>
+    <string name="cards_downloaded">cards downloaded.</string>
+    <string name="combos_downloaded">combos downloaded.</string>
+    <string name="card_name_hint">Card Name</string>
+    <string name="result_hint">Result</string>
+    <string name="card_name_repeated">Card name already selected!</string>
+    <string name="prerequisites">Prerequisites</string>
+    <string name="steps">Steps</string>
+    <string name="results">Results</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
