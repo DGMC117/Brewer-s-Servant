@@ -26,6 +26,8 @@ import magicchief.main.brewersservant.dataclass.Card
 import magicchief.main.brewersservant.dataclass.Deck
 import magicchief.main.brewersservant.fragments.CardListFragmentDirections
 import magicchief.main.brewersservant.fragments.CardSearchFragmentDirections
+import magicchief.main.brewersservant.fragments.DecksListFragment
+import magicchief.main.brewersservant.fragments.DecksListFragmentDirections
 
 class DecksListAdapter(val decksList: MutableList<Deck>, context: Context): RecyclerView.Adapter<DecksListAdapter.ViewHolder> () {
     val parentContext = context
@@ -54,10 +56,8 @@ class DecksListAdapter(val decksList: MutableList<Deck>, context: Context): Recy
                 .show()
         }
         holder.itemView.setOnClickListener {
-            Toast.makeText(parentContext, "Deck Pressed", Toast.LENGTH_SHORT).show()
-            /*
-            val action = CardListFragmentDirections.actionCardListFragmentToCardDetailsFragment(cardId = cardList[position].id.toString())
-            holder.itemView.findNavController().navigate(action)*/
+            val action = DecksListFragmentDirections.actionDecksListFragmentToDeckFragment(deckId = decksList[position].id!!)
+            holder.itemView.findNavController().navigate(action)
         }
     }
 

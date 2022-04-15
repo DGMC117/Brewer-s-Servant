@@ -16,6 +16,7 @@ import androidx.core.view.forEach
 import androidx.core.view.get
 import androidx.core.view.size
 import androidx.core.widget.doOnTextChanged
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -128,7 +129,7 @@ class DecksListFragment : Fragment() {
                     deckCommanderNamesChipGroup.forEach { commanderCards.add(db.getCard(db.getCardIdFromName((it as Chip).text.toString()))) }
                     var commanderIds: MutableList<String> = ArrayList()
                     commanderCards.forEach { commanderIds.add(it.id.toString()) }
-                    db.addDeck(
+                    val id = db.addDeck(
                         Deck(null,
                             deckNameText.editText?.text.toString(),
                             deckFormatText.editText?.text.toString(),
@@ -140,6 +141,8 @@ class DecksListFragment : Fragment() {
                             if (commanderCards.isNullOrEmpty()) "C" else getDeckColorIdentity(commanderCards.toTypedArray())),
                         commanderIds.toTypedArray())
                     dialog.dismiss()
+                    val action = DecksListFragmentDirections.actionDecksListFragmentToDeckFragment(deckId = id.toInt())
+                    view.findNavController().navigate(action)
                 }
             }
         }
