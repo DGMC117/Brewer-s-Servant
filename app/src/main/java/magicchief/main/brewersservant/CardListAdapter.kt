@@ -42,7 +42,7 @@ class CardListAdapter(val cardList: MutableList<Card>, context: Context): Recycl
                 holder.itemCost.textSize.toInt()
             )
             holder.itemType.text = cardList[position].type_line
-            Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).into(holder.itemImage)
+            Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
         }
         else {
             holder.itemName.text = cardList[position].card_faces?.get(0)?.name
@@ -56,8 +56,8 @@ class CardListAdapter(val cardList: MutableList<Card>, context: Context): Recycl
             )
             holder.itemType.text = cardList[position].card_faces?.get(0)?.type_line
 
-            if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null && cardList[position].image_uris?.art_crop?.toString() != "null") Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).into(holder.itemImage)
-            else Picasso.get().load(cardList[position].card_faces?.get(0)?.image_uris?.art_crop?.toString()).into(holder.itemImage)
+            if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null && cardList[position].image_uris?.art_crop?.toString() != "null") Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
+            else Picasso.get().load(cardList[position].card_faces?.get(0)?.image_uris?.art_crop?.toString()).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
         }
         holder.itemView.setOnClickListener {
             val action = CardListFragmentDirections.actionCardListFragmentToCardDetailsFragment(cardId = cardList[position].id.toString())

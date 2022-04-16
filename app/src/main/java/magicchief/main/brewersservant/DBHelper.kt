@@ -771,10 +771,18 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     @SuppressLint("Range")
-    fun updateFaceCardInDeck(deckId: Int, faceCard: String): Int {
+    fun updateFaceCardInDeck(deckId: Int, faceCardUri: String): Int {
         val db = this.writableDatabase
         val contentValues = ContentValues()
-        contentValues.put(DECK_FACE_CARD_URI, faceCard)
+        contentValues.put(DECK_FACE_CARD_URI, faceCardUri)
+        return db.update(DECK_TABLE_NAME, contentValues, "$DECK_ID=$deckId", null)
+    }
+
+    @SuppressLint("Range")
+    fun updateDeckName(deckId: Int, name: String): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(DECK_NAME, name)
         return db.update(DECK_TABLE_NAME, contentValues, "$DECK_ID=$deckId", null)
     }
 

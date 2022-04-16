@@ -27,8 +27,8 @@ class DeckCardsAdapter(val deckId: Int, val cardList: MutableList<Card>, context
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val db = DBHelper(parentContext)
-        if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null && cardList[position].image_uris?.art_crop?.toString() != "null") Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).into(holder.itemImage)
-        else Picasso.get().load(cardList[position].card_faces?.get(0)?.image_uris?.art_crop?.toString()).into(holder.itemImage)
+        if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null && cardList[position].image_uris?.art_crop?.toString() != "null") Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
+        else Picasso.get().load(cardList[position].card_faces?.get(0)?.image_uris?.art_crop?.toString()).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
         holder.itemName.text = cardList[position].name
         holder.itemType.text = cardList[position].type_line
         holder.itemCost.text = stringToSpannableString(cardList[position].mana_cost!!, holder.itemCost.textSize.toInt())

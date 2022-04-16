@@ -38,7 +38,7 @@ class DecksListAdapter(val decksList: MutableList<Deck>, context: Context): Recy
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (decksList[position].face_card_image_uri != null) Picasso.get().load(decksList[position].face_card_image_uri).into(holder.itemImage)
+        if (decksList[position].face_card_image_uri != null) Picasso.get().load(decksList[position].face_card_image_uri).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
         holder.itemName.text = decksList[position].name
         holder.itemFormat.text = decksList[position].format
         holder.itemColorIdentity.text = stringToSpannableString(decksList[position].colorIdentity!!, holder.itemColorIdentity.textSize.toInt(), true)

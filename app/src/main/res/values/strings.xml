@@ -103,6 +103,9 @@
     <string name="maybe">Maybe</string>
     <string name="sideboard">Sideboard</string>
     <string name="maybeboard">Maybeboard</string>
+    <string name="face_card_hint">Face Card</string>
+    <string name="save">Save</string>
+    <string name="no_valid_face_card_name_set">Not a valid face card!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
