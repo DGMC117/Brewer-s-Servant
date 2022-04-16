@@ -24,9 +24,10 @@ import com.squareup.picasso.Picasso
 import magicchief.main.brewersservant.*
 
 
-lateinit var cardId: String
 
 class CardDetailsFragment : Fragment() {
+
+    lateinit var cardId: String
 
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<CardDetailsSplitAdapter.ViewHolder>? = null

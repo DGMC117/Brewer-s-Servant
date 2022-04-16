@@ -702,6 +702,22 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     @SuppressLint("Range")
+    fun getDeck(deckId: Int): Deck {
+        val query = "SELECT * FROM $DECK_TABLE_NAME WHERE $DECK_ID == $deckId"
+        var deck = Deck()
+        val db = this.readableDatabase
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            deck.id = result.getInt(result.getColumnIndex(DECK_ID))
+            deck.name = result.getString(result.getColumnIndex(DECK_NAME))
+            deck.format = result.getString(result.getColumnIndex(DECK_FORMAT))
+            deck.face_card_image_uri = result.getString(result.getColumnIndex(DECK_FACE_CARD_URI))
+            deck.colorIdentity = result.getString(result.getColumnIndex(DECK_COLOR_IDENTITY))
+        }
+        return deck
+    }
+
+    @SuppressLint("Range")
     fun getDeckCards(deckId: Int): MutableList<Card> {
         val query = "SELECT $CID_CARD_ID FROM $CID_TABLE_NAME WHERE $CID_DECK_ID == $deckId"
         val db = this.readableDatabase
@@ -713,6 +729,53 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             } while (result.moveToNext())
         }
         return list
+    }
+
+    @SuppressLint("Range")
+    fun getAmountInDeck(deckId: Int, cardId: String): Int {
+        val query = "SELECT $CID_AMOUNT FROM $CID_TABLE_NAME WHERE $CID_DECK_ID == $deckId AND $CID_CARD_ID == '$cardId'"
+        val db = this.readableDatabase
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            return result.getInt(result.getColumnIndex(CID_AMOUNT))
+        }
+        return 0
+    }
+
+    @SuppressLint("Range")
+    fun getDeckCardBoard(deckId: Int, cardId: String): String {
+        val query = "SELECT $CID_BOARD FROM $CID_TABLE_NAME WHERE $CID_DECK_ID == $deckId AND $CID_CARD_ID == '$cardId'"
+        val db = this.readableDatabase
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            return result.getString(result.getColumnIndex(CID_BOARD))
+        }
+        return "other"
+    }
+
+    @SuppressLint("Range")
+    fun updateAmountInDeck(deckId: Int, cardId: String, amount: Int): Int {
+        val db = this.writableDatabase
+        if (amount < 1) return db.delete(CID_TABLE_NAME, "$CID_DECK_ID=$deckId AND $CID_CARD_ID='$cardId'", null)
+        val contentValues = ContentValues()
+        contentValues.put(CID_AMOUNT, amount)
+        return db.update(CID_TABLE_NAME, contentValues, "$CID_DECK_ID=$deckId AND $CID_CARD_ID='$cardId'", null)
+    }
+
+    @SuppressLint("Range")
+    fun updateColorIdentityInDeck(deckId: Int, identity: String): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(DECK_COLOR_IDENTITY, identity)
+        return db.update(DECK_TABLE_NAME, contentValues, "$DECK_ID=$deckId", null)
+    }
+
+    @SuppressLint("Range")
+    fun updateFaceCardInDeck(deckId: Int, faceCard: String): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(DECK_FACE_CARD_URI, faceCard)
+        return db.update(DECK_TABLE_NAME, contentValues, "$DECK_ID=$deckId", null)
     }
 
     fun deleteDeck(deckId: Int): Int {
@@ -1340,7 +1403,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     fun getCardIdFromName (name: String): String {
         var id = ""
         val db = this.readableDatabase
-        val query = "SELECT $CARD_SCRYFALL_ID FROM $CARD_TABLE_NAME WHERE $CARD_NAME LIKE '${name.replace("'", "_")}' ORDER BY $CARD_NAME"
+        val query = "SELECT $CARD_SCRYFALL_ID FROM $CARD_TABLE_NAME WHERE $CARD_NAME LIKE '${name.replace("'", "_")}'"
+        println(query)
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
             id = result.getStringOrNull(result.getColumnIndex(CARD_SCRYFALL_ID))!!

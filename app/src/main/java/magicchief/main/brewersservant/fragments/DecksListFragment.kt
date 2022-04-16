@@ -27,6 +27,7 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textview.MaterialTextView
 import magicchief.main.brewersservant.*
 import magicchief.main.brewersservant.dataclass.Card
 import magicchief.main.brewersservant.dataclass.Deck
@@ -95,7 +96,7 @@ class DecksListFragment : Fragment() {
             }
             (deckCommanderNameText.editText as? AutoCompleteTextView)?.setOnItemClickListener { adapterView, view, i, l ->
                 deckCommanderNamesChipGroup.visibility = View.VISIBLE
-                val row = commanderNameAdapter.getItem(0)
+                val row = (view as MaterialTextView).text.toString()
                 var notRepeated = true
                 var k = 0
                 while (notRepeated && k < deckCommanderNamesChipGroup.size) {

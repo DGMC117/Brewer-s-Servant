@@ -80,6 +80,29 @@
     <string name="delete_deck_alert_text">This action cannot be undone.</string>
     <string name="cancel">Cancel</string>
     <string name="accept">Accept</string>
+    <string name="add_card">Add Card</string>
+    <string name="commanders_symbol"></string>
+    <string name="commanders">Commanders</string>
+    <string name="planeswalkers_symbol"></string>
+    <string name="planeswalkers">Planeswalkers</string>
+    <string name="creatures_symbol"></string>
+    <string name="creatures">Creatures</string>
+    <string name="artifacts_symbol"></string>
+    <string name="artifacts">Artifacts</string>
+    <string name="enchantments_symbol"></string>
+    <string name="enchantments">Enchantments</string>
+    <string name="sorceries_symbol"></string>
+    <string name="sorceries">Sorceries</string>
+    <string name="instants_symbol"></string>
+    <string name="instants">Instants</string>
+    <string name="lands_symbol"></string>
+    <string name="lands">Lands</string>
+    <string name="other">Other</string>
+    <string name="main">Main</string>
+    <string name="side">Side</string>
+    <string name="maybe">Maybe</string>
+    <string name="sideboard">Sideboard</string>
+    <string name="maybeboard">Maybeboard</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
