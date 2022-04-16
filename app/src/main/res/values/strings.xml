@@ -106,6 +106,17 @@
     <string name="face_card_hint">Face Card</string>
     <string name="save">Save</string>
     <string name="no_valid_face_card_name_set">Not a valid face card!</string>
+    <string name="card_types_distribution">Card Types Distribution</string>
+    <string name="mana_value_curve">Mana Value Curve</string>
+    <string name="mana_value_label">Mana Value</string>
+    <string name="white">White</string>
+    <string name="blue">Blue</string>
+    <string name="black">Black</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="colorless">Colorless</string>
+    <string name="symbols_vs_produced">Mana Symbol Colors vs Produced Mana</string>
+    <string name="mana_symbols">Mana Symbols</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
