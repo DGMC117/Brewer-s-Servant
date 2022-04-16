@@ -208,23 +208,84 @@ class DeckCardsFragment : Fragment() {
         val side: MutableList<Card> = ArrayList()
         val maybe: MutableList<Card> = ArrayList()
         cardList = dbHelper.getDeckCards(deckId)
+
+        var w = false
+        var u = false
+        var b = false
+        var r = false
+        var g = false
+
+        var planeswalkersCount = 0
+        var creaturesCount = 0
+        var artifactsCount = 0
+        var enchantmentsCount = 0
+        var sorceriesCount = 0
+        var instantsCount = 0
+        var landsCount = 0
+        var otherCount = 0
+        var sideCount = 0
+        var maybeCount = 0
+
         cardList.forEach {
+            if (it.color_identity!!.contains("W")) w = true
+            if (it.color_identity!!.contains("U")) u = true
+            if (it.color_identity!!.contains("B")) b = true
+            if (it.color_identity!!.contains("R")) r = true
+            if (it.color_identity!!.contains("G")) g = true
             when (dbHelper.getDeckCardBoard(deckId, it.id.toString())) {
                 "commander" -> commanders.add(it)
-                "side" -> side.add(it)
-                "maybe" -> maybe.add(it)
+                "side" -> {
+                    side.add(it)
+                    sideCount += dbHelper.getAmountInDeck(deckId, it.id.toString())
+                }
+                "maybe" -> {
+                    maybe.add(it)
+                    maybeCount += dbHelper.getAmountInDeck(deckId, it.id.toString())
+                }
                 "main" -> {
-                    if (it.type_line!!.contains("Planeswalker", false)) planeswalkers.add(it)
-                    else if (it.type_line!!.contains("Creature", false)) creatures.add(it)
-                    else if (it.type_line!!.contains("Artifact", false)) artifacts.add(it)
-                    else if (it.type_line!!.contains("Enchantment", false)) enchantments.add(it)
-                    else if (it.type_line!!.contains("Sorcery", false)) sorceries.add(it)
-                    else if (it.type_line!!.contains("Instant", false)) instants.add(it)
-                    else if (it.type_line!!.contains("Land", false)) lands.add(it)
-                    else other.add(it)
+                    if (it.type_line!!.contains("Planeswalker", false)) {
+                        planeswalkers.add(it)
+                        planeswalkersCount += dbHelper.getAmountInDeck(deckId, it.id.toString())
+                    }
+                    else if (it.type_line!!.contains("Creature", false)) {
+                        creatures.add(it)
+                        creaturesCount += dbHelper.getAmountInDeck(deckId, it.id.toString())
+                    }
+                    else if (it.type_line!!.contains("Artifact", false)) {
+                        artifacts.add(it)
+                        artifactsCount += dbHelper.getAmountInDeck(deckId, it.id.toString())
+                    }
+                    else if (it.type_line!!.contains("Enchantment", false)) {
+                        enchantments.add(it)
+                        enchantmentsCount += dbHelper.getAmountInDeck(deckId, it.id.toString())
+                    }
+                    else if (it.type_line!!.contains("Sorcery", false)) {
+                        sorceries.add(it)
+                        sorceriesCount += dbHelper.getAmountInDeck(deckId, it.id.toString())
+                    }
+                    else if (it.type_line!!.contains("Instant", false)) {
+                        instants.add(it)
+                        instantsCount += dbHelper.getAmountInDeck(deckId, it.id.toString())
+                    }
+                    else if (it.type_line!!.contains("Land", false)) {
+                        lands.add(it)
+                        landsCount += dbHelper.getAmountInDeck(deckId, it.id.toString())
+                    }
+                    else {
+                        other.add(it)
+                        otherCount += dbHelper.getAmountInDeck(deckId, it.id.toString())
+                    }
                 }
             }
         }
+        var identity = ""
+        identity += if(w) if (identity.length > 0) ",W" else "W" else ""
+        identity += if(u) if (identity.length > 0) ",U" else "U" else ""
+        identity += if(b) if (identity.length > 0) ",B" else "B" else ""
+        identity += if(r) if (identity.length > 0) ",R" else "R" else ""
+        identity += if(g) if (identity.length > 0) ",G" else "G" else ""
+        if (identity == "") identity = "C"
+        dbHelper.updateColorIdentityInDeck(deckId, identity)
         if (!commanders.isNullOrEmpty()) {
             commandersAdapter = DeckCardsAdapter(deckId, commanders, requireContext())
             val listener = object : OnItemsClickListener {
@@ -245,7 +306,7 @@ class DeckCardsFragment : Fragment() {
             (planeswalkersAdapter as DeckCardsAdapter).setOnItemClickListener(listener)
             planeswalkersRecycler.adapter = planeswalkersAdapter
             planeswalkersLayout.visibility = View.VISIBLE
-            planeswalkersCountTextView.text = planeswalkers.size.toString()
+            planeswalkersCountTextView.text = planeswalkersCount.toString()
         }
         else planeswalkersLayout.visibility = View.GONE
         if (!creatures.isNullOrEmpty()) {
@@ -258,7 +319,7 @@ class DeckCardsFragment : Fragment() {
             (creaturesAdapter as DeckCardsAdapter).setOnItemClickListener(listener)
             creaturesRecycler.adapter = creaturesAdapter
             creaturesLayout.visibility = View.VISIBLE
-            creaturesCountTextView.text = creatures.size.toString()
+            creaturesCountTextView.text = creaturesCount.toString()
         }
         else creaturesLayout.visibility = View.GONE
         if (!artifacts.isNullOrEmpty()) {
@@ -271,7 +332,7 @@ class DeckCardsFragment : Fragment() {
             (artifactsAdapter as DeckCardsAdapter).setOnItemClickListener(listener)
             artifactsRecycler.adapter = artifactsAdapter
             artifactsLayout.visibility = View.VISIBLE
-            artifactsCountTextView.text = artifacts.size.toString()
+            artifactsCountTextView.text = artifactsCount.toString()
         }
         else artifactsLayout.visibility = View.GONE
         if (!enchantments.isNullOrEmpty()) {
@@ -284,7 +345,7 @@ class DeckCardsFragment : Fragment() {
             (enchantmentsAdapter as DeckCardsAdapter).setOnItemClickListener(listener)
             enchantmentsRecycler.adapter = enchantmentsAdapter
             enchantmentsLayout.visibility = View.VISIBLE
-            enchantmentsCountTextView.text = enchantments.size.toString()
+            enchantmentsCountTextView.text = enchantmentsCount.toString()
         }
         else enchantmentsLayout.visibility = View.GONE
         if (!sorceries.isNullOrEmpty()) {
@@ -297,7 +358,7 @@ class DeckCardsFragment : Fragment() {
             (sorceriesAdapter as DeckCardsAdapter).setOnItemClickListener(listener)
             sorceriesRecycler.adapter = sorceriesAdapter
             sorceriesLayout.visibility = View.VISIBLE
-            sorceriesCountTextView.text = sorceries.size.toString()
+            sorceriesCountTextView.text = sorceriesCount.toString()
         }
         else sorceriesLayout.visibility = View.GONE
         if (!instants.isNullOrEmpty()) {
@@ -310,7 +371,7 @@ class DeckCardsFragment : Fragment() {
             (instantsAdapter as DeckCardsAdapter).setOnItemClickListener(listener)
             instantsRecycler.adapter = instantsAdapter
             instantsLayout.visibility = View.VISIBLE
-            instantsCountTextView.text = instants.size.toString()
+            instantsCountTextView.text = instantsCount.toString()
         }
         else instantsLayout.visibility = View.GONE
         if (!lands.isNullOrEmpty()) {
@@ -323,7 +384,7 @@ class DeckCardsFragment : Fragment() {
             (landsAdapter as DeckCardsAdapter).setOnItemClickListener(listener)
             landsRecycler.adapter = landsAdapter
             landsLayout.visibility = View.VISIBLE
-            landsCountTextView.text = lands.size.toString()
+            landsCountTextView.text = landsCount.toString()
         }
         else landsLayout.visibility = View.GONE
         if (!other.isNullOrEmpty()) {
@@ -336,7 +397,7 @@ class DeckCardsFragment : Fragment() {
             (otherAdapter as DeckCardsAdapter).setOnItemClickListener(listener)
             otherRecycler.adapter = otherAdapter
             otherLayout.visibility = View.VISIBLE
-            otherCountTextView.text = other.size.toString()
+            otherCountTextView.text = otherCount.toString()
         }
         else otherLayout.visibility = View.GONE
         if (!side.isNullOrEmpty()) {
@@ -349,7 +410,7 @@ class DeckCardsFragment : Fragment() {
             (sideAdapter as DeckCardsAdapter).setOnItemClickListener(listener)
             sideRecycler.adapter = sideAdapter
             sideLayout.visibility = View.VISIBLE
-            sideCountTextView.text = side.size.toString()
+            sideCountTextView.text = sideCount.toString()
         }
         else sideLayout.visibility = View.GONE
         if (!maybe.isNullOrEmpty()) {
@@ -362,7 +423,7 @@ class DeckCardsFragment : Fragment() {
             (maybeAdapter as DeckCardsAdapter).setOnItemClickListener(listener)
             maybeRecycler.adapter = maybeAdapter
             maybeLayout.visibility = View.VISIBLE
-            maybeCountTextView.text = maybe.size.toString()
+            maybeCountTextView.text = maybeCount.toString()
         }
         else maybeLayout.visibility = View.GONE
     }
