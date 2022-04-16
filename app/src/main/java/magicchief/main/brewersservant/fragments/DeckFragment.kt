@@ -1,32 +1,27 @@
 package magicchief.main.brewersservant.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.NonNull
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import magicchief.main.brewersservant.R
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [DeckFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class DeckFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    var deckId = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            deckId = it.getInt("deckId")
         }
     }
 
@@ -38,23 +33,58 @@ class DeckFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_deck, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DeckFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DeckFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val tabLayout = requireView().findViewById<TabLayout>(R.id.deck_tab_layout)
+        val viewPager2 = requireView().findViewById<ViewPager2>(R.id.deck_view_pager)
+
+        val fragmentManager = childFragmentManager
+        val pagerAdapter = ViewPagerAdapter(fragmentManager, lifecycle)
+        pagerAdapter.addFragment(DeckCardsFragment(), deckId)
+        pagerAdapter.addFragment(DeckEditFragment(), deckId)
+        pagerAdapter.addFragment(DeckStatsFragment(), deckId)
+        viewPager2.adapter = pagerAdapter
+
+        tabLayout.addTab(tabLayout.newTab().setText("Cards").setIcon(R.drawable.ic_card))
+        tabLayout.addTab(tabLayout.newTab().setText("Edit").setIcon(R.drawable.ic_baseline_edit_24))
+        tabLayout.addTab(tabLayout.newTab().setText("Stats").setIcon(R.drawable.ic_baseline_bar_chart_24))
+
+        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                viewPager2.setCurrentItem(tab.position)
             }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                tabLayout.selectTab(tabLayout.getTabAt(position))
+            }
+        })
+
+    }
+
+    private class ViewPagerAdapter : FragmentStateAdapter {
+
+        var childFragments: MutableList<Fragment> = ArrayList()
+
+        constructor(@NonNull fragmentManager: FragmentManager, @NonNull lifecycle: Lifecycle) : super(fragmentManager, lifecycle)
+
+        @NonNull override fun createFragment(position: Int): Fragment {
+            return childFragments[position]
+        }
+
+        override fun getItemCount(): Int {
+            return childFragments.size
+        }
+
+        fun addFragment(frag: Fragment, deckId: Int) {
+            val args = Bundle()
+            args.putInt("deckId", deckId)
+            frag.arguments = args
+            childFragments.add(frag)
+        }
     }
 }

@@ -103,6 +103,10 @@
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_combo_details.xml" value="0.31354166666666666" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_combo_list.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_combo_search.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_deck.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_deck_cards.xml" value="0.31354166666666666" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_deck_edit.xml" value="0.31354166666666666" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_deck_stats.xml" value="0.31354166666666666" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_decks_list.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/list_item.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/mana_cost_symbol_dialog.xml" value="0.5541666666666667" />
