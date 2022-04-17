@@ -18,6 +18,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textview.MaterialTextView
 import magicchief.main.brewersservant.DBHelper
 import magicchief.main.brewersservant.R
 
@@ -54,7 +55,7 @@ class ComboSearchFragment : Fragment() {
         }
         (cardNameTextView.editText as? AutoCompleteTextView)?.setOnItemClickListener { adapterView, view, i, l ->
             cardNamesChipGroup.visibility = View.VISIBLE
-            val row = nameAdapter.getItem(0)
+            val row = (view as MaterialTextView).text.toString()
             var notRepeated = true
             var k = 0
             while (notRepeated && k < cardNamesChipGroup.size) {

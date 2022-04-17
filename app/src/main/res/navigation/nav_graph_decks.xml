@@ -9,5 +9,17 @@
         android:id="@+id/decksListFragment"
         android:name="magicchief.main.brewersservant.fragments.DecksListFragment"
         android:label="fragment_decks_list"
-        tools:layout="@layout/fragment_decks_list" />
+        tools:layout="@layout/fragment_decks_list" >
+        <action
+            android:id="@+id/action_decksListFragment_to_deckFragment"
+            app:destination="@id/deckFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/deckFragment"
+        android:name="magicchief.main.brewersservant.fragments.DeckFragment"
+        android:label="fragment_deck"
+        tools:layout="@layout/fragment_deck" >
+        <argument android:name="deckId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

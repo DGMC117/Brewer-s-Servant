@@ -10,58 +10,36 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.core.view.get
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.chip.Chip
+import com.google.android.material.button.MaterialButton
 import com.squareup.picasso.Picasso
 import magicchief.main.brewersservant.dataclass.Card
-import magicchief.main.brewersservant.fragments.CardListFragmentDirections
-import magicchief.main.brewersservant.fragments.CardSearchFragmentDirections
 
-class CardListAdapter(val cardList: MutableList<Card>, context: Context): RecyclerView.Adapter<CardListAdapter.ViewHolder> () {
+class DeckCardsAdapter(val deckId: Int, val cardList: MutableList<Card>, context: Context): RecyclerView.Adapter<DeckCardsAdapter.ViewHolder> () {
     val parentContext = context
+    var listener: OnItemsClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.card_list_row, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.deck_card_row, parent, false)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (cardList[position].card_faces == null) {
-            holder.itemName.text = cardList[position].name
-            holder.itemText.text = stringToSpannableString(
-                cardList[position].oracle_text.toString(),
-                holder.itemText.textSize.toInt()
-            )
-            holder.itemCost.text = stringToSpannableString(
-                cardList[position].mana_cost.toString(),
-                holder.itemCost.textSize.toInt()
-            )
-            holder.itemType.text = cardList[position].type_line
-            Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
+        val db = DBHelper(parentContext)
+        if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null && cardList[position].image_uris?.art_crop?.toString() != "null") Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
+        else Picasso.get().load(cardList[position].card_faces?.get(0)?.image_uris?.art_crop?.toString()).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
+        holder.itemName.text = cardList[position].name
+        holder.itemType.text = cardList[position].type_line
+        holder.itemCost.text = stringToSpannableString(cardList[position].mana_cost!!, holder.itemCost.textSize.toInt())
+        holder.itemAmount.text = db.getAmountInDeck(deckId, cardList[position].id.toString()).toString()
+        holder.itemRemoveButton.setOnClickListener {
+            db.updateAmountInDeck(deckId, cardList[position].id.toString(), holder.itemAmount.text.toString().toInt() - 1)
+            if (listener != null) listener!!.onItemClick()
         }
-        else {
-            holder.itemName.text = cardList[position].card_faces?.get(0)?.name
-            holder.itemText.text = stringToSpannableString(
-                cardList[position].card_faces?.get(0)?.oracle_text.toString(),
-                holder.itemText.textSize.toInt()
-            )
-            holder.itemCost.text = stringToSpannableString(
-                cardList[position].card_faces?.get(0)?.mana_cost.toString(),
-                holder.itemCost.textSize.toInt()
-            )
-            holder.itemType.text = cardList[position].card_faces?.get(0)?.type_line
-
-            if (cardList[position].image_uris != null && cardList[position].image_uris?.art_crop != null && cardList[position].image_uris?.art_crop?.toString() != "null") Picasso.get().load(cardList[position].image_uris?.art_crop?.toString()).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
-            else Picasso.get().load(cardList[position].card_faces?.get(0)?.image_uris?.art_crop?.toString()).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
-        }
-        holder.itemView.setOnClickListener {
-            val action = CardListFragmentDirections.actionCardListFragmentToCardDetailsFragment(cardId = cardList[position].id.toString())
-            holder.itemView.findNavController().navigate(action)
+        holder.itemAddButton.setOnClickListener {
+            db.updateAmountInDeck(deckId, cardList[position].id.toString(), holder.itemAmount.text.toString().toInt() + 1)
+            if (listener != null) listener!!.onItemClick()
         }
     }
 
@@ -72,17 +50,25 @@ class CardListAdapter(val cardList: MutableList<Card>, context: Context): Recycl
     inner class ViewHolder (itemView: View): RecyclerView.ViewHolder (itemView) {
         var itemImage: ImageView
         var itemName: TextView
-        var itemText: TextView
-        var itemCost: TextView
         var itemType: TextView
+        var itemCost: TextView
+        var itemAddButton: MaterialButton
+        var itemAmount: TextView
+        var itemRemoveButton: MaterialButton
 
         init {
-            itemImage = itemView.findViewById(R.id.card_image)
-            itemName = itemView.findViewById(R.id.card_name)
-            itemText= itemView.findViewById(R.id.card_text)
-            itemCost = itemView.findViewById(R.id.card_mana_cost)
-            itemType= itemView.findViewById(R.id.card_type)
+            itemImage = itemView.findViewById(R.id.deck_card_row_image)
+            itemName = itemView.findViewById(R.id.deck_card_row_name)
+            itemType= itemView.findViewById(R.id.deck_card_row_type)
+            itemCost = itemView.findViewById(R.id.deck_card_row_mana_cost)
+            itemAddButton = itemView.findViewById(R.id.deck_card_row_add_button)
+            itemAmount = itemView.findViewById(R.id.deck_card_row_amount)
+            itemRemoveButton = itemView.findViewById(R.id.deck_card_row_remove_button)
         }
+    }
+
+    fun setOnItemClickListener(listener: OnItemsClickListener) {
+        this.listener = listener
     }
 
     fun stringToSpannableString (string: String, textSize: Int): SpannableString {

@@ -11,6 +11,7 @@ import android.text.SpannableString
 import android.text.style.ImageSpan
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.database.getDoubleOrNull
+import androidx.core.database.getIntOrNull
 import androidx.core.database.getStringOrNull
 import magicchief.main.brewersservant.dataclass.*
 import magicchief.main.brewersservant.dataclass.Set
@@ -26,7 +27,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // Create Card table
         val createCardDB = (
                 "CREATE TABLE $CARD_TABLE_NAME ("
-                        + CARD_ID + " int auto_increment primary key,"
+                        + CARD_ID + " INTEGER primary key autoincrement,"
                         + CARD_SCRYFALL_ID + " char(36) unique not null,"
                         + CARD_CMC + " float not null,"
                         + CARD_COLOR_IDENTITY + " varchar(50) not null,"
@@ -69,7 +70,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // Create CardFace table
         val createCardFaceDB = (
                 "CREATE TABLE $CARD_FACE_TABLE_NAME ("
-                        + CARD_FACE_ID + " int auto_increment primary key,"
+                        + CARD_FACE_ID + " INTEGER primary key autoincrement,"
                         + CARD_FACE_SCRYFALL_ID_MAIN_CARD + " char(36) not null,"
                         + CARD_FACE_CMC + " float,"
                         + CARD_FACE_COLORS + " varchar(50),"
@@ -95,7 +96,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // Create RelatedCard table
         val createRelatedCardDB = (
                 "CREATE TABLE $RELATED_CARD_TABLE_NAME ("
-                        + RELATED_CARD_ID + " int auto_increment primary key,"
+                        + RELATED_CARD_ID + " INTEGER primary key autoincrement,"
                         + RELATED_CARD_SCRYFALL_ID_MAIN + " char(36) not null,"
                         + RELATED_CARD_SCRYFALL_ID_RELATED + " char(36) not null,"
                         + RELATED_CARD_COMPONENT + " varchar(25) not null,"
@@ -107,7 +108,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // Create CardSet table
         val createCardSetDB = (
                 "CREATE TABLE $CARD_SET_TABLE_NAME ("
-                        + CARD_SET_SET_ID + " int auto_increment primary key,"
+                        + CARD_SET_SET_ID + " INTEGER primary key autoincrement,"
                         + CARD_SET_SCRYFALL_SET_ID + " char(36) not null,"
                         + CARD_SET_CODE + " varchar(10) not null,"
                         + CARD_SET_NAME + " varchar(50) not null,"
@@ -117,61 +118,61 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         // Create Catalog tables
         val createArtistCatalogDB = (
                 "CREATE TABLE $ARTIST_CATALOG_TABLE_NAME ("
-                        + ARTIST_CATALOG_ID + " int auto_increment primary key,"
+                        + ARTIST_CATALOG_ID + " INTEGER primary key autoincrement,"
                         + ARTIST_CATALOG_NAME + " varchar(50) not null"
                         + ")"
                 )
         val createCreatureTypeCatalogDB = (
                 "CREATE TABLE $CREATURE_TYPE_CATALOG_TABLE_NAME ("
-                        + CREATURE_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + CREATURE_TYPE_CATALOG_ID + " INTEGER primary key autoincrement,"
                         + CREATURE_TYPE_CATALOG_TYPE + " varchar(50) not null"
                         + ")"
                 )
         val createPlaneswalkerTypeCatalogDB = (
                 "CREATE TABLE $PLANESWALKER_TYPE_CATALOG_TABLE_NAME ("
-                        + PLANESWALKER_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + PLANESWALKER_TYPE_CATALOG_ID + " INTEGER primary key autoincrement,"
                         + PLANESWALKER_TYPE_CATALOG_TYPE + " varchar(50) not null"
                         + ")"
                 )
         val createLandTypeCatalogDB = (
                 "CREATE TABLE $LAND_TYPE_CATALOG_TABLE_NAME ("
-                        + LAND_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + LAND_TYPE_CATALOG_ID + " INTEGER primary key autoincrement,"
                         + LAND_TYPE_CATALOG_TYPE + " varchar(50) not null"
                         + ")"
                 )
         val createArtifactTypeCatalogDB = (
                 "CREATE TABLE $ARTIFACT_TYPE_CATALOG_TABLE_NAME ("
-                        + ARTIFACT_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + ARTIFACT_TYPE_CATALOG_ID + " INTEGER primary key autoincrement,"
                         + ARTIFACT_TYPE_CATALOG_TYPE + " varchar(50) not null"
                         + ")"
                 )
         val createEnchantmentTypeCatalogDB = (
                 "CREATE TABLE $ENCHANTMENT_TYPE_CATALOG_TABLE_NAME ("
-                        + ENCHANTMENT_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + ENCHANTMENT_TYPE_CATALOG_ID + " INTEGER primary key autoincrement,"
                         + ENCHANTMENT_TYPE_CATALOG_TYPE + " varchar(50) not null"
                         + ")"
                 )
         val createSpellTypeCatalogDB = (
                 "CREATE TABLE $SPELL_TYPE_CATALOG_TABLE_NAME ("
-                        + SPELL_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + SPELL_TYPE_CATALOG_ID + " INTEGER primary key autoincrement,"
                         + SPELL_TYPE_CATALOG_TYPE + " varchar(50) not null"
                         + ")"
                 )
         val createCardTypeCatalogDB = (
                 "CREATE TABLE $CARD_TYPE_CATALOG_TABLE_NAME ("
-                        + CARD_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + CARD_TYPE_CATALOG_ID + " INTEGER primary key autoincrement,"
                         + CARD_TYPE_CATALOG_TYPE + " varchar(50) not null"
                         + ")"
                 )
         val createCardSuperTypeCatalogDB = (
                 "CREATE TABLE $CARD_SUPER_TYPE_CATALOG_TABLE_NAME ("
-                        + CARD_SUPER_TYPE_CATALOG_ID + " int auto_increment primary key,"
+                        + CARD_SUPER_TYPE_CATALOG_ID + " INTEGER primary key autoincrement,"
                         + CARD_SUPER_TYPE_CATALOG_TYPE + " varchar(50) not null"
                         + ")"
                 )
         val createCombosDB = (
                 "CREATE TABLE $COMBO_TABLE_NAME ("
-                        + COMBO_ID + " int primary key,"
+                        + COMBO_ID + " INTEGER primary key,"
                         + COMBO_COLOR_IDENTITY + " varchar(50) not null,"
                         + COMBO_PREREQUISITES + " text not null,"
                         + COMBO_STEPS + " text not null,"
@@ -180,11 +181,31 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                 )
         val createCardsInCombosDB = (
                 "CREATE TABLE $CIC_TABLE_NAME ("
-                        + CIC_COMBO_ID + " int,"
+                        + CIC_COMBO_ID + " INTEGER,"
                         + CIC_CARD_NAME + " varchar(255),"
                         + "primary key ($CIC_COMBO_ID, $CIC_CARD_NAME),"
                         + "foreign key ($CIC_COMBO_ID) references $COMBO_TABLE_NAME($COMBO_ID),"
                         + "foreign key ($CIC_CARD_NAME) references $CARD_TABLE_NAME($CARD_NAME)"
+                        + ")"
+                )
+        val createDecksDB = (
+                "CREATE TABLE $DECK_TABLE_NAME ("
+                        + DECK_ID + " INTEGER primary key autoincrement,"
+                        + DECK_NAME + " varchar(255) not null,"
+                        + DECK_FORMAT + " varchar(50) not null,"
+                        + DECK_FACE_CARD_URI + " varchar(255),"
+                        + DECK_COLOR_IDENTITY + " varchar(50) not null"
+                        + ")"
+                )
+        val createCardsInDecksDB = (
+                "CREATE TABLE $CID_TABLE_NAME ("
+                        + CID_DECK_ID + " INTEGER,"
+                        + CID_CARD_ID + " char(36),"
+                        + CID_AMOUNT + " int,"
+                        + CID_BOARD + " varchar(50),"
+                        + "primary key ($CID_DECK_ID, $CID_CARD_ID),"
+                        + "foreign key ($CID_DECK_ID) references $DECK_TABLE_NAME($DECK_ID),"
+                        + "foreign key ($CID_CARD_ID) references $CARD_TABLE_NAME($CARD_SCRYFALL_ID)"
                         + ")"
                 )
 
@@ -204,6 +225,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         db.execSQL(createCardSuperTypeCatalogDB)
         db.execSQL(createCombosDB)
         db.execSQL(createCardsInCombosDB)
+        db.execSQL(createDecksDB)
+        db.execSQL(createCardsInDecksDB)
 
         initialiseCardTypesAndSuperTypes (db)
 
@@ -376,6 +399,22 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
 
         private val CIC_CARD_NAME = "cic_card_name"
         private val CIC_COMBO_ID = "cic_combo_id"
+
+        // Card Decks
+        private val DECK_TABLE_NAME = "Deck"
+
+        private val DECK_ID = "deck_id"
+        private val DECK_NAME = "deck_name"
+        private val DECK_FORMAT = "deck_format"
+        private val DECK_FACE_CARD_URI = "deck_face_card"
+        private val DECK_COLOR_IDENTITY = "deck_color_identity"
+
+        private val CID_TABLE_NAME = "CardsInDecks"
+
+        private val CID_CARD_ID = "cid_card_id"
+        private val CID_DECK_ID = "cid_deck_id"
+        private val CID_AMOUNT = "cid_amount"
+        private val CID_BOARD = "cid_board"
     }
 
     fun addCardSet(cardSet: Set): Long {
@@ -592,20 +631,42 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         db.close()
         if (result > -1) {
             combo.cards!!.forEach {
-                //val cardId = getCardIdFromName(it)
-                addComboInCard (combo.id!!, it)
+                addCardInCombo (combo.id!!, it)
             }
         }
         return result
     }
 
-    fun addComboInCard(comboId: Int, cardId: String): Long {
+    fun addCardInCombo(comboId: Int, cardId: String): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(CIC_COMBO_ID, comboId)
         contentValues.put(CIC_CARD_NAME, cardId)
         val result = db.insert(CIC_TABLE_NAME, null, contentValues)
         return result
+    }
+
+    fun addDeck(deck: Deck, cardCommander: Array<String>?): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(DECK_NAME, deck.name)
+        contentValues.put(DECK_FORMAT, deck.format)
+        contentValues.put(DECK_FACE_CARD_URI, deck.face_card_image_uri)
+        contentValues.put(DECK_COLOR_IDENTITY, if (deck.colorIdentity.isNullOrEmpty()) "" else deck.colorIdentity)
+        val result = db.insert(DECK_TABLE_NAME, null, contentValues)
+        db.close()
+        if (result > -1 && deck.format == "Commander" && !cardCommander.isNullOrEmpty()) cardCommander.forEach { addCardInDeck(result.toInt(), it, 1, "commander") }
+        return result
+    }
+
+    fun addCardInDeck(deckId: Int, cardId: String, amount: Int, board: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(CID_DECK_ID, deckId)
+        contentValues.put(CID_CARD_ID, cardId)
+        contentValues.put(CID_AMOUNT, amount)
+        contentValues.put(CID_BOARD, board)
+        return db.insert(CID_TABLE_NAME, null, contentValues)
     }
 
     private fun initialiseCardTypesAndSuperTypes (db: SQLiteDatabase) {
@@ -618,6 +679,118 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         cardSuperTypes.forEach {
             addCardSuperTypeCatalog(it, db)
         }
+    }
+
+    @SuppressLint("Range")
+    fun getDecks(): MutableList<Deck> {
+        val query = "SELECT * FROM $DECK_TABLE_NAME"
+        val list: MutableList<Deck> = ArrayList()
+        val db = this.readableDatabase
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                var currentDeck = Deck()
+                currentDeck.id = result.getInt(result.getColumnIndex(DECK_ID))
+                currentDeck.name = result.getString(result.getColumnIndex(DECK_NAME))
+                currentDeck.format = result.getString(result.getColumnIndex(DECK_FORMAT))
+                currentDeck.face_card_image_uri = result.getString(result.getColumnIndex(DECK_FACE_CARD_URI))
+                currentDeck.colorIdentity = result.getString(result.getColumnIndex(DECK_COLOR_IDENTITY))
+                list.add(currentDeck)
+            } while (result.moveToNext())
+        }
+        return list
+    }
+
+    @SuppressLint("Range")
+    fun getDeck(deckId: Int): Deck {
+        val query = "SELECT * FROM $DECK_TABLE_NAME WHERE $DECK_ID == $deckId"
+        var deck = Deck()
+        val db = this.readableDatabase
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            deck.id = result.getInt(result.getColumnIndex(DECK_ID))
+            deck.name = result.getString(result.getColumnIndex(DECK_NAME))
+            deck.format = result.getString(result.getColumnIndex(DECK_FORMAT))
+            deck.face_card_image_uri = result.getString(result.getColumnIndex(DECK_FACE_CARD_URI))
+            deck.colorIdentity = result.getString(result.getColumnIndex(DECK_COLOR_IDENTITY))
+        }
+        return deck
+    }
+
+    @SuppressLint("Range")
+    fun getDeckCards(deckId: Int): MutableList<Card> {
+        val query = "SELECT $CID_CARD_ID FROM $CID_TABLE_NAME WHERE $CID_DECK_ID == $deckId"
+        val db = this.readableDatabase
+        val list: MutableList<Card> = ArrayList()
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            do {
+                list.add(getCard(result.getString(result.getColumnIndex(CID_CARD_ID))))
+            } while (result.moveToNext())
+        }
+        return list
+    }
+
+    @SuppressLint("Range")
+    fun getAmountInDeck(deckId: Int, cardId: String): Int {
+        val query = "SELECT $CID_AMOUNT FROM $CID_TABLE_NAME WHERE $CID_DECK_ID == $deckId AND $CID_CARD_ID == '$cardId'"
+        val db = this.readableDatabase
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            return result.getInt(result.getColumnIndex(CID_AMOUNT))
+        }
+        return 0
+    }
+
+    @SuppressLint("Range")
+    fun getDeckCardBoard(deckId: Int, cardId: String): String {
+        val query = "SELECT $CID_BOARD FROM $CID_TABLE_NAME WHERE $CID_DECK_ID == $deckId AND $CID_CARD_ID == '$cardId'"
+        val db = this.readableDatabase
+        val result = db.rawQuery(query, null)
+        if (result.moveToFirst()) {
+            return result.getString(result.getColumnIndex(CID_BOARD))
+        }
+        return "other"
+    }
+
+    @SuppressLint("Range")
+    fun updateAmountInDeck(deckId: Int, cardId: String, amount: Int): Int {
+        val db = this.writableDatabase
+        if (amount < 1) return db.delete(CID_TABLE_NAME, "$CID_DECK_ID=$deckId AND $CID_CARD_ID='$cardId'", null)
+        val contentValues = ContentValues()
+        contentValues.put(CID_AMOUNT, amount)
+        return db.update(CID_TABLE_NAME, contentValues, "$CID_DECK_ID=$deckId AND $CID_CARD_ID='$cardId'", null)
+    }
+
+    @SuppressLint("Range")
+    fun updateColorIdentityInDeck(deckId: Int, identity: String): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(DECK_COLOR_IDENTITY, identity)
+        return db.update(DECK_TABLE_NAME, contentValues, "$DECK_ID=$deckId", null)
+    }
+
+    @SuppressLint("Range")
+    fun updateFaceCardInDeck(deckId: Int, faceCardUri: String): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(DECK_FACE_CARD_URI, faceCardUri)
+        return db.update(DECK_TABLE_NAME, contentValues, "$DECK_ID=$deckId", null)
+    }
+
+    @SuppressLint("Range")
+    fun updateDeckName(deckId: Int, name: String): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(DECK_NAME, name)
+        return db.update(DECK_TABLE_NAME, contentValues, "$DECK_ID=$deckId", null)
+    }
+
+    fun deleteDeck(deckId: Int): Int {
+        val db = this.writableDatabase
+        var result = db.delete(CID_TABLE_NAME, "$CID_DECK_ID=$deckId", null)
+        if (result > -1) result = db.delete(DECK_TABLE_NAME, "$DECK_ID=$deckId", null)
+        return result
     }
 
     @SuppressLint("Range")
@@ -706,7 +879,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         }
         else query += " GROUP BY $COMBO_ID ORDER BY $COMBO_ID LIMIT 100" // OFFSET 100
         val list: MutableList<Combo> = ArrayList()
-        val db = this.writableDatabase
+        val db = this.readableDatabase
         println(query)
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
@@ -734,7 +907,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     fun getCombo(comboId: Int): Combo {
         var query = "SELECT * FROM $COMBO_TABLE_NAME WHERE $COMBO_ID == $comboId"
         val combo = Combo ()
-        val db = this.writableDatabase
+        val db = this.readableDatabase
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
             var cardsInCombo: MutableList<String> = ArrayList()
@@ -1238,7 +1411,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     fun getCardIdFromName (name: String): String {
         var id = ""
         val db = this.readableDatabase
-        val query = "SELECT $CARD_SCRYFALL_ID FROM $CARD_TABLE_NAME WHERE $CARD_NAME LIKE '${name.replace("'", "_")}' ORDER BY $CARD_NAME"
+        val query = "SELECT $CARD_SCRYFALL_ID FROM $CARD_TABLE_NAME WHERE $CARD_NAME LIKE '${name.replace("'", "_")}'"
+        println(query)
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
             id = result.getStringOrNull(result.getColumnIndex(CARD_SCRYFALL_ID))!!

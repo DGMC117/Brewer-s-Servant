@@ -17,7 +17,7 @@ class ComboDetailsImagesAdapter(val imageList: MutableList<String>, context: Con
     }
 
     override fun onBindViewHolder(holder: ComboDetailsImagesAdapter.ViewHolder, position: Int) {
-        Picasso.get().load(imageList[position]).into(holder.itemImage)
+        Picasso.get().load(imageList[position]).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
     }
 
     override fun getItemCount(): Int {

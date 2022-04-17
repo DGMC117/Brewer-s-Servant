@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/circle_button.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/divider.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_0_cost.xml" value="0.3165" />
@@ -56,6 +57,7 @@
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_gwp.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_hr_cost.xml" value="0.3165" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_infinity_cost.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_launcher_background.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_mana.xml" value="0.3165" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_p_cost.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_pw_cost.xml" value="0.5475" />
@@ -77,11 +79,13 @@
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/ic_z_cost.xml" value="0.5475" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/legality_border.xml" value="0.5225" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/drawable/rounded_corners.xml" value="0.5475" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/about_dialog.xml" value="0.31354166666666666" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/activity_card_download.xml" value="0.31354166666666666" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/activity_card_list.xml" value="0.33" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/activity_card_search.xml" value="0.4381294964028777" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/activity_hub.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/activity_main.xml" value="0.47690217391304346" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/add_deck_dialog.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/card_image_row.xml" value="0.31302083333333336" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/card_list_row.xml" value="0.31354166666666666" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/card_name_row.xml" value="0.31302083333333336" />
@@ -90,8 +94,11 @@
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/chip_item.xml" value="0.31354166666666666" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/combo_list_item.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/combo_list_row.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/deck_card_row.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/decks_list_row.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/details_related_row.xml" value="0.19067028985507245" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/details_split_row.xml" value="0.1" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/disclaimer_dialog.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/divider.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/entry_chip_item.xml" value="0.4995471014492754" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_blank.xml" value="0.5541666666666667" />
@@ -101,7 +108,12 @@
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_combo_details.xml" value="0.31354166666666666" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_combo_list.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_combo_search.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_deck.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_deck_cards.xml" value="0.31354166666666666" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_deck_edit.xml" value="0.31354166666666666" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_deck_stats.xml" value="0.31354166666666666" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_decks_list.xml" value="0.5541666666666667" />
+        <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/fragment_settings.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/list_item.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/mana_cost_symbol_dialog.xml" value="0.5541666666666667" />
         <entry key="..\:/Android/Projects/BrewersServant/app/src/main/res/layout/text_symbol_dialog.xml" value="1.0" />
