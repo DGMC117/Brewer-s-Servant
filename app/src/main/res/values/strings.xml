@@ -117,8 +117,10 @@
     <string name="colorless">Colorless</string>
     <string name="symbols_vs_produced">Mana Symbol Colors vs Produced Mana</string>
     <string name="mana_symbols">Mana Symbols</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="disclaimer_title">Disclaimer</string>
+    <string name="disclaimer">This is an unofficial fan made app not endorsed nor sponsored by Wizards of the Coast or Hasbro in any way.</string>
+    <string name="about_title">About the app</string>
+    <string name="about">Special thank you to Scryfall for providing a great database for the cards.\n\n Thank you to Commander Spellbook for the amazing combo database as well.</string>
 
     <string name="w"></string>
     <string name="u"></string>
