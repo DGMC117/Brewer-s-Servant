@@ -1,12 +1,12 @@
 package magicchief.main.brewersservant.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -86,10 +86,11 @@ class CardListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val noResultstext = requireView().findViewById<TextView>(R.id.card_list_no_results)
+        var page = 0
 
         val db = DBHelper(requireContext())
         val cards = db.getCards(cardName, cardTypesArray, isCardTypesArray, cardTypesAnd, cardText, manaValueParamsArray, powerParamsArray, toughnessParamsArray, loyaltyParamsArray, rarityParamsArray, legalityParamsArray, layoutParamsArray,
-            manaCost, cardColor, colorOperator, cardColorIdentity, cardProducedMana, cardFlavorText, priceCoin, priceOperator, priceValue, cardSet, cardArtist, similarToCardName)
+            manaCost, cardColor, colorOperator, cardColorIdentity, cardProducedMana, cardFlavorText, priceCoin, priceOperator, priceValue, cardSet, cardArtist, similarToCardName, page)
 
         var cardList = requireView().findViewById<RecyclerView>(R.id.card_list)
         val divider = DividerItemDecoration (requireContext(), DividerItemDecoration.VERTICAL)
@@ -100,5 +101,18 @@ class CardListFragment : Fragment() {
         adapter = CardListAdapter(cards, requireContext())
         cardList.adapter = adapter
         if (cards.isEmpty()) noResultstext.visibility = View.VISIBLE
+
+        cardList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (recyclerView.canScrollVertically(-1) && !recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    page++
+                    cards.addAll(db.getCards(cardName, cardTypesArray, isCardTypesArray, cardTypesAnd, cardText, manaValueParamsArray, powerParamsArray, toughnessParamsArray, loyaltyParamsArray, rarityParamsArray, legalityParamsArray, layoutParamsArray,
+                        manaCost, cardColor, colorOperator, cardColorIdentity, cardProducedMana, cardFlavorText, priceCoin, priceOperator, priceValue, cardSet, cardArtist, similarToCardName, page))
+                    adapter = CardListAdapter(cards, requireContext())
+                    cardList.adapter?.notifyDataSetChanged()
+                }
+            }
+        })
     }
 }
