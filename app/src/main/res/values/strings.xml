@@ -101,6 +101,7 @@
     <string name="main">Main</string>
     <string name="side">Side</string>
     <string name="maybe">Maybe</string>
+    <string name="mainboard">Mainboard</string>
     <string name="sideboard">Sideboard</string>
     <string name="maybeboard">Maybeboard</string>
     <string name="face_card_hint">Face Card</string>
