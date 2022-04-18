@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -84,6 +85,8 @@ class CardListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val noResultstext = requireView().findViewById<TextView>(R.id.card_list_no_results)
+
         val db = DBHelper(requireContext())
         val cards = db.getCards(cardName, cardTypesArray, isCardTypesArray, cardTypesAnd, cardText, manaValueParamsArray, powerParamsArray, toughnessParamsArray, loyaltyParamsArray, rarityParamsArray, legalityParamsArray, layoutParamsArray,
             manaCost, cardColor, colorOperator, cardColorIdentity, cardProducedMana, cardFlavorText, priceCoin, priceOperator, priceValue, cardSet, cardArtist, similarToCardName)
@@ -96,5 +99,6 @@ class CardListFragment : Fragment() {
         cardList.layoutManager = layoutManager
         adapter = CardListAdapter(cards, requireContext())
         cardList.adapter = adapter
+        if (cards.isEmpty()) noResultstext.visibility = View.VISIBLE
     }
 }

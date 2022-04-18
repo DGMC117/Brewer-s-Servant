@@ -121,6 +121,7 @@
     <string name="disclaimer">This is an unofficial fan made app not endorsed nor sponsored by Wizards of the Coast or Hasbro in any way.</string>
     <string name="about_title">About the app</string>
     <string name="about">Special thank you to Scryfall for providing a great database for the cards.\n\n Thank you to Commander Spellbook for the amazing combo database as well.</string>
+    <string name="no_results">No results.</string>
 
     <string name="w"></string>
     <string name="u"></string>
