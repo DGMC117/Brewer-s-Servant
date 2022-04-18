@@ -11,10 +11,9 @@
     app:cardBackgroundColor="?attr/colorSurface"
     android:padding="5dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/deck_list_row_image"
@@ -22,12 +21,31 @@
             android:layout_height="130dp"
             android:src="@drawable/ic_baseline_image_not_supported_24"
             android:scaleType="centerCrop"
-            android:adjustViewBounds="true"/>
+            android:adjustViewBounds="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:elevation="1dp"
+            android:id="@+id/deck_list_row_content_layout_back"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/deck_list_row_content_layout"
+            app:layout_constraintBottom_toBottomOf="@+id/deck_list_row_image"
+            android:background="?attr/colorSurface"/>
+
+        <LinearLayout
+            android:elevation="2dp"
+            android:id="@+id/deck_list_row_content_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/deck_list_row_image">
 
             <TextView
                 android:id="@+id/deck_list_row_name"
@@ -73,6 +91,7 @@
                     android:id="@+id/deck_list_row_delete_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    app:iconTint="@color/primaryLightColor"
                     app:icon="@drawable/ic_baseline_delete_outline_24"
                     style="@style/Widget.MaterialComponents.Button.TextButton.Icon.IconOnly"
                     android:layout_weight="3"
@@ -83,6 +102,6 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
