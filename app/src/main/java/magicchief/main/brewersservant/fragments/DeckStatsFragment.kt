@@ -16,6 +16,7 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.data.Set
 import com.anychart.enums.*
 import com.anychart.scales.Linear
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import magicchief.main.brewersservant.DBHelper
 import magicchief.main.brewersservant.R
 
@@ -44,6 +45,10 @@ class DeckStatsFragment : Fragment() {
 
         var isNightMode = requireContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
         println(isNightMode)
+
+        val progressManaValueCurve = requireView().findViewById<CircularProgressIndicator>(R.id.mana_curve_chart_view_progress)
+        val progressTypesPie = requireView().findViewById<CircularProgressIndicator>(R.id.types_chart_view_progress)
+        val progressSymbolsProduced = requireView().findViewById<CircularProgressIndicator>(R.id.mana_cost_color_symbols_chart_view_progress)
 
         val dbHelper = DBHelper(requireContext())
 
@@ -111,6 +116,7 @@ class DeckStatsFragment : Fragment() {
         }
 
         val manaValueChartView = requireView().findViewById<AnyChartView>(R.id.mana_curve_chart_view)
+        manaValueChartView.setProgressBar(progressManaValueCurve)
         APIlib.getInstance().setActiveAnyChartView(manaValueChartView)
         val manaValueCartesian = AnyChart.column()
         val manaValueData: MutableList<DataEntry> = ArrayList()
@@ -143,6 +149,7 @@ class DeckStatsFragment : Fragment() {
         manaValueChartView.setChart(manaValueCartesian)
 
         val typesChartView = requireView().findViewById<AnyChartView>(R.id.types_chart_view)
+        typesChartView.setProgressBar(progressTypesPie)
         APIlib.getInstance().setActiveAnyChartView(typesChartView)
         val typesPie = AnyChart.pie()
         val typesChartData: MutableList<DataEntry> = ArrayList()
@@ -161,6 +168,7 @@ class DeckStatsFragment : Fragment() {
         typesChartView.setChart(typesPie)
 
         val symbolsChartView = requireView().findViewById<AnyChartView>(R.id.mana_cost_color_symbols_chart_view)
+        symbolsChartView.setProgressBar(progressSymbolsProduced)
         APIlib.getInstance().setActiveAnyChartView(symbolsChartView)
         val symbolsPolar = AnyChart.polar()
         val symbolsChartData: MutableList<DataEntry> = ArrayList()
