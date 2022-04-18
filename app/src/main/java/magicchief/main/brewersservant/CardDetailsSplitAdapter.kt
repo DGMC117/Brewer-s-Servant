@@ -56,6 +56,11 @@ class CardDetailsSplitAdapter(val cardFaces: Array<CardFace>, context: Context):
             holder.itemFlavorText.text = "\"${cardFaces[position].flavor_text!!.replace("\"", "")}\""
         }
         else holder.itemFlavorText.visibility = View.GONE
+        if (cardFaces[position].artist != null && cardFaces[position].artist != "") {
+            holder.itemArtist.visibility = View.VISIBLE
+            holder.itemArtist.text = "\"${cardFaces[position].artist!!}\""
+        }
+        else holder.itemArtist.visibility = View.GONE
     }
 
     override fun getItemCount(): Int {
@@ -72,6 +77,7 @@ class CardDetailsSplitAdapter(val cardFaces: Array<CardFace>, context: Context):
         var itemLoyalty: TextView
         var itemFlavorText: TextView
         var itemPowTouLayout: LinearLayout
+        var itemArtist: TextView
 
         init {
             itemName = itemView.findViewById(R.id.card_details_split_row_name)
@@ -83,6 +89,7 @@ class CardDetailsSplitAdapter(val cardFaces: Array<CardFace>, context: Context):
             itemLoyalty = itemView.findViewById(R.id.card_details_split_row_loyalty)
             itemFlavorText = itemView.findViewById(R.id.card_details_split_row_flavor_text)
             itemPowTouLayout = itemView.findViewById(R.id.card_details_split_row_pow_tou_layout)
+            itemArtist = itemView.findViewById(R.id.card_details_split_row_artist)
         }
     }
 

@@ -50,11 +50,63 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+            android:id="@+id/deck_card_tab_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/primaryDarkColor">
+
+                <TextView
+                    android:id="@+id/deck_card_tab_main_label_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/mainboard"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="16sp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:id="@+id/deck_card_tab_main_count_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="1"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="16sp"
+                    android:layout_toStartOf="@+id/deck_card_tab_main_count_label_text"
+                    android:layout_centerVertical="true"
+                    android:textStyle="italic"/>
+
+                <TextView
+                    android:id="@+id/deck_card_tab_main_count_label_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/cards"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="16sp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:textStyle="italic"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/deck_card_tab_commanders_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/deck_card_tab_main_layout"
                 android:visibility="gone">
 
                 <RelativeLayout
@@ -668,7 +720,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="@color/primaryColor">
+                    android:background="@color/primaryDarkColor">
 
                     <TextView
                         android:id="@+id/deck_card_tab_side_label_text"
@@ -726,7 +778,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="@color/primaryColor">
+                    android:background="@color/primaryDarkColor">
 
                     <TextView
                         android:id="@+id/deck_card_tab_maybe_label_text"

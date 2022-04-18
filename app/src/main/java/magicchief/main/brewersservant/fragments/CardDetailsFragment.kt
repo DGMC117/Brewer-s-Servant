@@ -78,6 +78,7 @@ class CardDetailsFragment : Fragment() {
         val cardToughness = requireView().findViewById<TextView>(R.id.card_details_toughness)
         val cardLoyalty = requireView().findViewById<TextView>(R.id.card_details_loyalty)
         val cardFlavorText = requireView().findViewById<TextView>(R.id.card_details_flavor_text)
+        val cardArtist = requireView().findViewById<TextView>(R.id.card_details_artist)
 
         var cardSplitList = requireView().findViewById<RecyclerView>(R.id.card_details_split_recycler)
         val noSplitLayout = requireView().findViewById<ConstraintLayout>(R.id.card_details_no_split_layout)
@@ -111,6 +112,11 @@ class CardDetailsFragment : Fragment() {
                     cardFlavorText.text = "\"${card.flavor_text!!.replace("\"", "")}\""
                 }
                 else cardFlavorText.visibility = View.GONE
+                if (card.artist != null && card.artist != "") {
+                    cardArtist.visibility = View.VISIBLE
+                    cardArtist.text = "\"${card.artist!!}\""
+                }
+                else cardArtist.visibility = View.GONE
             }
             in listOf("flip", "transform", "modal_dfc", "double_faced_token", "reversible_card", "art_series") -> {
                 cardName.text = card.card_faces?.get(currentCardFace)?.name
@@ -139,6 +145,11 @@ class CardDetailsFragment : Fragment() {
                     cardFlavorText.text = "\"${card.card_faces?.get(currentCardFace)?.flavor_text!!.replace("\"", "")}\""
                 }
                 else cardFlavorText.visibility = View.GONE
+                if (card.card_faces?.get(currentCardFace)?.artist != null && card.card_faces?.get(currentCardFace)?.artist != "") {
+                    cardArtist.visibility = View.VISIBLE
+                    cardArtist.text = "\"${card.card_faces?.get(currentCardFace)?.artist!!}\""
+                }
+                else cardArtist.visibility = View.GONE
                 flipFAB.visibility = View.VISIBLE
                 flipFAB.setOnClickListener {
                     if (card.layout == "flip") {
@@ -199,6 +210,11 @@ class CardDetailsFragment : Fragment() {
                         cardFlavorText.text = "\"${card.card_faces?.get(currentCardFace)?.flavor_text!!.replace("\"", "")}\""
                     }
                     else cardFlavorText.visibility = View.GONE
+                    if (card.card_faces?.get(currentCardFace)?.artist != null && card.card_faces?.get(currentCardFace)?.artist != "") {
+                        cardArtist.visibility = View.VISIBLE
+                        cardArtist.text = "\"${card.card_faces?.get(currentCardFace)?.artist!!}\""
+                    }
+                    else cardArtist.visibility = View.GONE
                 }
             }
             in listOf("split", "adventure") -> {

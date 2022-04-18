@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/card_color"
-                android:textColor="@color/colorOnBackground"
+                android:textColor="?attr/colorOnBackground"
                 app:layout_constraintTop_toBottomOf="@id/combo_color_divider"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>

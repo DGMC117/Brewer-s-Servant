@@ -81,6 +81,7 @@ class DeckCardsFragment : Fragment() {
     private lateinit var instantsCountTextView: TextView
     private lateinit var landsCountTextView: TextView
     private lateinit var otherCountTextView: TextView
+    private lateinit var mainCountTextView: TextView
     private lateinit var sideCountTextView: TextView
     private lateinit var maybeCountTextView: TextView
 
@@ -148,6 +149,7 @@ class DeckCardsFragment : Fragment() {
         otherCountTextView = requireView().findViewById(R.id.deck_card_tab_other_count_text)
         otherRecycler = requireView().findViewById(R.id.deck_card_tab_other_recycler)
         sideLayout = requireView().findViewById(R.id.deck_card_tab_side_layout)
+        mainCountTextView = requireView().findViewById(R.id.deck_card_tab_main_count_text)
         sideCountTextView = requireView().findViewById(R.id.deck_card_tab_side_count_text)
         sideRecycler = requireView().findViewById(R.id.deck_card_tab_side_recycler)
         maybeLayout = requireView().findViewById(R.id.deck_card_tab_maybe_layout)
@@ -286,6 +288,7 @@ class DeckCardsFragment : Fragment() {
         identity += if(g) if (identity.length > 0) ",G" else "G" else ""
         if (identity == "") identity = "C"
         dbHelper.updateColorIdentityInDeck(deckId, identity)
+        mainCountTextView.text = (planeswalkersCount + creaturesCount + artifactsCount + enchantmentsCount + sorceriesCount + instantsCount + landsCount + otherCount).toString()
         if (!commanders.isNullOrEmpty()) {
             commandersAdapter = DeckCardsAdapter(deckId, commanders, requireContext())
             val listener = object : OnItemsClickListener {

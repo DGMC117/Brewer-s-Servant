@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
@@ -38,6 +39,7 @@ class DecksListAdapter(val decksList: MutableList<Deck>, context: Context): Recy
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.itemContentLayout.alpha = .6f
         if (decksList[position].face_card_image_uri != null) Picasso.get().load(decksList[position].face_card_image_uri).placeholder(R.drawable.ic_baseline_image_not_supported_24).into(holder.itemImage)
         holder.itemName.text = decksList[position].name
         holder.itemFormat.text = decksList[position].format
@@ -71,6 +73,7 @@ class DecksListAdapter(val decksList: MutableList<Deck>, context: Context): Recy
         var itemFormat: TextView
         var itemColorIdentity: TextView
         var itemDeleteButton: MaterialButton
+        var itemContentLayout: LinearLayout
 
         init {
             itemImage = itemView.findViewById(R.id.deck_list_row_image)
@@ -78,6 +81,7 @@ class DecksListAdapter(val decksList: MutableList<Deck>, context: Context): Recy
             itemFormat = itemView.findViewById(R.id.deck_list_row_format)
             itemColorIdentity = itemView.findViewById(R.id.deck_list_row_color_identity)
             itemDeleteButton= itemView.findViewById(R.id.deck_list_row_delete_button)
+            itemContentLayout = itemView.findViewById(R.id.deck_list_row_content_layout_back)
         }
     }
 

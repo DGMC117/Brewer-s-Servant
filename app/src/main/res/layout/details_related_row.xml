@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="2dp"
     app:cardPreventCornerOverlap="true"
-    app:cardBackgroundColor="@color/colorBackground"
+    app:cardBackgroundColor="?android:attr/colorBackground"
     app:cardCornerRadius="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:textColor="@color/colorOnBackground"
+            android:textColor="?attr/colorOnBackground"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/hyphen"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="―"
-            android:textColor="@color/colorOnBackground"
+            android:textColor="?attr/colorOnBackground"
             app:layout_constraintTop_toBottomOf="@+id/row_divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -41,7 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:textColor="@color/colorOnBackground"
+            android:textColor="?attr/colorOnBackground"
             app:layout_constraintTop_toBottomOf="@+id/row_divider"
             app:layout_constraintStart_toEndOf="@+id/hyphen"
             app:layout_constraintEnd_toEndOf="parent"

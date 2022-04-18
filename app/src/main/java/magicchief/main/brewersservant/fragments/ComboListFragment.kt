@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,8 +47,11 @@ class ComboListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val noResultstext = requireView().findViewById<TextView>(R.id.combo_list_no_results)
+        var page = 0
+
         val db = DBHelper(requireContext())
-        val combos = db.getCombos(cardNamesArray, cardNamesAnd, comboColorOperator, comboColor, comboResult)
+        val combos = db.getCombos(cardNamesArray, cardNamesAnd, comboColorOperator, comboColor, comboResult, page)
 
         val comboList = requireView().findViewById<RecyclerView>(R.id.combo_list)
         val divider = DividerItemDecoration (requireContext(), DividerItemDecoration.VERTICAL)
@@ -57,5 +61,18 @@ class ComboListFragment : Fragment() {
         comboList.layoutManager = layoutManager
         adapter = ComboListAdapter(combos, requireContext())
         comboList.adapter = adapter
+        if (combos.isEmpty()) noResultstext.visibility = View.VISIBLE
+
+        comboList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    page++
+                    combos.addAll(db.getCombos(cardNamesArray, cardNamesAnd, comboColorOperator, comboColor, comboResult, page))
+                    adapter = ComboListAdapter(combos, requireContext())
+                    comboList.adapter?.notifyDataSetChanged()
+                }
+            }
+        })
     }
 }

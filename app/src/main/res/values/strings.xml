@@ -101,6 +101,7 @@
     <string name="main">Main</string>
     <string name="side">Side</string>
     <string name="maybe">Maybe</string>
+    <string name="mainboard">Mainboard</string>
     <string name="sideboard">Sideboard</string>
     <string name="maybeboard">Maybeboard</string>
     <string name="face_card_hint">Face Card</string>
@@ -121,6 +122,7 @@
     <string name="disclaimer">This is an unofficial fan made app not endorsed nor sponsored by Wizards of the Coast or Hasbro in any way.</string>
     <string name="about_title">About the app</string>
     <string name="about">Special thank you to Scryfall for providing a great database for the cards.\n\n Thank you to Commander Spellbook for the amazing combo database as well.</string>
+    <string name="no_results">No results.</string>
 
     <string name="w"></string>
     <string name="u"></string>

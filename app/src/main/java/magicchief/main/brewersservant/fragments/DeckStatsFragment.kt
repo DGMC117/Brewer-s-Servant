@@ -1,19 +1,22 @@
 package magicchief.main.brewersservant.fragments
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.toColor
 import androidx.fragment.app.Fragment
 import com.anychart.APIlib
 import com.anychart.AnyChart
-import com.anychart.AnyChart.polar
 import com.anychart.AnyChartView
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.data.Set
 import com.anychart.enums.*
 import com.anychart.scales.Linear
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import magicchief.main.brewersservant.DBHelper
 import magicchief.main.brewersservant.R
 
@@ -40,6 +43,12 @@ class DeckStatsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var isNightMode = requireContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        println(isNightMode)
+
+        val progressManaValueCurve = requireView().findViewById<CircularProgressIndicator>(R.id.mana_curve_chart_view_progress)
+        val progressTypesPie = requireView().findViewById<CircularProgressIndicator>(R.id.types_chart_view_progress)
+        val progressSymbolsProduced = requireView().findViewById<CircularProgressIndicator>(R.id.mana_cost_color_symbols_chart_view_progress)
 
         val dbHelper = DBHelper(requireContext())
 
@@ -107,6 +116,7 @@ class DeckStatsFragment : Fragment() {
         }
 
         val manaValueChartView = requireView().findViewById<AnyChartView>(R.id.mana_curve_chart_view)
+        manaValueChartView.setProgressBar(progressManaValueCurve)
         APIlib.getInstance().setActiveAnyChartView(manaValueChartView)
         val manaValueCartesian = AnyChart.column()
         val manaValueData: MutableList<DataEntry> = ArrayList()
@@ -135,10 +145,11 @@ class DeckStatsFragment : Fragment() {
         manaValueCartesian.interactivity().hoverMode(HoverMode.SINGLE)
         manaValueCartesian.xAxis(0).title(getString(R.string.mana_value_label))
         manaValueCartesian.yAxis(0).title(getString(R.string.cards))
-        manaValueCartesian.background().fill(requireActivity().getColor(R.color.colorBackground).toString())
+        if (isNightMode) manaValueCartesian.background().fill(requireContext().getColor(R.color.colorBackground).toString())
         manaValueChartView.setChart(manaValueCartesian)
 
         val typesChartView = requireView().findViewById<AnyChartView>(R.id.types_chart_view)
+        typesChartView.setProgressBar(progressTypesPie)
         APIlib.getInstance().setActiveAnyChartView(typesChartView)
         val typesPie = AnyChart.pie()
         val typesChartData: MutableList<DataEntry> = ArrayList()
@@ -153,10 +164,11 @@ class DeckStatsFragment : Fragment() {
         typesPie.title(getString(R.string.card_types_distribution))
         typesPie.labels().position("outside")
         typesPie.legend().position("center-bottom").itemsLayout(LegendLayout.HORIZONTAL_EXPANDABLE).align(Align.CENTER)
-        typesPie.background().fill(requireActivity().getColor(R.color.colorBackground).toString())
+        if (isNightMode) typesPie.background().fill(requireContext().getColor(R.color.colorBackground).toString())
         typesChartView.setChart(typesPie)
 
         val symbolsChartView = requireView().findViewById<AnyChartView>(R.id.mana_cost_color_symbols_chart_view)
+        symbolsChartView.setProgressBar(progressSymbolsProduced)
         APIlib.getInstance().setActiveAnyChartView(symbolsChartView)
         val symbolsPolar = AnyChart.polar()
         val symbolsChartData: MutableList<DataEntry> = ArrayList()
@@ -185,7 +197,7 @@ class DeckStatsFragment : Fragment() {
         (symbolsPolar.yScale(Linear::class.java) as Linear).stackMode(ScaleStackMode.PERCENT)
         symbolsPolar.tooltip()
             .displayMode(TooltipDisplayMode.UNION)
-        symbolsPolar.background().fill(requireActivity().getColor(R.color.colorBackground).toString())
+        if (isNightMode) symbolsPolar.background().fill(requireContext().getColor(R.color.colorBackground).toString())
         symbolsPolar.legend(true)
         symbolsChartView.setChart(symbolsPolar)
 

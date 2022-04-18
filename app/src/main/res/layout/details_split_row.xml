@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="2dp"
     app:cardPreventCornerOverlap="true"
-    app:cardBackgroundColor="@color/colorBackground"
+    app:cardBackgroundColor="?android:attr/colorBackground"
     app:cardCornerRadius="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/name_hint"
-            android:textColor="@color/colorOnBackground"
+            android:textColor="?attr/colorOnBackground"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/card_details_split_row_mana_cost"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/mana_cost_hint"
-            android:textColor="@color/colorOnBackground"
+            android:textColor="?attr/colorOnBackground"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             style="@style/TextAppearance.MaterialComponents.Headline6"/>
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/type_hint"
-            android:textColor="@color/colorOnBackground"
+            android:textColor="?attr/colorOnBackground"
             app:layout_constraintTop_toBottomOf="@id/card_details_split_row_name"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/text_hint"
-            android:textColor="@color/colorOnBackground"
+            android:textColor="?attr/colorOnBackground"
             app:layout_constraintTop_toBottomOf="@id/card_details_split_row_type"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -78,7 +78,7 @@
                     android:paddingVertical="5dp"
                     android:paddingStart="5dp"
                     android:text="0"
-                    android:textColor="@color/colorOnBackground"
+                    android:textColor="?attr/colorOnBackground"
                     style="@style/TextAppearance.MaterialComponents.Headline6"/>
 
                 <TextView
@@ -86,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="/"
-                    android:textColor="@color/colorOnBackground"
+                    android:textColor="?attr/colorOnBackground"
                     style="@style/TextAppearance.MaterialComponents.Headline6"/>
 
                 <TextView
@@ -96,7 +96,7 @@
                     android:paddingVertical="5dp"
                     android:paddingEnd="5dp"
                     android:text="0"
-                    android:textColor="@color/colorOnBackground"
+                    android:textColor="?attr/colorOnBackground"
                     style="@style/TextAppearance.MaterialComponents.Headline6"/>
 
             </LinearLayout>
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="0"
-                android:textColor="@color/colorOnBackground"
+                android:textColor="?attr/colorOnBackground"
                 android:visibility="gone"
                 style="@style/TextAppearance.MaterialComponents.Headline6"/>
 
@@ -119,16 +119,26 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/flavor_text_hint"
-            android:textColor="@color/colorOnBackground"
+            android:textColor="?attr/colorOnBackground"
             app:layout_constraintTop_toBottomOf="@id/card_details_split_row_stats_layout"
             app:layout_constraintStart_toStartOf="parent"
             android:textStyle="italic"/>
+
+        <TextView
+            android:id="@+id/card_details_split_row_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/artist_hint"
+            android:textColor="?attr/colorOnBackground"
+            app:layout_constraintTop_toBottomOf="@id/card_details_split_row_flavor_text"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/row_divider"
-            app:layout_constraintTop_toBottomOf="@id/card_details_split_row_flavor_text"
+            app:layout_constraintTop_toBottomOf="@id/card_details_split_row_artist"
             style="@style/SearchViewDivider"
             android:padding="5dp"/>
 

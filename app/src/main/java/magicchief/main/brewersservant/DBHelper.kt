@@ -794,7 +794,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     @SuppressLint("Range")
-    fun getCombos(cardNamesArray: Array<String>?, cardNamesAnd: Boolean, comboColorOperator: String?, comboColor: String?, comboResult: String?): MutableList<Combo> {
+    fun getCombos(cardNamesArray: Array<String>?, cardNamesAnd: Boolean, comboColorOperator: String?, comboColor: String?, comboResult: String?, page: Int): MutableList<Combo> {
         var whereStarted = false
         var query = "SELECT co.$COMBO_ID, co.$COMBO_COLOR_IDENTITY, co.$COMBO_RESULTS FROM $COMBO_TABLE_NAME co LEFT JOIN $CIC_TABLE_NAME cic ON co.$COMBO_ID == cic.$CIC_COMBO_ID"
         if (comboColor != null && comboColor != "") {
@@ -875,9 +875,9 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
                 }
                 whereStarted = true
             }
-            query += "  ORDER BY $COMBO_ID LIMIT 100"
+            query += "  ORDER BY $COMBO_ID LIMIT 50 OFFSET ${page * 50}"
         }
-        else query += " GROUP BY $COMBO_ID ORDER BY $COMBO_ID LIMIT 100" // OFFSET 100
+        else query += " GROUP BY $COMBO_ID ORDER BY $COMBO_ID LIMIT 50 OFFSET ${page * 50}"
         val list: MutableList<Combo> = ArrayList()
         val db = this.readableDatabase
         println(query)
@@ -969,7 +969,8 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
         priceValue: String?,
         cardSet: String?,
         cardArtist: String?,
-        similarToCardName: String?
+        similarToCardName: String?,
+        page: Int
     ): MutableList<Card> {
         var whereStarted = false
         var similarSearch = false
@@ -1229,7 +1230,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null
             query += " ORDER BY (SELECT COUNT (*) FROM similarCard s WHERE c.$CARD_ORACLE_TEXT LIKE '%' || s.textWord || '%') DESC"
         }
         else query += " ORDER BY $CARD_NAME"
-        query += " LIMIT 100" // OFFSET 50
+        query += " LIMIT 50 OFFSET ${page * 50}"
 
         val list: MutableList<Card> = ArrayList()
         val db = this.readableDatabase
