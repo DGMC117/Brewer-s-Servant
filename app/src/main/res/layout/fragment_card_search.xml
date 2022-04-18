@@ -140,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/mana_value"
-                    android:textColor="@color/colorOnBackground"
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_gravity="center_vertical"/>
 
                 <HorizontalScrollView
@@ -169,7 +169,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/power"
-                    android:textColor="@color/colorOnBackground"
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_gravity="center_vertical"/>
 
                 <HorizontalScrollView
@@ -198,7 +198,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/toughness"
-                    android:textColor="@color/colorOnBackground"
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_gravity="center_vertical"/>
 
                 <HorizontalScrollView
@@ -227,7 +227,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/loyalty"
-                    android:textColor="@color/colorOnBackground"
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_gravity="center_vertical"/>
 
                 <HorizontalScrollView
@@ -256,7 +256,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/rarity"
-                    android:textColor="@color/colorOnBackground"
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_gravity="center_vertical"/>
 
                 <HorizontalScrollView
@@ -285,7 +285,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/legality"
-                    android:textColor="@color/colorOnBackground"
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_gravity="center_vertical"/>
 
                 <HorizontalScrollView
@@ -314,7 +314,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/layout"
-                    android:textColor="@color/colorOnBackground"
+                    android:textColor="?attr/colorOnBackground"
                     android:layout_gravity="center_vertical"/>
 
                 <HorizontalScrollView
@@ -654,7 +654,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/card_color"
-                android:textColor="@color/colorOnBackground"
+                android:textColor="?attr/colorOnBackground"
                 app:layout_constraintTop_toBottomOf="@id/card_color_divider"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
@@ -747,7 +747,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/commander_color_identity"
-                android:textColor="@color/colorOnBackground"
+                android:textColor="?attr/colorOnBackground"
                 app:layout_constraintTop_toBottomOf="@id/card_color_identity_divider"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
@@ -804,7 +804,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/produced_mana"
-                android:textColor="@color/colorOnBackground"
+                android:textColor="?attr/colorOnBackground"
                 app:layout_constraintTop_toBottomOf="@id/card_produced_mana_divider"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
@@ -875,7 +875,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/card_price"
-                android:textColor="@color/colorOnBackground"
+                android:textColor="?attr/colorOnBackground"
                 app:layout_constraintTop_toBottomOf="@id/card_price_divider"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
@@ -996,7 +996,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="@string/similar_to"
-                android:textColor="@color/colorOnBackground"
+                android:textColor="?attr/colorOnBackground"
                 app:layout_constraintTop_toBottomOf="@id/similar_to_divider"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>

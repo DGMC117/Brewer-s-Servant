@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="2dp"
     app:cardPreventCornerOverlap="true"
-    app:cardBackgroundColor="@color/colorBackground"
+    app:cardBackgroundColor="?android:attr/colorBackground"
     app:cardCornerRadius="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout

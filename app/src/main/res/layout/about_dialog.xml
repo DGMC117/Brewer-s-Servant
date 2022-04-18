@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:padding="15dp"
         android:text="@string/about"
-        android:textColor="@color/colorOnBackground"
+        android:textColor="?attr/colorOnBackground"
         app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
