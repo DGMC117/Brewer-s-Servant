@@ -146,6 +146,7 @@ class DeckStatsFragment : Fragment() {
         manaValueCartesian.xAxis(0).title(getString(R.string.mana_value_label))
         manaValueCartesian.yAxis(0).title(getString(R.string.cards))
         if (isNightMode) manaValueCartesian.background().fill(requireContext().getColor(R.color.colorBackground).toString())
+        manaValueChartView.setLicenceKey("david.garcia.de.mercado@estudiantat.upc.edu-18c9b427-77b3388a")
         manaValueChartView.setChart(manaValueCartesian)
 
         val typesChartView = requireView().findViewById<AnyChartView>(R.id.types_chart_view)
@@ -165,6 +166,7 @@ class DeckStatsFragment : Fragment() {
         typesPie.labels().position("outside")
         typesPie.legend().position("center-bottom").itemsLayout(LegendLayout.HORIZONTAL_EXPANDABLE).align(Align.CENTER)
         if (isNightMode) typesPie.background().fill(requireContext().getColor(R.color.colorBackground).toString())
+        typesChartView.setLicenceKey("david.garcia.de.mercado@estudiantat.upc.edu-18c9b427-77b3388a")
         typesChartView.setChart(typesPie)
 
         val symbolsChartView = requireView().findViewById<AnyChartView>(R.id.mana_cost_color_symbols_chart_view)
@@ -199,6 +201,7 @@ class DeckStatsFragment : Fragment() {
             .displayMode(TooltipDisplayMode.UNION)
         if (isNightMode) symbolsPolar.background().fill(requireContext().getColor(R.color.colorBackground).toString())
         symbolsPolar.legend(true)
+        symbolsChartView.setLicenceKey("david.garcia.de.mercado@estudiantat.upc.edu-18c9b427-77b3388a")
         symbolsChartView.setChart(symbolsPolar)
 
     }
